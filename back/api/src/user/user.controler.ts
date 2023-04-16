@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Controller, Get, Post, Delete, Body, BadRequestException } from '@nestjs/common';
+import { HttpException, HttpStatus, Controller, Get, Post, Delete, Patch, Body, Headers, BadRequestException } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.entity';
 
@@ -6,24 +6,65 @@ import { User } from './user.entity';
 export class UserController {
     constructor(private readonly userService: UserService) {}
 
-    @Get('all')
-    getAll() {
-        return this.userService.findAll();
+    @Get()
+    async getUser(@Body() body: { id: number }, @Headers('authorization') authHeader: string) {
+        const { id } = body;
+
+        if (typeof id !== 'number') {
+            throw new HttpException("", HttpStatus.BAD_REQUEST);
+        }
+        this.userService.checkAuth(authHeader);
+
+        const user = await this.userService.getUser(id);
+        return {
+            id: user.id,
+            username: user.username,
+            profile_picture: user.profile_picture,
+            elo: user.elo,
+        }
     }
 
-    @Post('register')
-    async postRegister(@Body() user: { name: string; email: string }): Promise<User> {
-        const { name, email } = user;
+    @Post()
+    createUser(@Body() user: { username: string; password: string }) {
+        const { username, password } = user;
 
-        if (typeof name !== 'string' || typeof email !== 'string') {
-            throw new BadRequestException(user)
+        if (typeof username !== 'string' || typeof password !== 'string') {
+            throw new HttpException("", HttpStatus.BAD_REQUEST)
         }
         
-        return this.userService.create(name, email);
+        return this.userService.registerPassword(username, password);
     }
 
-    @Delete('delete')
-    async deleteUser() {
-        return this.userService.deleteOne(2);
+    @Get('self')
+    async getSelf(@Headers('authorization') authHeader: string) {
+        const id = await this.userService.checkAuth(authHeader);
+
+        return this.userService.getUser(id);
+    }
+
+    @Delete('self')
+    async deleteSelf(@Headers('authorization') authHeader: string) {
+        const id = await this.userService.checkAuth(authHeader);
+
+        return this.userService.deleteUser(id);
+    }
+
+    @Patch('self')
+    async patchSelf(@Body() body: { password: string, profile_picture: string }, @Headers('authorization') authHeader: string) {
+        const id = await this.userService.checkAuth(authHeader);
+        const { password, profile_picture } = body;
+
+        return this.userService.updateUser(id, password, profile_picture);
+    }
+
+    @Get('login')
+    login(@Body() user: { username: string, password: string }) {
+        const { username, password } = user;
+
+        if (typeof username !== 'string' || typeof password !== 'string') {
+            throw new HttpException("", HttpStatus.BAD_REQUEST)
+        }
+
+        return this.userService.loginPassword(username, password)
     }
 }

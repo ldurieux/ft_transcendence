@@ -6,8 +6,17 @@ export class User {
   id: number;
 
   @Column()
-  name: string;
+  username: string;
 
-  @Column()
-  email: string;
+  @Column({default: null})
+  profile_picture: string | null;
+
+  @Column({default: null})
+  intra_token: string | null;
+
+  @Column({default: null})
+  pass_hash: string | null;
+
+  @Column({default: 1000})
+  elo: number;
 }

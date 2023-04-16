@@ -9,8 +9,6 @@ CREATE TABLE user_ (
 	pp			text,
 	ft_token	varchar,
     pass_hash   varchar,
-	win			int DEFAULT 0,
-	lose		int DEFAULT 0,
 	elo			int DEFAULT 1000,
 	PRIMARY KEY(id)
 );

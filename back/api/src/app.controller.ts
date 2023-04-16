@@ -1,9 +1,9 @@
-import { HttpException, HttpStatus, Controller, Get } from '@nestjs/common';
+import { HttpException, HttpStatus, Controller, Get, Res } from '@nestjs/common';
 
 @Controller()
 export class AppController {
   @Get()
-  getHello() {
-    throw new HttpException('hey', HttpStatus.NOT_FOUND);
+  getHello(@Res() res) {
+    res.status(HttpStatus.OK).json({message: 'API running!'});
   }
 }
