@@ -1,14 +1,18 @@
 import './App.css';
-import { SnackbarProvider, enqueueSnackbar } from 'notistack';
+import React from 'react';
+import { BrowserRouter } from "react-router-dom";
+
+const Header = React.lazy(() => import('./components/Header/index.tsx'));
+const FrontRoute = React.lazy(() => import('./components/redirect.tsx'));
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
+    <div className="App-header">
 
-        <SnackbarProvider />
-        <button onClick={() => enqueueSnackbar('That was easy!')}>Show snackbar</button>
-      </header>
+      <BrowserRouter>
+          <Header />
+          <FrontRoute />
+      </BrowserRouter>
     </div>
   );
 }
