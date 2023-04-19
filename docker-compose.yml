@@ -14,16 +14,35 @@ services:
     build: ./api
     restart: always
     environment:
+      PORT: ${API_PORT}
+      WEB_HOST: ${WEB_HOST}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       JWT_SECRET: ${JWT_SECRET}
+      FRONT_PORT: ${FRONT_PORT}
+      INTRA_ID: ${INTRA_ID}
+      INTRA_SECRET: ${INTRA_SECRET}
     ports:
-      - 3000:3000
-      - 9229:9229
+      - "${API_PORT}:${API_PORT}"
     networks:
       - docker-network
     volumes:
       - ./api/:/usr/src/app/
+      - /usr/src/app/node_modules
+  frontend:
+    build: ./frontend
+    restart: always
+    environment:
+      PORT: ${FRONT_PORT}
+      WEB_HOST: ${WEB_HOST}
+      API_PORT: ${API_PORT}
+    ports:
+      - "${FRONT_PORT}:${FRONT_PORT}"
+    networks:
+      - docker-network
+    volumes:
+      - ./frontend/:/usr/src/app/
+      - /usr/src/app/node_modules
 volumes:
   db:
     driver: local
