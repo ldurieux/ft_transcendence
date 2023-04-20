@@ -17,7 +17,7 @@ export class UserController {
             throw new HttpException("", HttpStatus.BAD_REQUEST);
         }
 
-        const user = await this.userService.getUser(id);
+        const user: User = await this.userService.getUser(id);
         return user;
     }
 
@@ -53,7 +53,7 @@ export class UserController {
             throw new HttpException("", HttpStatus.BAD_REQUEST)
         }
 
-        const token: string = await this.userService.login('local', data);
+        const token: string = await this.userService.login(method, data);
         return { access_token: token };
     }
 }

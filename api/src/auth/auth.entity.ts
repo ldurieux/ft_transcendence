@@ -9,7 +9,7 @@ export class Auth {
     @PrimaryColumn()
     username: string;
 
-    @Column('jsonb')
+    @Column('jsonb', {default: null})
     data: Map<string, string>;
 
     @ManyToOne(() => User, (user) => user.auths)
