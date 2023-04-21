@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToMany, JoinTable } from 'typeorm';
 import { Auth } from '../auth/auth.entity'
+import { FriendRequest } from 'src/friend-request/friend-request.entity';
 
 @Entity()
 export class User {
@@ -13,5 +14,15 @@ export class User {
   profile_picture: string | null;
 
   @OneToMany(() => Auth, (auth) => auth.user)
-  auths: Auth[]
+  auths: Auth[];
+
+  @ManyToMany(() => User, user => user.friends)
+  @JoinTable()
+  friends: User[];
+
+  @OneToMany(() => FriendRequest, (request) => request.requester)
+  sentRequests: FriendRequest[];
+
+  @OneToMany(() => FriendRequest, (request) => request.receiver)
+  receivedRequests: FriendRequest[];
 }

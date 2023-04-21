@@ -32,10 +32,14 @@ export class AuthService {
         const auth: Auth = await this.authRepository.findOne({
             where: {
                 username: username,
-                method: 'local'
+                method: method
             }
         });
-        return auth ? true : false;
+
+        console.log(await this.authRepository.find())
+
+        if (auth) return true;
+        return false;
     }
 
     async loginLocal(username: string, password: string): Promise<User> {

@@ -5,8 +5,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 
 import { User } from './user/user.entity';
 import { Auth } from './auth/auth.entity';
+import { FriendRequest } from './friend-request/friend-request.entity';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { FriendRequestModule } from './friend-request/friend-request.module';
 
 @Module({
   imports: [
@@ -20,11 +22,11 @@ import { AuthModule } from './auth/auth.module';
         password: configService.get('POSTGRES_PASSWORD'),
         database: configService.get('POSTGRES_USER'),
         synchronize: true,
-        entities: [User, Auth],
+        entities: [User, Auth, FriendRequest],
       }),
       inject: [ConfigService],
     }),
-    UserModule, AuthModule
+    UserModule, AuthModule, FriendRequestModule
   ],
   controllers: [AppController],
 })

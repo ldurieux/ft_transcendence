@@ -1,17 +1,19 @@
-import { Logger, HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { User } from './user.entity';
 
 import { Auth } from 'src/auth/auth.entity';
 import { AuthService } from 'src/auth/auth.service';
+import { FriendRequestService } from 'src/friend-request/friend-request.service';
 
 @Injectable()
 export class UserService {
     constructor(
         @InjectRepository(User)
         private userRepository: Repository<User>,
-        private readonly authService: AuthService
+        private readonly authService: AuthService,
+        private readonly friendService: FriendRequestService,
     ) {}
 
     async getUser(id: number, self: boolean = false): Promise<User> {
@@ -20,7 +22,10 @@ export class UserService {
                 id: id
             },
             relations: {
-                auths: self
+                auths: self,
+                friends: self,
+                sentRequests: self,
+                receivedRequests: self,
             }
         })
         if (!user) {
@@ -79,7 +84,10 @@ export class UserService {
         let username: string = await this.authService.getUsername(method, data);
 
         data.username = username;
-        if (! await this.authService.exist(method, username)) {
+        const exist: boolean = await this.authService.exist(method, username) ;
+        console.log("exist " + exist)
+        if (!exist) {
+            console.log("register")
             return this.register(method, data);
         }
 
@@ -95,5 +103,57 @@ export class UserService {
         }
 
         return this.authService.getJwt(user);
+    }
+
+    async addFriend(requesterId: number, receiverId: number)
+    {
+        const requester: User = await this.getUser(requesterId, true);
+        
+        requester.friends.forEach( (e) => {
+            if (e.id == receiverId) {
+                throw new HttpException("Already friend", HttpStatus.CONFLICT)
+            }
+        })
+        
+        const receiver: User = await this.getUser(receiverId, true);
+
+        if (await this.friendService.hasRequest(requester, receiver)) {
+            await this.friendService.accept(requester, receiver)
+
+            requester.friends.push(receiver);
+            receiver.friends.push(requester);
+            await this.userRepository.save(requester);
+            await this.userRepository.save(receiver);
+        }
+        else {
+            await this.friendService.send(requester, receiver);
+        }
+    }
+
+    async rejectFriend(selfId: number, fromId: number) {
+        const self: User = await this.getUser(selfId, true);
+        const from: User = await this.getUser(fromId, true);
+
+        await this.friendService.reject(self, from);
+    }
+
+    async removeFriend(selfId: number, otherId: number) {
+        const self: User = await this.getUser(selfId, true);
+        
+        if (!self.friends.some(e => e.id == otherId)) {
+            throw new HttpException("Friend not found", HttpStatus.NOT_FOUND)
+        }
+
+        const other: User = await this.getUser(otherId, true);
+
+        self.friends = self.friends.filter(e => e.id != otherId);
+        other.friends = other.friends.filter(e => e.id != selfId);
+
+        await this.userRepository.save(self);
+        await this.userRepository.save(other);
+    }
+
+    async debug() {
+        return this.userRepository.find({ relations: ['auths', 'friends', 'sentRequests', 'receivedRequests']});
     }
 }
