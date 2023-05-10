@@ -6,14 +6,13 @@ class Authentication extends Component {
     async sendRequest(code: string) {
         try {
             const input = 'http://localhost:3001/user/login';
-            const options = {method: 'POST', body: JSON.stringify({method: '42', code: code})};
+            const options = {method: 'POST', headers: {"Content-Type": "application/json"} ,body: JSON.stringify({method: '42', code: code})};
             const response = await fetch(input, options);
-            if (response.ok) {
+            if (response.status === 201) {
                let data = await response.json();
-               const token = data.token;
+               const token = data.access_token;
                if (token) {
                    localStorage.setItem('token', token);
-                   console.log(token);
                }
             }
         }
