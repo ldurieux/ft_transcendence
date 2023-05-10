@@ -1,13 +1,34 @@
-import { Link } from 'react-router-dom';
+import {startTransition} from "react";
 
 const Header = () => {
   return (
-    <nav className="nav">
-        <ul>
-            <li><Link to="/authentication">Login</Link></li>
-            <li><Link to="/profile">Profile</Link></li>
-        </ul>
-    </nav>
+      <div className="wrapper">
+        <nav className="nav">
+            <h2>Menu</h2>
+            <ul>
+                <li><button onClick={() => startTransition(() => {
+                    window.location.href = "/login";})}>
+                        Login
+                </button></li>
+                <li><button onClick={() => startTransition(() => {
+                    window.location.href = "/profile";})}>
+                        Profile
+                </button></li>
+                <li><button onClick={() => startTransition(() => {
+                    window.location.href = "/game";})}>
+                        Game
+                </button></li>
+                <li><button onClick={() => startTransition(() => {
+                    window.location.href = "/leaderboard";})}>
+                        Leaderboard
+                </button></li>
+                <li><button onClick={() => startTransition(() => {
+                    window.location.href = "/chat";})}>
+                        Chat
+                </button></li>
+            </ul>
+        </nav>
+      </div>
   );
 };
 
