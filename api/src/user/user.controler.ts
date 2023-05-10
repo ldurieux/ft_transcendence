@@ -46,7 +46,7 @@ export class UserController {
         return { access_token: token };
     }
 
-    @Get('login')
+    @Post('login')
     async login(@Body() data: { method: string }) {
         const { method } = data;
 

@@ -3,10 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import axios, { AxiosError } from 'axios';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import * as jwt from 'jsonwebtoken';
 
-import { Auth } from './auth.entity'
+import { Auth } from './auth.entity';
 import { User } from '../user/user.entity';
 
 @Injectable()
