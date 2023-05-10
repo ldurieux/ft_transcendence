@@ -34,6 +34,13 @@ export class UserService {
         return user;
     }
 
+    async setUsername(id: number, username: string) {
+        const user: User = await this.getUser(id);
+
+        user.display_name = username;
+        await this.userRepository.save(user)
+    }
+
     async register(method: string, data): Promise<string> {
         const { username } = data;
         if (typeof username !== 'string') {

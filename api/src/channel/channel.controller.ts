@@ -19,9 +19,14 @@ export class ChannelController {
     async getChannel(@Request() req) {
         const user: User = await this.userService.getUser(req['user']);
 
-        const { id } = req.body;
-        if (typeof id === 'number') {
-            return this.channelService.getChannelInfo(user, id);
+        const { id } = req.query;
+        if (typeof id === 'string') {
+            const val: number = parseInt(id);
+            if (isNaN(val)) {
+                throw new HttpException("", HttpStatus.BAD_REQUEST);
+            }
+
+            return this.channelService.getChannelInfo(user, val);
         }
         
         return this.channelService.listSelfChannel(user);

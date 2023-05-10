@@ -11,14 +11,19 @@ export class UserController {
 
     @UseGuards(AuthGuard)
     @Get()
-    async getUser(@Body() body: { id: number }) {
-        const { id } = body;
+    async getUser(@Request() req) {
+        const { id } = req.query
 
-        if (typeof id !== 'number') {
+        if (typeof id !== 'string') {
             throw new HttpException("", HttpStatus.BAD_REQUEST);
         }
 
-        const user: User = await this.userService.getUser(id);
+        const val: number = parseInt(id);
+        if (isNaN(val)) {
+            throw new HttpException("", HttpStatus.BAD_REQUEST);
+        }
+
+        const user: User = await this.userService.getUser(val);
         return user;
     }
 
@@ -34,7 +39,21 @@ export class UserController {
         return user;
     }
 
-    @Post()
+    @UseGuards(AuthGuard)
+    @Post('username')
+    async setUsername(@Request() req) {
+        const id = req['user'];
+        const { username } = req.body
+
+        if (typeof username !== 'string' || username.length < 3) {
+            throw new HttpException("", HttpStatus.BAD_REQUEST)
+        }
+
+        await this.userService.setUsername(id, username);
+        return { status: "modified" };
+    }
+
+    @Post('register')
     async register(@Body() data: { method: string }) {
         const { method } = data;
 
@@ -87,7 +106,7 @@ export class UserController {
     }
 
     @UseGuards(AuthGuard)
-    @Delete('friend')
+    @Post('friend/delete')
     async removeFriend(@Request() req) {
         const selfId: number = req['user'];
         const { id } = req.body;
