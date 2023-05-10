@@ -26,6 +26,9 @@ body {
   height: 100%;
   padding: 30px 0;
   background-color: #333;
+  border-right-color: white;
+  border-right: 1px solid rgba(0, 0, 0, 0.05);
+  border-right: 1px solid rgba(255, 255, 255, 0.25);
 }
 
 .wrapper .nav h2 {
@@ -38,8 +41,9 @@ body {
 .wrapper .nav ul li {
   padding: 15px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
     border-top: 1px solid rgba(0, 0, 0, 0.05);
+
 }
 
 .wrapper .nav ul li button {

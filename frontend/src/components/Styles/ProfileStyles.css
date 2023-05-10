@@ -1,0 +1,46 @@
+.* {
+    box-sizing: border-box;
+    background-color: #333;
+}
+
+.ProfileHeader {
+    background-color: #333;
+    color: #fff;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.ProfileHeader h1 {
+    background-color: #333;
+    color: white;
+    padding: 20px;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 20px;
+    margin-left: 200px;
+    font-size: 50px;
+    font-weight: bold;
+}
+
+.ProfileHeader .ProfileBody {
+    background-color: #333;
+    color: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.ProfileHeader .ProfileBody .Avatar {
+    display: flex;
+    margin-left: 200px;
+    padding: 50px;
+}
+
+.User {
+    color: white;
+    font-size: 35px;
+    display: flex;
+    margin-left: 260px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}

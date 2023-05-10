@@ -9,11 +9,14 @@ function App() {
   return (
     <div className="App-header">
 
-      <BrowserRouter>
-          <Header />
-          <FrontRoute />
-      </BrowserRouter>
+        <div className="App">
+          <BrowserRouter>
+              <Header />
+              <FrontRoute />
+          </BrowserRouter>
+        </div>
     </div>
+
   );
 }
 
