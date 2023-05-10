@@ -1,4 +1,6 @@
-import { HttpException, HttpStatus, Controller, Get, Post, Delete, Patch, Body, Request, UseGuards } from '@nestjs/common';
+import { HttpException, HttpStatus, Controller, Get, Post, Body, Request, UseGuards, UploadedFile, UseInterceptors, ParseFilePipe, FileTypeValidator, MaxFileSizeValidator } from '@nestjs/common';
+import * as jimp from 'jimp';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { UserService } from './user.service';
 import { User } from './user.entity';
 
@@ -51,6 +53,35 @@ export class UserController {
 
         await this.userService.setUsername(id, username);
         return { status: "modified" };
+    }
+
+    @UseGuards(AuthGuard)
+    @Post('picture')
+    @UseInterceptors(FileInterceptor('image'))
+    async setPicture(@Request() req, @UploadedFile(
+        new ParseFilePipe({
+            validators: [
+              new FileTypeValidator({ fileType: '.(png|jpeg|jpg)' }),
+              new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 4 }),
+            ],
+        }),
+    ) file)
+    {
+        const id = req['user'];
+
+        if (typeof file !== 'object') {
+            throw new HttpException("", HttpStatus.BAD_REQUEST)
+        }
+
+        const image = await jimp.read(file.buffer);
+        if (image) {
+            this.userService.setPicture(id, await image.getBase64Async(jimp.AUTO))
+        }
+        else {
+            throw new HttpException("Invalid image", HttpStatus.BAD_REQUEST)
+        }
+
+        return { status: "modified" }
     }
 
     @Post('register')

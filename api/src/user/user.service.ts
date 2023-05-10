@@ -41,6 +41,13 @@ export class UserService {
         await this.userRepository.save(user)
     }
 
+    async setPicture(id: number, picture: string) {
+        const user: User = await this.getUser(id);
+
+        user.profile_picture = picture;
+        await this.userRepository.save(user)
+    }
+
     async register(method: string, data): Promise<string> {
         const { username } = data;
         if (typeof username !== 'string') {
