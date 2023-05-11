@@ -36,11 +36,19 @@
     padding: 50px;
 }
 
+.Nickname {
+    color: white;
+    font-size: 25px;
+    display: block;
+    margin-left: 260px;
+    margin-bottom: 1px;
+    text-align: left;
+}
+
 .User {
     color: white;
     font-size: 35px;
     display: flex;
     margin-left: 260px;
-    margin-bottom: 20px;
     font-weight: bold;
 }

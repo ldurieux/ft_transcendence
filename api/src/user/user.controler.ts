@@ -70,7 +70,8 @@ export class UserController {
         const id = req['user'];
 
         if (typeof file !== 'object') {
-            throw new HttpException("", HttpStatus.BAD_REQUEST)
+            console.log("aled")
+            throw new HttpException("test", HttpStatus.BAD_REQUEST)
         }
 
         const image = await jimp.read(file.buffer);
@@ -78,6 +79,7 @@ export class UserController {
             this.userService.setPicture(id, await image.getBase64Async(jimp.AUTO))
         }
         else {
+            console.log("trop nul")
             throw new HttpException("Invalid image", HttpStatus.BAD_REQUEST)
         }
 
