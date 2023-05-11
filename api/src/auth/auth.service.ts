@@ -36,8 +36,6 @@ export class AuthService {
             }
         });
 
-        console.log(await this.authRepository.find())
-
         if (auth) return true;
         return false;
     }
@@ -157,9 +155,16 @@ export class AuthService {
         if (reqToken?.data?.access_token === undefined) {
             throw new HttpException("", HttpStatus.FAILED_DEPENDENCY);
         }
-        const info = await axios.get('https://api.intra.42.fr/v2/me', {
-            headers: { Authorization: `Bearer ${reqToken.data.access_token}` },
-        });
+
+        let info;
+        try {
+            info = await axios.get('https://api.intra.42.fr/v2/me', {
+                headers: { Authorization: `Bearer ${reqToken.data.access_token}` },
+            });
+        } catch (error) {
+            console.log("here")
+            throw new HttpException("", HttpStatus.FAILED_DEPENDENCY);
+        }
         if (info.status !== 200) return;
         if (info?.data?.login === undefined) {
             throw new HttpException("", HttpStatus.FAILED_DEPENDENCY);

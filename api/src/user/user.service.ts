@@ -99,9 +99,7 @@ export class UserService {
 
         data.username = username;
         const exist: boolean = await this.authService.exist(method, username) ;
-        console.log("exist " + exist)
         if (!exist) {
-            console.log("register")
             return this.register(method, data);
         }
 

@@ -68,8 +68,6 @@ export class ChannelService {
             }
         }
 
-        console.log(channel.users)
-
         if (channel.users.some(e => e.id == self.id)) {
             throw new HttpException("User already in channel", HttpStatus.CONFLICT)
         }
