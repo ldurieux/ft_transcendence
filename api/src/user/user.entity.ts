@@ -25,4 +25,7 @@ export class User {
 
   @OneToMany(() => FriendRequest, (request) => request.receiver)
   receivedRequests: FriendRequest[];
+
+  @Column({default: 0})
+  points: number;
 }
