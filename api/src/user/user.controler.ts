@@ -14,7 +14,11 @@ export class UserController {
     @UseGuards(AuthGuard)
     @Get()
     async getUser(@Request() req) {
-        const { id } = req.query
+        const { id, username } = req.query
+
+        if (typeof username === 'string') {
+            return await this.userService.getUserByUsername(username);
+        }
 
         if (typeof id !== 'string') {
             throw new HttpException("", HttpStatus.BAD_REQUEST);
@@ -42,12 +46,18 @@ export class UserController {
     }
 
     @UseGuards(AuthGuard)
+    @Get('leaderboard')
+    async getLeaderboard() {
+        return this.userService.leaderboard();
+    }
+
+    @UseGuards(AuthGuard)
     @Post('username')
     async setUsername(@Request() req) {
         const id = req['user'];
         const { username } = req.body
 
-        if (typeof username !== 'string' || username.length < 3) {
+        if (typeof username !== 'string' || username.length < 3 || username.length > 12) {
             throw new HttpException("", HttpStatus.BAD_REQUEST)
         }
 
@@ -70,7 +80,6 @@ export class UserController {
         const id = req['user'];
 
         if (typeof file !== 'object') {
-            console.log("aled")
             throw new HttpException("test", HttpStatus.BAD_REQUEST)
         }
 
@@ -79,7 +88,6 @@ export class UserController {
             this.userService.setPicture(id, await image.getBase64Async(jimp.AUTO))
         }
         else {
-            console.log("trop nul")
             throw new HttpException("Invalid image", HttpStatus.BAD_REQUEST)
         }
 

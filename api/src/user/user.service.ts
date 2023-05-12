@@ -34,7 +34,28 @@ export class UserService {
         return user;
     }
 
+    async getUserByUsername(username: string): Promise<User> {
+        const user: User = await this.userRepository.findOne({
+            where: {
+                display_name: username
+            }
+        })
+        if (!user) {
+            throw new HttpException("User does not exist", HttpStatus.NOT_FOUND);
+        }
+        return user;
+    }
+
     async setUsername(id: number, username: string) {
+        const other: User = await this.userRepository.findOne({
+            where: {
+                display_name: username
+            }
+        })
+        if (other && other.id != id) {
+            throw new HttpException("Username already taken", HttpStatus.CONFLICT);
+        }
+
         const user: User = await this.getUser(id);
 
         user.display_name = username;
@@ -46,6 +67,17 @@ export class UserService {
 
         user.profile_picture = picture;
         await this.userRepository.save(user)
+    }
+
+    async leaderboard() {
+        const users: User[] = await this.userRepository.find({
+            order: {
+                points: "ASC"
+            },
+            skip: 0,
+            take: 10
+        })
+        return users;
     }
 
     async register(method: string, data): Promise<string> {
@@ -99,9 +131,7 @@ export class UserService {
 
         data.username = username;
         const exist: boolean = await this.authService.exist(method, username) ;
-        console.log("exist " + exist)
         if (!exist) {
-            console.log("register")
             return this.register(method, data);
         }
 

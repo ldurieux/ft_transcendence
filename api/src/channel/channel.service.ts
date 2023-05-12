@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 
 import { Channel } from './channel.entity';
 
@@ -67,8 +67,6 @@ export class ChannelService {
                 throw new HttpException("Invalid password", HttpStatus.FORBIDDEN);
             }
         }
-
-        console.log(channel.users)
 
         if (channel.users.some(e => e.id == self.id)) {
             throw new HttpException("User already in channel", HttpStatus.CONFLICT)
