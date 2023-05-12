@@ -1,17 +1,18 @@
 .* {
     box-sizing: border-box;
-    background-color: #333;
+    background-color: #1e2122;
 }
 
 .ProfileHeader {
-    background-color: #333;
+    background-color: #1e2122;
     color: #fff;
     align-items: center;
     margin-bottom: 20px;
+    height: 100vh;
 }
 
 .ProfileHeader h1 {
-    background-color: #333;
+    background-color: #1e2122;
     color: white;
     padding: 20px;
     align-items: center;
@@ -23,32 +24,64 @@
 }
 
 .ProfileHeader .ProfileBody {
-    background-color: #333;
+    background-color: #1e2122;
     color: white;
     padding: 20px;
     margin-bottom: 20px;
     text-align: center;
 }
 
-.ProfileHeader .ProfileBody .Avatar {
+.ProfileHeader .ProfileBody .Avatar img {
     display: flex;
-    margin-left: 200px;
+    margin-left: 12vw;
     padding: 50px;
+    text-align: center;
+    border-radius: 50%;
+    width: 350px;
+    height: 350px;
+}
+
+.ProfileHeader .ProfileBody .Avatar img:hover {
+    opacity: 0.5;
+    transition: 0.3s ease;
+    cursor: pointer;
+}
+
+.ZoneNickName {
+    color: white;
+    font-size: 25px;
+    display: block;
+    margin-left: 15vw;
+    margin-bottom: 1px;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    align-content: center;
+    justify-content: space-between;
+    width: 10vw;
 }
 
 .Nickname {
     color: white;
     font-size: 25px;
-    display: block;
-    margin-left: 260px;
     margin-bottom: 1px;
     text-align: left;
+}
+
+.edit-nick {
+    color: white;
+    font-size: 15px;
+    bold: 700;
+    display: flex;
+    margin-bottom: 1px;
+    margin-top: 3px;
+    cursor: pointer;
 }
 
 .User {
     color: white;
     font-size: 35px;
     display: flex;
-    margin-left: 260px;
+    margin-left: 15vw;
     font-weight: bold;
 }

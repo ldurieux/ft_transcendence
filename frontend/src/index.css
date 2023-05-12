@@ -1,84 +1,197 @@
-* {
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+*{
   margin: 0;
   padding: 0;
-    box-sizing: border-box;
-  list-style: none;
-    text-decoration: none;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
 }
 
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+.sidebar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  width: 260px;
+  background: #11101D;
+    z-index: 100;
+    transition: all 0.5s ease;
 }
 
-.wrapper {
+.sidebar.close {
+  width: 78px;
+}
+
+.sidebar .logo-details {
+  height: 60px;
+  width: 100%;
   display: flex;
-  position: relative;
+  align-items: center;
 }
 
-.wrapper .nav {
-  position: fixed;
-  width: 200px;
-  height: 100%;
-  padding: 30px 0;
-  background-color: #333;
-  border-right-color: white;
-  border-right: 1px solid rgba(0, 0, 0, 0.05);
-  border-right: 1px solid rgba(255, 255, 255, 0.25);
-}
-
-.wrapper .nav h2 {
+.sidebar .logo-details i {
+  font-size: 30px;
   color: #fff;
-  text-transform: uppercase;
+  height: 50px;
+  min-width: 78px;
   text-align: center;
-  margin-bottom: 30px;
+  line-height: 50px;
+  cursor: pointer;
+}
+.sidebar .logo-details .logo_name {
+  font-size: 22px;
+  color: #fff;
+  font-weight: 600;
+    transition: 0.3s ease;
+  transition-delay: 0.1s;
 }
 
-.wrapper .nav ul li {
-  padding: 15px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
-    border-top: 1px solid rgba(0, 0, 0, 0.05);
-
+.sidebar.close .logo-details .logo_name {
+  transition-delay: 0s;
+  opacity: 0;
+    pointer-events: none;
 }
 
-.wrapper .nav ul li button {
-  border: none;
-  background-color: #333;
-    color: #bdb8d7;
-  display: block;
-  font-size: 18px;
-    outline: none;
+.sidebar .nav-links {
   height: 100%;
-    width: 100%;
-    text-align: left;
-    cursor: pointer;
-
+  padding: 30px;
+  margin-left: -20px;
+  overflow: visible;
 }
 
-.wrapper .nav ul li:hover {
-  background: #777;
-  transition-duration: 0.4s;
+.sidebar .nav-links li {
+  position: relative;
+  list-style: none;
+  transition: all 0.4s ease;
+}
+
+.sidebar .nav-links li i {
+    height: 50px;
+    min-width: 78px;
+    text-align: center;
+    line-height: 50px;
+    color: #fff;
+    font-size: 20px;
+  margin-left: -10px;
+}
+
+.sidebar .nav-links li a {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.sidebar .nav-links li a .links_name {
+  color: #fff;
+  font-size: 18px;
+  font-weight: 400;
+  transition: 0.3s ease;
+  transition-delay: 0.1s;
+}
+
+.sidebar.close .nav-links li a .links_name {
+  opacity: 0;
+    pointer-events: none;
+}
+
+.sidebar .nav-links li:hover {
+    background: #1d1b31;
   cursor: pointer;
 }
 
-.wrapper .nav ul li:hover button{
-  color: white;
-  background: #777;
-  font-size: 20px;
-    transition-duration: 0.4s;
-  height: 100%;
-    width: 100%;
-    text-align: left;
-    cursor: pointer;
+.sidebar.close .nav-links li:hover {
+    width: 175%;
 }
 
+.sidebar .profile-details {
+  position: fixed;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #1d1b31;
+  cursor: auto;
+    width: 260px;
+    height: 60px;
+  margin-left: -10px;
+  padding: 6px 0;
+  transition: all 0.4s ease;
+}
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.sidebar.close .profile-details {
+  width: 78px;
+  background: none;
+}
+
+.sidebar .profile-details .profile-content {
+  display: flex;
+  align-items: center;
+}
+
+.sidebar .profile-details img {
+  height: 52px;
+  width: 52px;
+    object-fit: cover;
+    border-radius: 16px;
+  margin: 0 14px 0 12px;
+  background: #1d1b31;
+  transition: all 0.5s ease;
+}
+
+.sidebar.close .profile-details img {
+  padding: 10px;
+}
+
+.sidebar .profile-details .login,
+.sidebar .profile-details .nickname {
+  color: #fff;
+  font-size: 18px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.sidebar.close .profile-details i,
+.sidebar.close .profile-details .login,
+.sidebar.close .profile-details .nickname {
+  display: none;
+}
+
+.sidebar .profile-details .nickname {
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.sidebar .profile-details .bx-log-out {
+  cursor: pointer;
+}
+
+.home-section {
+  position: relative;
+  background: #1e2122;
+  width: calc(100% - 260px);
+  left: 260px;
+    transition: all 0.5s ease;
+}
+
+.sidebar.close ~ .home-section {
+  width: calc(100% - 78px);
+  left: 78px;
+}
+
+.home-section .home-content {
+  height: 60px;
+  display: flex;
+    align-items: center;
+}
+
+.home-section .home-content .bx-menu,
+.home-section .home-content .text {
+  font-size: 35px;
+  color: #ffffff;
+}
+.home-section .home-content .bx-menu {
+  margin: 0 15px;
+  cursor: pointer;
+}
+.home-section .home-content .text {
+  font-size: 26px;
+  font-weight: 600;
 }

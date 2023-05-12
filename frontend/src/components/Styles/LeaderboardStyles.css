@@ -1,15 +1,13 @@
-.AuthBody {
+
+.Leaderboard {
     background-color: #1e2122;
     height: 100vh;
+}
+
+.Leaderboard .LeaderboardHeader {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     color: #fff;
-    text-decoration: none;
-}
-
-.AuthBody a {
-color: #fff;
-    text-decoration: none;
-    font-size: 50px;
 }

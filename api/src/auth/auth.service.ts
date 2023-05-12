@@ -138,7 +138,7 @@ export class AuthService {
             client_id: '' + process.env.INTRA_ID,
             client_secret: '' + process.env.INTRA_SECRET,
             grant_type: 'authorization_code',
-            redirect_uri: 'http://localhost:3000/login'
+            redirect_uri: `http://${process.env.WEB_HOST}:${process.env.FRONT_PORT}/login`
         };
 
         let reqToken;

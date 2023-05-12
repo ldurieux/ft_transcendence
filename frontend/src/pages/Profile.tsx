@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Avatar from "react-avatar";
 import "../components/Styles/ProfileStyles.css";
 
 class Profile extends Component {
@@ -8,7 +7,8 @@ class Profile extends Component {
         this.state = {
             avatar: '',
             login: '',
-            nickname: ''
+            nickname: '',
+            message: ''
         };
     }
 
@@ -83,32 +83,83 @@ class Profile extends Component {
         });
     };
 
+    async HandleChange(e: React.ChangeEvent<HTMLInputElement>): Promise<void> {
+        try {
+            let username = e.target.value;
+            this.setState({message: username});
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+    async HandleClick(username: string) {
+        try {
+            const input = `http://${process.env.REACT_APP_WEB_HOST}:${process.env.REACT_APP_API_PORT}/user/username`;
+            const token = localStorage.getItem('token');
+            const options = {
+                method: 'POST', headers: {"Content-Type": "application/json", "authorization": "Bearer " + token},
+                body: JSON.stringify({username: username})
+            };
+            const response = await fetch(input, options);
+            if (response.status === 200) {
+                console.log("Username changed")
+                localStorage.setItem('nickname', username);
+                this.setState({nickname: username})
+            }
+            window.location.reload();
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+
 
 
     render() {
+        if (!localStorage.getItem('token')) {
+            window.location.href = '/login';
+        }
         const { avatar, login, nickname } = this.state;
+        localStorage.setItem('avatar', avatar);
+        localStorage.setItem('login', login);
+        localStorage.setItem('nickname', nickname);
 
     return (
         <div className="ProfileHeader">
             <h1>Transcendance</h1>
           <div className="ProfileBody">
             <div className="Avatar">
-                <Avatar src={avatar} size="300" color="#777" round="200px" />
+                <label htmlFor="avatarInput">
+                    <img src={avatar} alt="Avatar" width="300" height="300" />
+                </label>
+                <input
+                    type="file"
+                    id="avatarInput"
+                    name="avatarInput"
+                    accept=".png, .jpeg, .jpg"
+                    onChange={this.onChange}
+                    style={{ display: "none" }}
+                />
             </div>
               <div className="User">
                   {login}
                   <br/>
               </div>
+              <div className="ZoneNickName">
                 <div className="Nickname">
                     {nickname}
+
                 </div>
-              <div className="SetAvatar">
-                    <input type="file"
-                           id="image"
-                           name="image"
-                           accept=".png, .jpeg, .jpg"
-                           onChange={e => this.onChange(e)}
-                    />
+              <div className="edit-nick">
+                  <a onClick={() => this.HandleClick(this.state.message)}>Edit</a>
+              </div>
+             </div>
+              <div className="Username">
+                  <input type="text"
+                         placeholder="Username"
+                         onChange={(e) => this.HandleChange(e)}
+                  />
+                  <button onClick={() => this.HandleClick(this.state.message)}>Change Username</button>
               </div>
           </div>
         </div>
