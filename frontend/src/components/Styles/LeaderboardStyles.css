@@ -11,3 +11,71 @@
     align-items: center;
     color: #fff;
 }
+
+.Leaderboard .LeaderboardHeader a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 50px;
+}
+
+.Leaderboard .LeaderboardBody {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+}
+
+.Leaderboard .LeaderboardBody ul {
+    color: #fff;
+    text-decoration: none;
+
+}
+
+ .Leaderboard .LeaderboardBody ul li {
+    color: #fff;
+    text-decoration: none;
+     height: 5vw;
+     list-style: none;
+     display: flex;
+    justify-content: space-between;
+     border-bottom: white solid 1px;
+     width: 40vw;
+ }
+
+ .Leaderboard .LeaderboardBody .avatar {
+     color: #fff;
+     text-decoration: none;
+     padding: 10px;
+     align-content: stretch;
+     display: flex;
+     justify-content: start;
+     width: 8vw;
+     height: 8vh;
+
+ }
+
+ .Leaderboard .LeaderboardBody .nickname {
+    color: #fff;
+    text-decoration: none;
+    font-size: 20px;
+     list-style: none;
+     padding: 10px;
+    align-content: stretch;
+     display: flex;
+    justify-content: flex-start;
+        width: 12vw;
+        height: 8vh;
+ }
+
+    .Leaderboard .LeaderboardBody .score {
+        color: #fff;
+        text-decoration: none;
+        font-size: 20px;
+        list-style: none;
+        padding: 10px;
+        align-content: stretch;
+        justify-content: end;
+        width: 8vw;
+    }
+

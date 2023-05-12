@@ -72,7 +72,7 @@ export class UserService {
     async leaderboard() {
         const users: User[] = await this.userRepository.find({
             order: {
-                points: "ASC"
+                points: "DESC"
             },
             skip: 0,
             take: 10

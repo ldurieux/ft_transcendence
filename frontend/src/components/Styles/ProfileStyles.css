@@ -1,6 +1,5 @@
-.* {
+* {
     box-sizing: border-box;
-    background-color: #1e2122;
 }
 
 .ProfileHeader {
@@ -84,4 +83,67 @@
     display: flex;
     margin-left: 15vw;
     font-weight: bold;
+}
+
+.Username {
+    color: white;
+    font-size: 35px;
+    margin-bottom: 1px;
+    text-align: center;
+}
+
+.Username input {
+    color: white;
+    font-size: 35px;
+    margin-bottom: 1px;
+    text-align: center;
+    background-color: #1e2122;
+    border: none;
+    border-bottom: 1px solid white;
+    outline: none;
+}
+
+.Username input:focus {
+    outline: none;
+}
+
+.Username input::placeholder {
+    color: white;
+    font-size: 35px;
+    margin-bottom: 1px;
+    text-align: center;
+}
+
+.Username input:hover {
+    opacity: 0.5;
+    transition: 0.3s ease;
+    cursor: pointer;
+}
+
+.Username input:active {
+    outline: none;
+}
+
+.Username button {
+    background-color: #333;
+    border: none;
+    color: #fff;
+    font-weight: 700;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 20px;
+    margin-left: 10px;
+    cursor: pointer;
+    outline: none;
+}
+
+.Username button:hover {
+    opacity: 0.5;
+    transition: 0.3s ease;
+    cursor: pointer;
+}
+
+.Username button:active {
+    outline: none;
 }
