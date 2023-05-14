@@ -47,6 +47,20 @@ export class ChannelController {
     }
 
     @UseGuards(AuthGuard)
+    @Post('update')
+    async updatePassword(@Request() req) {
+        const user: User = await this.userService.getUser(req['user']);
+
+        const { id, password } = req.body;
+        if (typeof id !== 'number') {
+            throw new HttpException("", HttpStatus.BAD_REQUEST)
+        }
+
+        await this.channelService.updatePassword(user, id, password);
+        return { status: "updated" };
+    }
+
+    @UseGuards(AuthGuard)
     @Get('public')
     async getPublicChannels() {
         return this.channelService.listPublic();

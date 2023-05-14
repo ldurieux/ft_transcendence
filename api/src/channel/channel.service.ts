@@ -222,14 +222,14 @@ export class ChannelService {
         }
 
         if (await this.channelExist(name)) {
-            throw new HttpException("", HttpStatus.CONFLICT)
+            throw new HttpException("Channel already exist", HttpStatus.CONFLICT)
         }
 
         const channel: Channel = new Channel()
         channel.type = 'public'
         channel.display_name = name;
 
-        if (typeof password === 'string' && password.length >= 0) {
+        if (typeof password === 'string' && password.length > 0) {
             channel.password_hash = await bcrypt.hash(password, 10);
         }
 
@@ -246,7 +246,7 @@ export class ChannelService {
         }
 
         if (await this.channelExist(name)) {
-            throw new HttpException("", HttpStatus.CONFLICT)
+            throw new HttpException("Channel already exist", HttpStatus.CONFLICT)
         }
 
         const channel: Channel = new Channel();
@@ -257,6 +257,26 @@ export class ChannelService {
 
         await this.channelRepository.save(channel);
         return channel;
+    }
+
+    async updatePassword(user: User, channelId: number, password: string | null) {
+        let channel: Channel = await this.getChannel(channelId, true);
+
+        if (channel.type != "public") {
+            throw new HttpException("Only public channels can have a password", HttpStatus.BAD_REQUEST);
+        }
+        if (channel.owner.id != user.id) {
+            throw new HttpException("Only the owner can change password", HttpStatus.FORBIDDEN);
+        }
+
+        if (typeof password === 'string' && password.length > 0) {
+            channel.password_hash = await bcrypt.hash(password, 10);
+        }
+        else {
+            channel.password_hash = null;
+        }
+
+        await this.channelRepository.save(channel);
     }
 
     private async getChannel(id: number, withUsers: boolean = false, withMessages: boolean = false): Promise<Channel> {
