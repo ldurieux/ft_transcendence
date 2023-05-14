@@ -86,6 +86,13 @@ export class UserService {
         if (typeof username !== 'string') {
             throw new HttpException("", HttpStatus.BAD_REQUEST);
         }
+        if (await this.userRepository.findOne({
+            where: {
+                display_name: username
+            }
+        })) {
+            throw new HttpException("Username already taken", HttpStatus.CONFLICT);
+        }
 
         const user: User = new User();
         user.auths = new Array<Auth>;
