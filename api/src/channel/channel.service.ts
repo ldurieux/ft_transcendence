@@ -88,6 +88,9 @@ export class ChannelService {
         if (channel.users.some(e => e.id == user.id)) {
             throw new HttpException("User already in channel", HttpStatus.CONFLICT)
         }
+        if (this.userService.isBlocked(from, user.id) || this.userService.isBlocked(user, from.id)) {
+            throw new HttpException("User is blocked", HttpStatus.FORBIDDEN);
+        }
 
         channel.users.push(user);
         await this.channelRepository.save(channel);
@@ -316,10 +319,11 @@ export class ChannelService {
     async getMessages(user: User, channelId: number): Promise<Message[]> {
         const channel: Channel = await this.getChannel(channelId, true);
 
-        if (channel.users.some(e => e.id == user.id)) {
-            return this.messageService.getMessages(channel);
+        if (!channel.users.some(e => e.id == user.id)) {
+            throw new HttpException("user not in channel", HttpStatus.FORBIDDEN);
         }
 
-        throw new HttpException("user not in channel", HttpStatus.FORBIDDEN);
+        let messages: Message[] = await this.messageService.getMessages(channel);
+        return messages.filter(msg => !this.userService.isBlocked(user, msg.owner.id));
     }
 }

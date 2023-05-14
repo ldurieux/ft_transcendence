@@ -26,6 +26,10 @@ export class User {
   @OneToMany(() => FriendRequest, (request) => request.receiver)
   receivedRequests: FriendRequest[];
 
+  @ManyToMany(() => User, (user) => user.id)
+  @JoinTable()
+  blocked: User[];
+
   @Column({default: 0})
   points: number;
 }

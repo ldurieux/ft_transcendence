@@ -46,6 +46,44 @@ export class UserController {
     }
 
     @UseGuards(AuthGuard)
+    @Get('block')
+    async blockUser(@Request() req) {
+        const self: User = await this.userService.getUser(req['user'], true);
+        const { id } = req.query;
+
+        if (typeof id !== 'string') {
+            throw new HttpException("", HttpStatus.BAD_REQUEST);
+        }
+        const val: number = parseInt(id);
+        if (isNaN(val)) {
+            throw new HttpException("", HttpStatus.BAD_REQUEST);
+        }
+
+        const user: User = await this.userService.getUser(val, true);
+        await this.userService.blockUser(self, user);
+        return { status: "blocked" };
+    }
+
+    @UseGuards(AuthGuard)
+    @Get('unblock')
+    async unblockUser(@Request() req) {
+        const self: User = await this.userService.getUser(req['user'], true);
+        const { id } = req.query;
+
+        if (typeof id !== 'string') {
+            throw new HttpException("", HttpStatus.BAD_REQUEST);
+        }
+        const val: number = parseInt(id);
+        if (isNaN(val)) {
+            throw new HttpException("", HttpStatus.BAD_REQUEST);
+        }
+
+        const user: User = await this.userService.getUser(val);
+        await this.userService.unblockUser(self, user);
+        return { status: "unblocked" };
+    }
+
+    @UseGuards(AuthGuard)
     @Get('leaderboard')
     async getLeaderboard() {
         return this.userService.leaderboard();

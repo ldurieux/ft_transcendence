@@ -83,14 +83,14 @@ export class ChannelController {
     @UseGuards(AuthGuard)
     @Post('add')
     async addUser(@Request() req) {
-        const from: User = await this.userService.getUser(req['user']);
+        const from: User = await this.userService.getUser(req['user'], true);
 
         const { userId, channelId } = req.body;
         if (typeof userId !== 'number' || typeof channelId !== 'number') {
             throw new HttpException("", HttpStatus.BAD_REQUEST)
         }
 
-        const user: User = await this.userService.getUser(userId);
+        const user: User = await this.userService.getUser(userId, true);
         await this.channelService.addUser(from, user, channelId);
         return { status: "added" };
     }
@@ -157,7 +157,7 @@ export class ChannelController {
     @UseGuards(AuthGuard)
     @Get('message')
     async getMessages(@Request() req) {
-        const user: User = await this.userService.getUser(req['user'])
+        const user: User = await this.userService.getUser(req['user'], true)
 
         const { id } = req.query;
         if (typeof id !== 'string') {

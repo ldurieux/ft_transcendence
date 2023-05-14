@@ -26,6 +26,7 @@ export class UserService {
                 friends: self,
                 sentRequests: self,
                 receivedRequests: self,
+                blocked: self,
             }
         })
         if (!user) {
@@ -161,6 +162,10 @@ export class UserService {
         
         const receiver: User = await this.getUser(receiverId, true);
 
+        if (this.isBlocked(receiver, requester.id) || this.isBlocked(requester, receiver.id)) {
+            throw new HttpException("User is blocked", HttpStatus.FORBIDDEN);
+        }
+
         if (await this.friendService.hasRequest(requester, receiver)) {
             await this.friendService.accept(requester, receiver)
 
@@ -195,5 +200,39 @@ export class UserService {
 
         await this.userRepository.save(self);
         await this.userRepository.save(other);
+    }
+
+    async blockUser(self: User, other: User) {
+        if (this.isBlocked(self, other.id)) {
+            throw new HttpException("Already blocked", HttpStatus.CONFLICT);
+        }
+
+        self.blocked.push(other);
+        self.friends = self.friends.filter(e => e.id != other.id);
+        other.friends = other.friends.filter(e => e.id != self.id);
+
+        if (await this.friendService.hasRequest(self, other)) {
+            await this.friendService.reject(self, other);
+        }
+        else if (await this.friendService.hasRequest(other, self)) {
+            await this.friendService.reject(other, self);
+        }
+
+        await this.userRepository.save(self);
+        await this.userRepository.save(other);
+    }
+
+    async unblockUser(self: User, other: User) {
+        if (!this.isBlocked(self, other.id)) {
+            throw new HttpException("User not blocked", HttpStatus.NOT_FOUND);
+        }
+
+        self.blocked = self.blocked.filter(e => e.id != other.id);
+
+        await this.userRepository.save(self);
+    }
+
+    isBlocked(self: User, userId: number): boolean {
+        return self.blocked.some(e => e.id == userId);
     }
 }
