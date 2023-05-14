@@ -8,6 +8,8 @@ import { Channel } from './channel.entity';
 
 import { User } from 'src/user/user.entity';
 import { UserService } from 'src/user/user.service';
+import { Message } from 'src/message/message.entity';
+import { MessageService } from 'src/message/message.service';
 
 @Injectable()
 export class ChannelService {
@@ -15,6 +17,7 @@ export class ChannelService {
         @InjectRepository(Channel)
         private channelRepository: Repository<Channel>,
         private readonly userService: UserService,
+        private readonly messageService: MessageService
     ) {}
 
     async listPublic() {
@@ -34,7 +37,7 @@ export class ChannelService {
         const channels: Channel[] = await this.channelRepository.createQueryBuilder('channel')
             .leftJoinAndSelect('channel.users', 'user')
             .where('user.id = :userId', { userId: user.id })
-            .select(['channel.id', 'channel.display_name'])
+            .select(['channel.id', 'channel.display_name', 'channel.type'])
             .getMany();
         return channels;
     }
@@ -74,6 +77,78 @@ export class ChannelService {
 
         channel.users.push(self);
         return this.channelRepository.save(channel);
+    }
+
+    async addUser(from: User, user: User, channelId: number) {
+        const channel: Channel = await this.getChannel(channelId, true);
+
+        if (!channel.users.some(e => e.id == from.id)) {
+            throw new HttpException("Inviter not in channel", HttpStatus.FORBIDDEN);
+        }
+        if (channel.users.some(e => e.id == user.id)) {
+            throw new HttpException("User already in channel", HttpStatus.CONFLICT)
+        }
+
+        channel.users.push(user);
+        await this.channelRepository.save(channel);
+    }
+
+    async kickUser(from: User, user: User, channelId: number) {
+        const channel: Channel = await this.getChannel(channelId, true);
+
+        this.canEditUser(from, user, channel);
+
+        channel.users = channel.users.filter(e => e.id != user.id)
+        channel.admins = channel.admins.filter(e => e.id != user.id)
+        await this.channelRepository.save(channel);
+    }
+
+    async promoteUser(from: User, user: User, channelId: number) {
+        const channel: Channel = await this.getChannel(channelId, true);
+
+        const isAdmin: boolean = this.canEditUser(from, user, channel);
+
+        if (isAdmin) {
+            channel.owner = user;
+            channel.admins = channel.admins.filter(e => e.id != user.id)
+        }
+        else {
+            channel.admins.push(user);
+        }
+        await this.channelRepository.save(channel);
+    }
+
+    async demoteUser(from: User, user: User, channelId: number) {
+        const channel: Channel = await this.getChannel(channelId, true);
+
+        const isAdmin: boolean = this.canEditUser(from, user, channel);
+
+        if (!isAdmin) {
+            throw new HttpException("This use cannot be demoted", HttpStatus.BAD_REQUEST);
+        }
+
+        channel.admins = channel.admins.filter(e => e.id != user.id)
+        await this.channelRepository.save(channel);
+    }
+
+    canEditUser(from: User, user: User, channel: Channel): boolean {
+        if (from.id == user.id) {
+            throw new HttpException("Cannot use on yourself", HttpStatus.BAD_REQUEST);
+        }
+        if (channel.owner.id == user.id) {
+            throw new HttpException("Cannot use on the owner", HttpStatus.FORBIDDEN);
+        }
+        if (!channel.users.some(e => e.id == user.id)) {
+            throw new HttpException("User not in channel", HttpStatus.NOT_FOUND);
+        }
+        if (channel.owner.id != from.id && !channel.admins.some(e => e.id == from.id)) {
+            throw new HttpException("Insufficient permissions", HttpStatus.FORBIDDEN);
+        }
+        const isAdmin: boolean = channel.admins.some(e => e.id == user.id);
+        if (isAdmin && channel.owner.id != from.id) {
+            throw new HttpException("Insufficient permissions", HttpStatus.FORBIDDEN);
+        }
+        return isAdmin;
     }
 
     async leaveChannel(self: User, channelId: number) {
@@ -181,7 +256,7 @@ export class ChannelService {
         return channel;
     }
 
-    private async getChannel(id: number, withUsers: boolean = false): Promise<Channel> {
+    private async getChannel(id: number, withUsers: boolean = false, withMessages: boolean = false): Promise<Channel> {
         const channel: Channel = await this.channelRepository.findOne({
             where: {
                 id: id
@@ -189,7 +264,8 @@ export class ChannelService {
             relations: {
                 owner: withUsers,
                 admins: withUsers,
-                users: withUsers
+                users: withUsers,
+                messages: withMessages,
             }
         });
         if (!channel) {
@@ -221,5 +297,29 @@ export class ChannelService {
             .where('channel.type = :type', { type: "dm" })
             .getOne()
         return (channel) ? true : false;
+    }
+
+    async sendMessage(user: User, channelId: number, text: string): Promise<Message> {
+        const channel: Channel = await this.getChannel(channelId, true);
+
+        if (channel.users.some(e => e.id == user.id)) {
+            delete channel.users;
+            delete channel.password_hash;
+            delete channel.admins;
+            delete channel.owner;
+            return this.messageService.addMessage(user, channel, text);
+        }
+
+        throw new HttpException("user not in channel", HttpStatus.FORBIDDEN);
+    }
+
+    async getMessages(user: User, channelId: number): Promise<Message[]> {
+        const channel: Channel = await this.getChannel(channelId, true);
+
+        if (channel.users.some(e => e.id == user.id)) {
+            return this.messageService.getMessages(channel);
+        }
+
+        throw new HttpException("user not in channel", HttpStatus.FORBIDDEN);
     }
 }

@@ -159,9 +159,4 @@ export class UserController {
         await this.userService.removeFriend(selfId, id);
         return { status: "removed" };
     }
-
-    @Get('debug')
-    async debug() {
-        return this.userService.debug();
-    }
 }

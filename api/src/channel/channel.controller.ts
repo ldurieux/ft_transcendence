@@ -79,4 +79,96 @@ export class ChannelController {
         await this.channelService.leaveChannel(user, id);
         return { status: "left" };
     }
+
+    @UseGuards(AuthGuard)
+    @Post('add')
+    async addUser(@Request() req) {
+        const from: User = await this.userService.getUser(req['user']);
+
+        const { userId, channelId } = req.body;
+        if (typeof userId !== 'number' || typeof channelId !== 'number') {
+            throw new HttpException("", HttpStatus.BAD_REQUEST)
+        }
+
+        const user: User = await this.userService.getUser(userId);
+        await this.channelService.addUser(from, user, channelId);
+        return { status: "added" };
+    }
+
+    @UseGuards(AuthGuard)
+    @Post('kick')
+    async kickUser(@Request() req) {
+        const from: User = await this.userService.getUser(req['user']);
+
+        const { userId, channelId } = req.body;
+        if (typeof userId !== 'number' || typeof channelId !== 'number') {
+            throw new HttpException("", HttpStatus.BAD_REQUEST)
+        }
+
+        const user: User = await this.userService.getUser(userId);
+        await this.channelService.kickUser(from, user, channelId);
+        return { status: "kicked" };
+    }
+
+    @UseGuards(AuthGuard)
+    @Post('promote')
+    async promoteUser(@Request() req) {
+        const from: User = await this.userService.getUser(req['user']);
+
+        const { userId, channelId } = req.body;
+        if (typeof userId !== 'number' || typeof channelId !== 'number') {
+            throw new HttpException("", HttpStatus.BAD_REQUEST)
+        }
+
+        const user: User = await this.userService.getUser(userId);
+        await this.channelService.promoteUser(from, user, channelId);
+        return { status: "promoted" };
+    }
+
+    @UseGuards(AuthGuard)
+    @Post('demote')
+    async demoteUser(@Request() req) {
+        const from: User = await this.userService.getUser(req['user']);
+
+        const { userId, channelId } = req.body;
+        if (typeof userId !== 'number' || typeof channelId !== 'number') {
+            throw new HttpException("", HttpStatus.BAD_REQUEST)
+        }
+
+        const user: User = await this.userService.getUser(userId);
+        await this.channelService.demoteUser(from, user, channelId);
+        return { status: "demoted" };
+    }
+
+    @UseGuards(AuthGuard)
+    @Post('message')
+    async sendMessage(@Request() req) {
+        const user: User = await this.userService.getUser(req['user'])
+
+        const { id, text } = req.body;
+        if (typeof id !== 'number' || typeof text !== 'string'
+            || text.length < 1 || text.length > 4096) {
+            throw new HttpException("", HttpStatus.BAD_REQUEST)
+        }
+
+        return await this.channelService.sendMessage(user, id, text);
+    }
+
+    @UseGuards(AuthGuard)
+    @Get('message')
+    async getMessages(@Request() req) {
+        const user: User = await this.userService.getUser(req['user'])
+
+        const { id } = req.query;
+        if (typeof id !== 'string') {
+            throw new HttpException("", HttpStatus.BAD_REQUEST)
+        }
+
+        const val: number = parseInt(id);
+        if (isNaN(val)) {
+            throw new HttpException("", HttpStatus.BAD_REQUEST);
+        }
+
+        return await this.channelService.getMessages(user, val);
+    }
 }

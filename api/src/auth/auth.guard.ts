@@ -15,13 +15,18 @@ export class AuthGuard implements CanActivate {
     }
 
     const token = authHeader.split(' ')[1];
+    if (typeof token !== 'string' || token == "null") {
+      console.log("[auth.guard.ts] Invalid/empty token was provided: " + token)
+      throw new UnauthorizedException();
+    }
+
     try {
       const payload = this.jwtService.verify(token, { secret: process.env.JWT_SECRET });
       const { id } = payload;
 
       req['user'] = id;
     } catch (err) {
-      console.log(err)
+      console.log("[auth.guard.ts] " + err)
       throw new UnauthorizedException();
     }
     return true;

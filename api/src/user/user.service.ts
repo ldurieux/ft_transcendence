@@ -196,8 +196,4 @@ export class UserService {
         await this.userRepository.save(self);
         await this.userRepository.save(other);
     }
-
-    async debug() {
-        return this.userRepository.find({ relations: ['auths', 'friends', 'sentRequests', 'receivedRequests']});
-    }
 }

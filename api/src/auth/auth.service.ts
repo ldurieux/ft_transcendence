@@ -162,7 +162,6 @@ export class AuthService {
                 headers: { Authorization: `Bearer ${reqToken.data.access_token}` },
             });
         } catch (error) {
-            console.log("here")
             throw new HttpException("", HttpStatus.FAILED_DEPENDENCY);
         }
         if (info.status !== 200) return;

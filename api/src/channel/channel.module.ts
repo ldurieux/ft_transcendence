@@ -14,6 +14,8 @@ import { FriendRequest } from 'src/friend-request/friend-request.entity';
 import { AuthService } from 'src/auth/auth.service';
 import { UserService } from 'src/user/user.service';
 import { FriendRequestService } from 'src/friend-request/friend-request.service';
+import { Message } from 'src/message/message.entity';
+import { MessageService } from 'src/message/message.service';
 
 @Module({
   imports: [
@@ -21,8 +23,9 @@ import { FriendRequestService } from 'src/friend-request/friend-request.service'
     TypeOrmModule.forFeature([Auth]),
     TypeOrmModule.forFeature([FriendRequest]),
     TypeOrmModule.forFeature([Channel]),
+    TypeOrmModule.forFeature([Message]),
   ],
-  providers: [UserService, AuthService, ChannelService, FriendRequestService, JwtService],
+  providers: [UserService, AuthService, ChannelService, FriendRequestService, MessageService, JwtService],
   controllers: [ChannelController],
 })
 export class ChannelModule {}
