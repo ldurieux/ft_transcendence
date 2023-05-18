@@ -1,21 +1,12 @@
 import React, { Component } from "react";
 import "../components/Styles/ProfileStyles.css";
-import ProfileUser from "../components/Utils/ProfileInfo.tsx";
+import { ProfileUser } from "../components/Utils/ProfileInfo.tsx";
 import {UserContext} from "../components/Utils/context.tsx";
 
 class Profile extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            avatar: '',
-            login: '',
-            nickname: '',
-            message: ''
-        };
-    }
 
     async componentDidMount() {
-        await this.getAvatar();
+
     }
 
 
@@ -96,7 +87,7 @@ class Profile extends Component {
         <div className="ProfileHeader">
             <h1>Transcendance</h1>
           <div className="ProfileBody">
-              {ProfileUser()}
+              {ProfileUser}
               <div className="Right">
               <div className="Friends">
                   <div className="FriendsList">

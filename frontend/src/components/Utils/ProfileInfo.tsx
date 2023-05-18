@@ -3,7 +3,7 @@ import {UserContext} from "./context.tsx";
 import "../Styles/ProfileStyles.css"
 
 function ProfileUser() {
-    const User: any = useContext(UserContext());
+    const User: any = useContext(UserContext);
 
     return (
             <div className="Left">
@@ -41,4 +41,4 @@ function ProfileUser() {
     )
 }
 
-export default ProfileUser;
+export { ProfileUser };
