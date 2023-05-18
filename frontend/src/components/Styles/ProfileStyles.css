@@ -25,19 +25,45 @@
 .ProfileHeader .ProfileBody {
     background-color: #1e2122;
     color: white;
-    padding: 20px;
+    overflow: scroll;
+}
+
+.Left {
+    position: absolute;
     margin-bottom: 20px;
     text-align: center;
+    margin-left: 350px;
+    width: 30%;
+    height: 75vh;
+    float: left;
+
+}
+
+.Right {
+    position: absolute;
+    margin-bottom: 20px;
+    text-align: center;
+    margin-left: 60%;
+    float: right;
 }
 
 .ProfileHeader .ProfileBody .Avatar img {
+    text-align: left;
     display: flex;
-    margin-left: 12vw;
-    padding: 50px;
-    text-align: center;
     border-radius: 50%;
-    width: 350px;
-    height: 350px;
+    color: black;
+}
+
+.ProfileHeader .ProfileBody .Avatar label {
+    text-align: left;
+    display: flex;
+    border: none;
+    text-decoration: none;
+    margin-left: 10px;
+    cursor: pointer;
+    width: 300px;
+    border-radius: 50%;
+    background: white;
 }
 
 .ProfileHeader .ProfileBody .Avatar img:hover {
@@ -46,19 +72,6 @@
     cursor: pointer;
 }
 
-.ZoneNickName {
-    color: white;
-    font-size: 25px;
-    display: block;
-    margin-left: 15vw;
-    margin-bottom: 1px;
-    text-align: left;
-    display: flex;
-    align-items: center;
-    align-content: center;
-    justify-content: space-between;
-    width: 10vw;
-}
 
 .Nickname {
     color: white;
@@ -67,21 +80,10 @@
     text-align: left;
 }
 
-.edit-nick {
-    color: white;
-    font-size: 15px;
-    bold: 700;
-    display: flex;
-    margin-bottom: 1px;
-    margin-top: 3px;
-    cursor: pointer;
-}
-
 .User {
     color: white;
     font-size: 35px;
     display: flex;
-    margin-left: 15vw;
     font-weight: bold;
 }
 
@@ -89,12 +91,13 @@
     color: white;
     font-size: 35px;
     margin-bottom: 1px;
-    text-align: center;
+    text-align: left;
+
 }
 
 .Username input {
     color: white;
-    font-size: 35px;
+    font-size: 25px;
     margin-bottom: 1px;
     text-align: center;
     background-color: #1e2122;
@@ -109,7 +112,7 @@
 
 .Username input::placeholder {
     color: white;
-    font-size: 35px;
+    font-size: 25px;
     margin-bottom: 1px;
     text-align: center;
 }
@@ -147,3 +150,111 @@
 .Username button:active {
     outline: none;
 }
+
+.FriendsList {
+    color: white;
+    margin-bottom: 1px;
+    margin-right: 10vh;
+}
+
+.FriendsList h2 {
+    color: white;
+    font-size: 35px;
+    margin-bottom: 1px;
+    text-align: center;
+}
+
+.FriendsList ul {
+    margin-right: 10vh;
+    overflow: scroll;
+    background-color: #333;
+}
+
+.FriendsList ul li {
+    display: inline-block;
+    margin: 0 10px;
+    background-color: #333;
+    border: none;
+    color: #fff;
+    font-weight: 500;
+    padding: 10px 20px;
+    text-align: center;
+    font-size: 20px;
+}
+
+.FriendsList ul li:hover {
+    opacity: 0.5;
+    transition: 0.3s ease;
+    cursor: pointer;
+}
+
+.AddFriend {
+    color: white;
+    margin-top: 100px;
+    margin-bottom: 1px;
+    margin-right: 10vh;
+}
+
+.AddFriend h2 {
+    color: white;
+    font-size: 35px;
+    margin-bottom: 1px;
+    text-align: center;
+}
+
+.AddFriend input {
+    color: white;
+    font-size: 25px;
+    margin-bottom: 1px;
+    text-align: center;
+    background-color: #1e2122;
+    border: none;
+    border-bottom: 1px solid white;
+    outline: none;
+}
+
+.AddFriend input:focus {
+    outline: none;
+}
+
+.AddFriend input::placeholder {
+    color: white;
+    font-size: 25px;
+    margin-bottom: 1px;
+    text-align: center;
+}
+
+.AddFriend input:hover {
+    opacity: 0.5;
+    transition: 0.3s ease;
+    cursor: pointer;
+}
+
+.AddFriend input:active {
+    outline: none;
+}
+
+.AddFriend button {
+    background-color: #333;
+    border: none;
+    color: #fff;
+    font-weight: 700;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 20px;
+    margin-left: 10px;
+    cursor: pointer;
+    outline: none;
+}
+
+.AddFriend button:hover {
+    opacity: 0.5;
+    transition: 0.3s ease;
+    cursor: pointer;
+}
+
+.AddFriend button:active {
+    outline: none;
+}
+
