@@ -39,13 +39,6 @@ class Authentication extends Component {
             const response = await fetch(url, options);
             if (response.status === 200) {
                 let data = await response.json();
-                const avatar = data.profile_picture;
-                const login = data.auths[0].username;
-                const nickname = data.display_name;
-                localStorage.setItem('avatar', avatar);
-
-                localStorage.setItem('nickname', nickname);
-
             }
         }
         catch (error) {
@@ -68,7 +61,6 @@ async componentDidMount() {
         const code = params.get("code");
         if (code) {
             this.sendRequest(code);
-            this.getLogin();
         }
     return (
 
