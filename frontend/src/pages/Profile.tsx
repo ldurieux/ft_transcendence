@@ -1,13 +1,10 @@
 import React, { Component } from "react";
 import "../components/Styles/ProfileStyles.css";
 import { ProfileUser } from "../components/Utils/ProfileInfo.tsx";
-import {UserContext} from "../components/Utils/context.tsx";
+import UserContext from "../components/Utils/context.tsx";
 
 class Profile extends Component {
-
-    async componentDidMount() {
-
-    }
+    static contextType = UserContext;
 
 
     onChange = async (e: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
@@ -55,27 +52,6 @@ class Profile extends Component {
             console.log(error);
         }
     }
-    async HandleClick(username: string) {
-        try {
-            const input = `http://${process.env.REACT_APP_WEB_HOST}:${process.env.REACT_APP_API_PORT}/user/username`;
-            const token = localStorage.getItem('token');
-            const options = {
-                method: 'POST', headers: {"Content-Type": "application/json", "authorization": "Bearer " + token},
-                body: JSON.stringify({username: username})
-            };
-            const response = await fetch(input, options);
-            if (response.status === 200) {
-                console.log("Username changed")
-                localStorage.setItem('nickname', username);
-                this.setState({nickname: username})
-            }
-            window.location.reload();
-        }
-        catch (error) {
-            console.log(error);
-        }
-    }
-
 
 
     render() {
@@ -87,7 +63,7 @@ class Profile extends Component {
         <div className="ProfileHeader">
             <h1>Transcendance</h1>
           <div className="ProfileBody">
-              {ProfileUser}
+              <ProfileUser/>
               <div className="Right">
               <div className="Friends">
                   <div className="FriendsList">

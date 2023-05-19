@@ -1,12 +1,18 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { startTransition } from "react";
+import { get } from "../Utils/Request.tsx";
 
 const Header = () => {
     //getAvatar from profile.tsx
-    const avatar = localStorage.getItem('avatar');
-    const nickname = localStorage.getItem('nickname');
-    const login = localStorage.getItem('login');
+    const [user, setUser] = useState({});
     const [isSidebarOpen, setSidebarOpen] = useState(false);
+
+    useEffect(() => {
+        (async () => {
+            const result = await get('user/self');
+            setUser(result);
+        })();
+    }, [])
 
     const toggleSidebarOpen = () => {
         setSidebarOpen(!isSidebarOpen);
@@ -18,9 +24,6 @@ const Header = () => {
 
     const logOut = () => {
         localStorage.removeItem('token');
-        localStorage.removeItem('login');
-        localStorage.removeItem('avatar');
-        localStorage.removeItem('nickname');
         window.location.href = "/login";
     }
 
@@ -70,12 +73,12 @@ const Header = () => {
             <li>
           <div className="profile-details">
                 <div className="profile-content">
-                    <img src={avatar} alt="profileImg"/>
+                    <img src={user.profile_picture} alt="profileImg"/>
                 </div>
 
                 <div className="login-nickname">
-                    <div className="login">{login}</div>
-                    <div className="nickname">{nickname}</div>
+                    <div className="login">{user?.auths?.[0].username ?? "--"}</div>
+                    <div className="nickname">{user.display_name ?? "--"}</div>
                 </div>
               <i className='bx bx-log-out' onClick={logOut}></i>
 
