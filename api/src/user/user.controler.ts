@@ -122,14 +122,16 @@ export class UserController {
         }
 
         const image = await jimp.read(file.buffer);
+        let res;
         if (image) {
-            this.userService.setPicture(id, await image.getBase64Async(jimp.AUTO))
+            res = await image.getBase64Async(jimp.AUTO);
+            this.userService.setPicture(id, res)
         }
         else {
             throw new HttpException("Invalid image", HttpStatus.BAD_REQUEST)
         }
 
-        return { status: "modified" }
+        return { status: "modified", profile_picture: res }
     }
 
     @Post('register')
