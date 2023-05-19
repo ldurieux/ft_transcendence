@@ -1,16 +1,17 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useRef, useContext } from "react";
+import UserContext from "./context.tsx";
 import {get, post} from "./Request.tsx";
 
 
 
-function ProfileUser() {
+function ProfileUser({children}) {
     const [user, setUser] = useState({});
-    // const [Username, setUsername] = useState(null);
+    const inputRef = useRef(null);
+    const userContext = useContext(UserContext);
 
     useEffect(() => {
         (async () => {
             const result = await get('user/self');
-            console.log(result)
             setUser(result);
         })()
     }, [])
@@ -21,13 +22,27 @@ function ProfileUser() {
             const formData = new FormData();
             formData.append("image", avatar);
 
-            await post('user/picture', formData, true);
-            setUser(await get('user/self'));
+            const data = await post('user/picture', formData, true);
 
-            // setUser((old) => ({
-            //     ...old,
-            //     profile_picture: "new base 64"
-            // }));
+            setUser((old) => ({
+                ...old,
+                profile_picture: data.profile_picture
+            }));
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+
+    async function changeUsername(e) {
+        try {
+            const username = inputRef.current.value;
+            await post('user/username', {username: username});
+
+            setUser((old) => ({
+                ...old,
+                display_name: username
+            }));
         }
         catch (error) {
             console.log(error);
@@ -60,11 +75,12 @@ function ProfileUser() {
             </div>
 
             <div className="Username">
-                <input type="text"
-                       placeholder="Username"
-                       onChange={(e) => this.HandleChange(e)}
+                <input
+                    ref={inputRef}
+                    type="text"
+                    placeholder="Username"
                 />
-                <button onClick={() => this.HandleClick(this.state.message)}>Edit</button>
+                <button onClick={changeUsername}>Edit</button>
             </div>
         </div>
     );

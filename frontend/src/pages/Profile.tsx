@@ -6,54 +6,6 @@ import UserContext from "../components/Utils/context.tsx";
 class Profile extends Component {
     static contextType = UserContext;
 
-
-    onChange = async (e: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
-        try {
-            console.log("file uploaded: ", e.target.files[0]);
-            let file = e.target.files[0];
-
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = this._handleReaderLoaded.bind(this);
-                reader.readAsBinaryString(file);
-                const url = `http://${process.env.REACT_APP_WEB_HOST}:${process.env.REACT_APP_API_PORT}/user/picture`;
-                const token = localStorage.getItem('token');
-                let data = new FormData();
-                data.append("image", file)
-                const options: RequestInit = {
-                    method: "POST",
-                    headers: {"authorization": "Bearer " + token},
-                    body: data
-                };
-                const response = await fetch(url, options);
-                if (response.status === 200) {
-                    console.log("Avatar uploaded");
-                }
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-    _handleReaderLoaded = (e: ProgressEvent<FileReader>): void => {
-        console.log("file uploaded 2: ", e);
-        let binaryString = (e.target as FileReader).result as string;
-        this.setState({
-            avatar: `data:image;base64,` + btoa(binaryString)
-        });
-    };
-
-    async HandleChange(e: React.ChangeEvent<HTMLInputElement>): Promise<void> {
-        try {
-            let username = e.target.value;
-            this.setState({message: username});
-        }
-        catch (error) {
-            console.log(error);
-        }
-    }
-
-
     render() {
         if (!localStorage.getItem('token')) {
             window.location.href = '/login';

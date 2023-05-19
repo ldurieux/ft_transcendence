@@ -1,11 +1,15 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useContext} from "react";
 import { startTransition } from "react";
 import { get } from "../Utils/Request.tsx";
+import UserContext from "../Utils/context.tsx";
 
-const Header = () => {
+const Header = ({children}) => {
     //getAvatar from profile.tsx
     const [user, setUser] = useState({});
     const [isSidebarOpen, setSidebarOpen] = useState(false);
+    const userContext = useContext(UserContext);
+
+    console.log(userContext);
 
     useEffect(() => {
         (async () => {
@@ -73,12 +77,12 @@ const Header = () => {
             <li>
           <div className="profile-details">
                 <div className="profile-content">
-                    <img src={user.profile_picture} alt="profileImg"/>
+                    <img src={user?.profile_picture} alt="profileImg"/>
                 </div>
 
                 <div className="login-nickname">
                     <div className="login">{user?.auths?.[0].username ?? "--"}</div>
-                    <div className="nickname">{user.display_name ?? "--"}</div>
+                    <div className="nickname">{user?.display_name ?? "--"}</div>
                 </div>
               <i className='bx bx-log-out' onClick={logOut}></i>
 
