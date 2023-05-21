@@ -31,6 +31,23 @@ export class FriendRequestService {
         return true;
     }
 
+    async get(requestId: number) : Promise<FriendRequest> {
+        let req: FriendRequest = await this.reqRepository.findOne({
+            where: {
+                id: requestId
+            },
+            relations: {
+                requester: true,
+                receiver: true,
+            }
+        })
+        if (!req) {
+            throw new HttpException("Request not found", HttpStatus.NOT_FOUND);
+        }
+
+        return req;
+    }
+
     async accept(self: User, from: User): Promise<boolean> {
         let req: FriendRequest = await this.reqRepository.findOne({
             where: {

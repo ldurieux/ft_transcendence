@@ -6,6 +6,7 @@ import { User } from './user.entity';
 import { Auth } from 'src/auth/auth.entity';
 import { AuthService } from 'src/auth/auth.service';
 import { FriendRequestService } from 'src/friend-request/friend-request.service';
+import { FriendRequest } from 'src/friend-request/friend-request.entity';
 
 @Injectable()
 export class UserService {
@@ -155,6 +156,21 @@ export class UserService {
         }
 
         return this.authService.getJwt(user);
+    }
+
+    async getFriendRequestUser(user: User, requestId: number) : Promise<Object>
+    {
+        const req: FriendRequest = await this.friendService.get(requestId);
+
+        let other: User;
+        if (req.requester.id == user.id) {
+            other = await this.getUser(req.requester.id);
+        }
+        else {
+            other = await this.getUser(req.receiver.id);
+        }
+
+        return { id: other.id, display_name: other.display_name };
     }
 
     async addFriend(requesterId: number, receiverId: number)

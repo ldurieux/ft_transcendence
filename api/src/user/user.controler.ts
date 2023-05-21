@@ -42,7 +42,23 @@ export class UserController {
         user.auths.forEach( (e) => {
             delete e.data;
         })
-        return user;
+
+        let receivedRequests = [];
+        for (req of user.receivedRequests) {
+            receivedRequests.push(await this.userService.getFriendRequestUser(user, req.id));
+        }
+        let sentRequests = [];
+        for (req of user.sentRequests) {
+            sentRequests.push(await this.userService.getFriendRequestUser(user, req.id));
+        }
+
+        let res: Object = user;
+        delete res["receivedRequests"];
+        delete res["sentRequests"];
+        res["receivedRequests"] = receivedRequests;
+        res["sentRequests"] = sentRequests;
+
+        return res;
     }
 
     @UseGuards(AuthGuard)
