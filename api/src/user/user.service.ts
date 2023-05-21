@@ -175,6 +175,10 @@ export class UserService {
 
     async addFriend(requesterId: number, receiverId: number)
     {
+        if (requesterId == receiverId) {
+            throw new HttpException("Cannot add yourself", HttpStatus.CONFLICT);
+        }
+
         const requester: User = await this.getUser(requesterId, true);
         
         requester.friends.forEach( (e) => {
