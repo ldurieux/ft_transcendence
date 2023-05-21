@@ -164,10 +164,10 @@ export class UserService {
 
         let other: User;
         if (req.requester.id == user.id) {
-            other = await this.getUser(req.requester.id);
+            other = await this.getUser(req.receiver.id);
         }
         else {
-            other = await this.getUser(req.receiver.id);
+            other = await this.getUser(req.requester.id);
         }
 
         return { id: other.id, display_name: other.display_name };
