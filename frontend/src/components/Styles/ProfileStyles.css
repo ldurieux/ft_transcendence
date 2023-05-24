@@ -186,21 +186,18 @@
 .AddFriend {
     color: white;
     margin-top: 100px;
-    margin-bottom: 1px;
-    margin-right: 10vh;
 }
 
 .AddFriend h2 {
     color: white;
-    font-size: 35px;
-    margin-bottom: 1px;
+    margin-bottom: 10px;
     text-align: center;
 }
 
 .AddFriend input {
     color: white;
     font-size: 25px;
-    margin-bottom: 1px;
+    margin-bottom: 100px;
     text-align: center;
     background-color: #1e2122;
     border: none;
@@ -253,43 +250,6 @@
     outline: none;
 }
 
-.FriendRequests {
-    color: white;
-    margin-top: 100px;
-    margin-bottom: 1px;
-    margin-right: 10vh;
-}
-
-.FriendRequests h2 {
-    color: white;
-    font-size: 35px;
-    margin-bottom: 1px;
-    text-align: center;
-}
-
-.FriendRequests ul {
-    margin-right: 10vh;
-    overflow: scroll;
-    background-color: #333;
-}
-
-.FriendRequests ul li {
-    display: inline-block;
-    margin: 0 10px;
-    background-color: #333;
-    border: none;
-    color: #fff;
-    font-weight: 500;
-    padding: 10px 20px;
-    text-align: center;
-    font-size: 20px;
-}
-
-.FriendRequests ul li:hover {
-    opacity: 0.5;
-    transition: 0.3s ease;
-    cursor: pointer;
-}
 .FriendsList .Popup {
     position: fixed;
     left: 70%;
