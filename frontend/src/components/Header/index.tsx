@@ -3,13 +3,10 @@ import { startTransition } from "react";
 import { get } from "../Utils/Request.tsx";
 import UserContext from "../Utils/context.tsx";
 
-const Header = ({children}) => {
+const Header = () => {
     //getAvatar from profile.tsx
     const [user, setUser] = useState({});
     const [isSidebarOpen, setSidebarOpen] = useState(false);
-    const userContext = useContext(UserContext);
-
-    console.log(userContext);
 
     useEffect(() => {
         (async () => {

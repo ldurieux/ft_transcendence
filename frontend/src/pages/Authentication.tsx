@@ -3,12 +3,6 @@ import "../components/Styles/LoginStyles.css";
 
 class Authentication extends Component {
 
-    constructor(props: any) {
-        super(props);
-        this.state = {
-            message: ''
-        };
-    }
     async sendRequest(code: string) {
         try {
             const input = `http://${process.env.REACT_APP_WEB_HOST}:${process.env.REACT_APP_API_PORT}/user/login`;
@@ -28,28 +22,6 @@ class Authentication extends Component {
         }
     }
 
-    async getLogin() {
-        try {
-            const url = `http://${process.env.REACT_APP_WEB_HOST}:${process.env.REACT_APP_API_PORT}/user/self`;
-            const token = localStorage.getItem('token');
-            const options: RequestInit = {
-                method: 'GET',
-                headers: { "Content-Type": "application/json", "authorization": "Bearer " + token }
-            };
-            const response = await fetch(url, options);
-            if (response.status === 200) {
-                let data = await response.json();
-            }
-        }
-        catch (error) {
-            console.log(error);
-        }
-    }
-
-async componentDidMount() {
-
-}
-
 
 
   render() {
@@ -59,9 +31,10 @@ async componentDidMount() {
         const url = new URL(window.location.href);
         const params = new URLSearchParams(url.search.slice(1));
         const code = params.get("code");
-        if (code) {
-            this.sendRequest(code);
+        if (code && localStorage.getItem('token') === null) {
+            this.sendRequest(code );
         }
+
     return (
 
       <div className="AuthBody">

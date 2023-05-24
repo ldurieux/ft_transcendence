@@ -36,7 +36,6 @@
     width: 30%;
     height: 75vh;
     float: left;
-
 }
 
 .Right {
@@ -152,27 +151,22 @@
 }
 
 .FriendsList {
-    color: white;
     margin-bottom: 1px;
-    margin-right: 10vh;
 }
 
-.FriendsList h2 {
+.FriendsList .FriendsListSearch h2 {
     color: white;
     font-size: 35px;
     margin-bottom: 1px;
     text-align: center;
 }
 
-.FriendsList ul {
-    margin-right: 10vh;
+.FriendsList .FriendsListSearch ul {
     overflow: scroll;
-    background-color: #333;
 }
 
-.FriendsList ul li {
+.FriendsList .FriendsListSearch ul li {
     display: inline-block;
-    margin: 0 10px;
     background-color: #333;
     border: none;
     color: #fff;
@@ -180,9 +174,10 @@
     padding: 10px 20px;
     text-align: center;
     font-size: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
 
-.FriendsList ul li:hover {
+.FriendsList .FriendsListSearch ul li:hover {
     opacity: 0.5;
     transition: 0.3s ease;
     cursor: pointer;
@@ -258,3 +253,73 @@
     outline: none;
 }
 
+.FriendRequests {
+    color: white;
+    margin-top: 100px;
+    margin-bottom: 1px;
+    margin-right: 10vh;
+}
+
+.FriendRequests h2 {
+    color: white;
+    font-size: 35px;
+    margin-bottom: 1px;
+    text-align: center;
+}
+
+.FriendRequests ul {
+    margin-right: 10vh;
+    overflow: scroll;
+    background-color: #333;
+}
+
+.FriendRequests ul li {
+    display: inline-block;
+    margin: 0 10px;
+    background-color: #333;
+    border: none;
+    color: #fff;
+    font-weight: 500;
+    padding: 10px 20px;
+    text-align: center;
+    font-size: 20px;
+}
+
+.FriendRequests ul li:hover {
+    opacity: 0.5;
+    transition: 0.3s ease;
+    cursor: pointer;
+}
+.FriendsList .Popup {
+    position: fixed;
+    left: 70%;
+    top: 350px;
+    transform: translate(-50%, -50%);
+    width: auto;
+    height: auto;
+    z-index: 9999;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.FriendsList .Popup ul li {
+    display: inline-block;
+    background-color: #333;
+    border: none;
+    color: #fff;
+    font-weight: 500;
+    padding: 10px 20px;
+    text-align: center;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.FriendsList .Popup ul li:hover {
+    opacity: 0.5;
+    transition: 0.3s ease;
+    cursor: pointer;
+}
+
+.FriendsList .Popup .PopupRemoveFriend {
+    background: #9c0303;
+}

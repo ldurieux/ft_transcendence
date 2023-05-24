@@ -54,7 +54,7 @@ function ProfileUser({children}) {
         <div className="Left">
             <div className="Avatar">
                 <label htmlFor="avatarInput">
-                    <img id="avatar" src={user.profile_picture} alt="Avatar" width="300" height="300" />
+                    <img id="avatar" src={user?.profile_picture} alt="Avatar" width="300" height="300" />
                 </label>
                 <input
                     type="file"
@@ -71,7 +71,7 @@ function ProfileUser({children}) {
                 <br />
             </div>
             <div className="Nickname">
-                {user.display_name ?? "--"}
+                {user?.display_name ?? "--"}
             </div>
 
             <div className="Username">
