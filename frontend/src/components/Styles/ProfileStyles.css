@@ -250,6 +250,27 @@
     outline: none;
 }
 
+ .RequestReceived ul {
+    overflow: scroll;
+}
+
+ .RequestReceived ul li {
+    display: inline-block;
+    border: none;
+    font-weight: 500;
+    padding: 10px 20px;
+    text-align: center;
+    font-size: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+     cursor: pointer;
+}
+
+ .RequestReceived ul li:hover {
+    opacity: 0.5;
+    transition: 0.3s ease;
+    cursor: pointer;
+}
+
 .FriendsList .Popup {
     position: fixed;
     left: 70%;
@@ -282,4 +303,64 @@
 
 .FriendsList .Popup .PopupRemoveFriend {
     background: #9c0303;
+}
+
+
+
+.popupError {
+    position: fixed;
+    left: 450px;
+    top: 100px;
+    transform: translate(-50%, -50%);
+    width: auto;
+    height: auto;
+    z-index: 9999;
+    border-radius: 5px;
+    color: white;
+    background-color: #9c0303;
+    font-size: 20px;
+    animation: fadein 2s;
+    -moz-animation: fadein 2s; /* Firefox */
+    -webkit-animation: fadein 2s; /* Safari et Chrome */
+    -o-animation: fadein 2s; /* Opera */
+}
+
+.vignets {
+
+    animation: fadein 2s;
+    -moz-animation: fadein 2s; /* Firefox */
+    -webkit-animation: fadein 2s; /* Safari et Chrome */
+    -o-animation: fadein 2s; /* Opera */
+}
+@keyframes fadein {
+    from {
+        opacity:0;
+    }
+    to {
+        opacity:1;
+    }
+}
+@-moz-keyframes fadein { /* sur Firefox */
+    from {
+        opacity:0;
+    }
+    to {
+        opacity:1;
+    }
+}
+@-webkit-keyframes fadein { /* sur Safari et Chrome */
+    from {
+        opacity:0;
+    }
+    to {
+        opacity:1;
+    }
+}
+@-o-keyframes fadein { /* sur Opera */
+    from {
+        opacity:0;
+    }
+    to {
+        opacity: 1;
+    }
 }

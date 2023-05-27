@@ -1,5 +1,4 @@
-import React, {useEffect, useState, useRef, useContext } from "react";
-import UserContext from "./context.tsx";
+import React, {useEffect, useState, useRef } from "react";
 import {get, post} from "./Request.tsx";
 
 
@@ -7,7 +6,11 @@ import {get, post} from "./Request.tsx";
 function ProfileUser({children}) {
     const [user, setUser] = useState({});
     const inputRef = useRef(null);
-    const userContext = useContext(UserContext);
+    const [error, setError] = useState(null);
+
+    async function timeout(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
 
     useEffect(() => {
         (async () => {
@@ -24,33 +27,45 @@ function ProfileUser({children}) {
 
             const data = await post('user/picture', formData, true);
 
-            setUser((old) => ({
-                ...old,
-                profile_picture: data.profile_picture
-            }));
+            if (data.profile_picture) {
+                setUser((old) => ({
+                    ...old,
+                    profile_picture: data.profile_picture
+                }));
+            }
         }
         catch (error) {
-            console.log(error);
+            setError("Error changing avatar");
+            await timeout(3000);
+            setError(null);
         }
     }
 
     async function changeUsername(e) {
         try {
             const username = inputRef.current.value;
-            await post('user/username', {username: username});
+            const result = await post('user/username', {username: username});
 
-            setUser((old) => ({
-                ...old,
-                display_name: username
-            }));
+            if (result.status === "modified") {
+                setUser((old) => ({
+                    ...old,
+                    display_name: username
+                }));
+            }
         }
         catch (error) {
-            console.log(error);
+            setError("Error changing username");
+            await timeout(3000);
+            setError(null);
         }
     }
 
     // return (<div></div>);
     return (
+        <div>
+            <p className="popupError">
+                {error}
+            </p>
         <div className="Left">
             <div className="Avatar">
                 <label htmlFor="avatarInput">
@@ -73,7 +88,6 @@ function ProfileUser({children}) {
             <div className="Nickname">
                 {user?.display_name ?? "--"}
             </div>
-
             <div className="Username">
                 <input
                     ref={inputRef}
@@ -82,6 +96,7 @@ function ProfileUser({children}) {
                 />
                 <button onClick={changeUsername}>Edit</button>
             </div>
+        </div>
         </div>
     );
 }

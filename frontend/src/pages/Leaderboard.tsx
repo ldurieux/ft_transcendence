@@ -49,7 +49,6 @@ class Leaderboard extends Component {
                         <ul>
                             {data.map((item: any) => (
                                 <li key={item.id}>
-                                    <div className="avatar"> <img src={item.profile_picture ? item.profile_picture : ""}/> </div>
                                     <div className="nickname"> {item.display_name} </div>
                                     <div className="score"> {item.points} </div>
                                 </li>

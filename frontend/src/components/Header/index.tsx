@@ -10,8 +10,10 @@ const Header = () => {
 
     useEffect(() => {
         (async () => {
-            const result = await get('user/self');
-            setUser(result);
+            if (localStorage.getItem('token')) {
+                const result = await get('user/self');
+                setUser(result);
+            }
         })();
     }, [])
 

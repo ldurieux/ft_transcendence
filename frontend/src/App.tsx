@@ -8,7 +8,6 @@ const Header = React.lazy(() => import('./components/Header/index.tsx'));
 const FrontRoute = React.lazy(() => import('./components/redirect.tsx'));
 
 function App() {
-    const [user, setUserContext] = useState(get('user/self'));
 
   return (
     <div className="App-header">
@@ -16,9 +15,7 @@ function App() {
         <div className="App">
           <BrowserRouter>
               <Header />
-              <UserContext.Provider value={user}>
                  <FrontRoute />
-              </UserContext.Provider>
           </BrowserRouter>
         </div>
     </div>
