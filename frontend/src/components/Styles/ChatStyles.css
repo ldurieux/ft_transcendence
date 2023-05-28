@@ -173,5 +173,24 @@ body {
     color: #ccc;
 }
 
+.Channels li,
+.Friends li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.Channels li:hover .bx-plus,
+.Friends li:hover .bx-plus {
+    display: inline-block;
+    margin-left: 10px; /* Ajoutez une marge à gauche pour l'espacement */
+}
+
+.bx-plus {
+    display: none;
+}
+
+
+
 
 

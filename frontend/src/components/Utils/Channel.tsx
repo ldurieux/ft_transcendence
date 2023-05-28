@@ -2,10 +2,8 @@ import React, { useEffect, useState } from "react";
 import { get, post } from "./Request.tsx";
 
 function Channel() {
-    const [list, setList] = useState([]);
-    const [friend, setFriend] = useState("");
-    const [channel, setChannel] = useState([]);
-    const [error, setError] = useState(null);
+    const [friendsList, setFriendsList] = useState([]);
+    const [channelList, setChannelList] = useState([]);
     const [selectedList, setSelectedList] = useState("Channel");
     const [message, setMessage] = useState("");
     const [showPopup, setShowPopup] = useState(false);
@@ -16,8 +14,8 @@ function Channel() {
         (async () => {
             const result = await get("user/self");
             const channels = await get("channel");
-            setChannel(channels);
-            setList(result.friends);
+            setFriendsList(result.friends);
+            setChannelList(channels);
         })();
     }, []);
 
@@ -30,12 +28,12 @@ function Channel() {
         setShowPopup(true);
     };
 
-    async function createPublicChannel(chan:string) {
+    async function createPublicChannel(chan) {
         try {
             const result = await post("channel", { type: "public", name: chan });
-            setChannel([...channel, result]);
-        }
-        catch (error) {
+            setChannelList([...channelList, result]);
+        } catch (error) {
+            console.error(error);
         }
     }
 
@@ -43,9 +41,12 @@ function Channel() {
         if (event.key === 'Enter') {
             // 👇 Get input value
             createPublicChannel(event.target.value);
+            // 👇 Reset input value
+            event.target.value = '';
+            setChannelName("");
         }
     };
-    console.log(channel);
+
     return (
 
         <div className="baguette">
@@ -65,15 +66,29 @@ function Channel() {
                         Friends
                     </button>
                 </ul>
-                <ul className="Channels">
-                    {selectedList === "Channel" &&
-                        list.length > 0 &&
-                        list.map((item, index) => (
-                            <li key={index}>{item?.display_name}</li>
-                        ))}
-                </ul>
+                {selectedList === "Channel" ? (
+                    <ul className="Channels">
+                        {channelList.length > 0 &&
+                            channelList.map((item, index) => (
+                                <li key={index}>
+                                    {item?.display_name}
+                                    <i className="bx bx-plus"></i>
+                                </li>
+                            ))}
+                    </ul>
+                ) : (
+                    <ul className="Channels">
+                        {friendsList.length > 0 &&
+                            friendsList.map((item, index) => (
+                                <li key={index}>
+                                    {item?.display_name}
+                                    <i className="bx bx-plus"></i>
+                                </li>
+                            ))}
+                    </ul>
+                )}
                 <div className="bx-cog-container">
-                    <i className='bx bx-cog bx-cog-icon' onClick={openPopup}></i>
+                    <i className="bx bx-cog bx-cog-icon" onClick={openPopup}></i>
                 </div>
             </div>
             <div className="Chat">
