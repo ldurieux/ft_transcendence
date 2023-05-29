@@ -105,7 +105,7 @@ function Channel() {
                     <ul className="Channels">
                         {friendsList.length > 0 &&
                             friendsList.map((item, index) => (
-                                <li key={index} onClick={() => openChannel(item?.display_name)}>
+                                <li key={index} onClick={() => openChannel(item)}>
                                     {item?.display_name}
                                     <i className="bx bx-plus"></i>
                                 </li>
