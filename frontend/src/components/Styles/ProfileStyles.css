@@ -252,6 +252,17 @@
     transition: 0.3s ease;
 }
 
+.popupError {
+    background: darkred;
+    text-align: center;
+    border-radius: 5px;
+    color: white;
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 @media screen and (max-width: 600px) {
     .ProfileHeader {
         display: none;

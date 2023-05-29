@@ -84,6 +84,26 @@ body {
     justify-content: flex-end;
 }
 
+.Chat .ChatBoxHeader {
+    position: sticky;
+    top: 0;
+    padding: 10px;
+    text-align: center;
+    background-color: #333;
+}
+
+.Chat .ChatBoxHeader h3 {
+    margin: 0;
+    color: white;
+}
+
+.Chat .ChatBoxBody {
+    height: 70vh;
+    width: 100%;
+    overflow: scroll;
+    padding: 10px;
+}
+
 .Chat .ChatInput {
     height: 8vh;
     width: 100%;
@@ -102,6 +122,21 @@ body {
     overflow: hidden;
     color: white;
 }
+
+.popup .popupContent .leaveButton {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 10px;
+    margin: 10px;
+    cursor: pointer;
+}
+
+.popup .popupContent .leaveButton:hover {
+    opacity: 0.5;
+    transition: 0.3s ease;
+}
+
 
 /* Media queries */
 @media (max-width: 1200px) {
