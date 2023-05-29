@@ -7,6 +7,7 @@ function ProfileUser({children}) {
     const [user, setUser] = useState({});
     const inputRef = useRef(null);
     const [error, setError] = useState(null);
+    const [username, setUsername] = useState("");
 
     async function timeout(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
@@ -51,6 +52,7 @@ function ProfileUser({children}) {
                     ...old,
                     display_name: username
                 }));
+                setUsername("")
             }
         }
         catch (error) {
@@ -66,10 +68,9 @@ function ProfileUser({children}) {
             <p className="popupError">
                 {error}
             </p>
-        <div className="Left">
             <div className="Avatar">
                 <label htmlFor="avatarInput">
-                    <img id="avatar" src={user?.profile_picture} alt="Avatar" width="300" height="300" />
+                    <img id="avatar" src={user?.profile_picture} alt="Avatar" />
                 </label>
                 <input
                     type="file"
@@ -93,10 +94,11 @@ function ProfileUser({children}) {
                     ref={inputRef}
                     type="text"
                     placeholder="Username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
                 />
                 <button onClick={changeUsername}>Edit</button>
             </div>
-        </div>
         </div>
     );
 }

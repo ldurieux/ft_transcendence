@@ -13,15 +13,18 @@ class Profile extends Component {
         }
 
     return (
-        <div className="ProfileHeader">
-            <h1>Transcendance</h1>
+        <div className="Profile">
+            <div className="ProfileHeader">
+                <h1>Profile</h1>
+            </div>
           <div className="ProfileBody">
-              <ProfileUser/>
+              <div className="Left">
+                  <ProfileUser/>
+              </div>
               <div className="Right">
-                    <FriendList />
+                  <FriendList />
               </div>
           </div>
-
         </div>
     );
   }

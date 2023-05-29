@@ -1,4 +1,3 @@
-
 .Leaderboard {
     background-color: #1e2122;
     height: 100vh;
@@ -27,59 +26,82 @@
     overflow: scroll;
     height: 80vh;
     width: 100vw;
-
 }
 
 .Leaderboard .LeaderboardBody ul {
     color: #fff;
     text-decoration: none;
-
 }
 
- .Leaderboard .LeaderboardBody ul li {
+.Leaderboard .LeaderboardBody ul li {
     color: #fff;
     text-decoration: none;
-     height: 5vw;
-     list-style: none;
-     display: flex;
+    height: 5vw;
+    list-style: none;
+    display: flex;
     justify-content: space-between;
-     border-bottom: white solid 1px;
-     width: 40vw;
- }
+    border-bottom: white solid 1px;
+    width: 40vw;
+}
 
- .Leaderboard .LeaderboardBody .avatar {
-     color: #fff;
-     text-decoration: none;
-     padding: 10px;
-     align-content: stretch;
-     display: flex;
-     justify-content: start;
-     width: 8vw;
-     height: 8vh;
+.Leaderboard .LeaderboardBody .avatar {
+    color: #fff;
+    text-decoration: none;
+    padding: 10px;
+    align-content: stretch;
+    display: flex;
+    justify-content: start;
+    width: 8vw;
+    height: 8vh;
+}
 
- }
-
- .Leaderboard .LeaderboardBody .nickname {
+.Leaderboard .LeaderboardBody .nickname {
     color: #fff;
     text-decoration: none;
     font-size: 20px;
-     list-style: none;
-     padding: 10px;
+    list-style: none;
+    padding: 10px;
     align-content: stretch;
-     display: flex;
+    display: flex;
     justify-content: flex-start;
-        width: 12vw;
-        height: 8vh;
- }
+    width: 12vw;
+    height: 8vh;
+}
 
-    .Leaderboard .LeaderboardBody .score {
-        color: #fff;
-        text-decoration: none;
-        font-size: 20px;
-        list-style: none;
+.Leaderboard .LeaderboardBody .score {
+    color: #fff;
+    text-decoration: none;
+    font-size: 20px;
+    list-style: none;
+    padding: 10px;
+    align-content: stretch;
+    justify-content: end;
+    width: 8vw;
+}
+
+/* Responsive Styles */
+
+@media screen and (max-width: 768px) {
+    .Leaderboard .LeaderboardBody ul li {
+        width: 80vw;
+        margin-left: 80px;
+        height: auto;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .Leaderboard .LeaderboardBody ul li {
+        margin-left: 80px;
+        flex-direction: column;
+        align-items: flex-start;
         padding: 10px;
-        align-content: stretch;
-        justify-content: end;
-        width: 8vw;
+        height: auto;
     }
 
+    .Leaderboard .LeaderboardBody .avatar,
+    .Leaderboard .LeaderboardBody .nickname,
+    .Leaderboard .LeaderboardBody .score {
+        width: 100%;
+        height: auto;
+    }
+}

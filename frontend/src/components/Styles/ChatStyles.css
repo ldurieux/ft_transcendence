@@ -13,7 +13,7 @@ body {
 
 .ChanList {
     position: fixed;
-    margin-left: 280px;
+    margin-left: 100px;
     background-color: #1e2122;
     height: 80vh;
     width: 250px;
@@ -73,7 +73,7 @@ body {
 
 .Chat {
     position: fixed;
-    margin-left: 530px;
+    margin-left: 349px;
     background-color: #c5c6cc;
     height: 80vh;
     width: calc(100% - 530px);
@@ -105,6 +105,10 @@ body {
 
 /* Media queries */
 @media (max-width: 1200px) {
+    .ChanList {
+        margin-left: 80px;
+        width: 200px;
+    }
     .Chat {
         margin-left: 280px;
         width: calc(100% - 280px);
@@ -113,9 +117,15 @@ body {
 
 @media (max-width: 768px) {
     .ChanList {
-        margin-left: 0;
-        width: 100%;
+        margin-left: 80px;
+        width: calc(100% - 80px);
         height: 200px;
+    }
+
+    .bx-cog-container {
+        position: sticky;
+        bottom: 0;
+        left: 0;
     }
 
     .ChooseList button {
@@ -128,6 +138,7 @@ body {
         height: calc(100vh - 280px);
         width: 100%;
         margin-top: 200px;
+        margin-left: 80px;
     }
 }
 
@@ -156,12 +167,45 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 400px;
+    width: auto;
+    max-width: 400px;
     height: 300px;
     background-color: red;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    padding: 20px;
 }
+
+.CreateChannel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.CreateChannel h3 {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.CreateChannel .inputButtonWrapper {
+    display: flex; /* Ajouter une flexbox pour aligner les éléments horizontalement */
+    align-items: center; /* Centrer verticalement les éléments */
+    justify-content: center; /* Centrer horizontalement les éléments */
+    margin-bottom: 10px;
+}
+
+.CreateChannel input {
+    width: 50%;
+    max-width: 150px;
+    margin-right: 10px; /* Ajouter une marge à droite pour l'espace entre le champ de saisie et le bouton */
+}
+
+.CreateChannel .CreateButton {
+    align-self: flex-end;
+}
+
 
 .bx-x-icon {
     font-size: 24px;

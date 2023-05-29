@@ -25,6 +25,7 @@ class Authentication extends Component {
 
 
   render() {
+        const logo = require("../components/Utils/42-logo.png");
         if (localStorage.getItem('token')) {
             window.location.href = "/profile";
         }
@@ -38,9 +39,12 @@ class Authentication extends Component {
     return (
 
       <div className="AuthBody">
-        <a href={`https://api.intra.42.fr/oauth/authorize?client_id=${process.env.REACT_APP_INTRA_ID}&redirect_uri=http%3A%2F%2F${process.env.REACT_APP_WEB_HOST}%3A${process.env.REACT_APP_FRONT_PORT}%2Flogin&response_type=code`}>
-            Login <br/>
-        </a>
+          <a className="btn-42-login"
+             href={`https://api.intra.42.fr/oauth/authorize?client_id=${process.env.REACT_APP_INTRA_ID}&redirect_uri=http%3A%2F%2F${process.env.REACT_APP_WEB_HOST}%3A${process.env.REACT_APP_FRONT_PORT}%2Flogin&response_type=code`}>
+              <img src={logo}/>
+              <span className="separator">|</span>
+              <span>Sign in as student</span>
+          </a>
       </div>
     );
   }

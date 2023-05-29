@@ -6,7 +6,7 @@ import UserContext from "../Utils/context.tsx";
 const Header = () => {
     //getAvatar from profile.tsx
     const [user, setUser] = useState({});
-    const [isSidebarOpen, setSidebarOpen] = useState(false);
+    const [isSidebarOpen, setSidebarOpen] = useState(true);
 
     useEffect(() => {
         (async () => {

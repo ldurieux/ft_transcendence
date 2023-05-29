@@ -1,366 +1,298 @@
-* {
-    box-sizing: border-box;
-}
-
-.ProfileHeader {
-    background-color: #1e2122;
-    color: #fff;
-    align-items: center;
-    margin-bottom: 20px;
+.Profile {
+    background: #1e2122;
     height: 100vh;
 }
 
-.ProfileHeader h1 {
-    background-color: #1e2122;
+.ProfileHeader {
+    height: 100px;
     color: white;
-    padding: 20px;
+    display: flex;
+    justify-content: center;
     align-items: center;
-    text-align: center;
-    margin-bottom: 20px;
-    margin-left: 200px;
-    font-size: 50px;
-    font-weight: bold;
+    border-bottom: 2px solid white;
 }
 
-.ProfileHeader .ProfileBody {
-    background-color: #1e2122;
+.ProfileBody {
+    display: flex;
+}
+
+.ProfileBody h2 {
     color: white;
-    overflow: scroll;
+    text-align: center;
+    margin-top: 20px;
 }
 
 .Left {
-    position: absolute;
-    margin-bottom: 20px;
+    margin-left: 250px;
+    width: calc(50% - 250px);
+}
+
+.Left .Avatar {
     text-align: center;
-    margin-left: 350px;
-    width: 30%;
-    height: 75vh;
-    float: left;
+}
+
+.Left .Avatar img {
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+}
+
+.Left .Avatar img:hover {
+    opacity: 0.5;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.Left .User {
+    text-align: center;
+    font-weight: 700;
+    color: white;
+    font-size: 35px;
+}
+
+.Left .Nickname {
+    color: white;
+    font-size: 25px;
+    font-weight: 400;
+    text-align: center;
+}
+
+.Left .Username {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.Left .Username input {
+    width: 200px;
+    padding: 5px;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+    border-bottom: 1px solid white;
+    background: #1e2122;
+    color: white;
+
+}
+
+.Left .Username input::placeholder {
+    color: white;
+}
+
+.Left .Username input:hover {
+    opacity: 0.5;
+    transition: 0.3s ease;
+}
+
+.Left .Username button {
+    margin-left: 10px;
+    padding: 5px;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+    background: #333;
+    color: white;
+    cursor: pointer;
+}
+
+.Left .Username button:hover {
+    opacity: 0.5;
+    transition: 0.3s ease;
 }
 
 .Right {
-    position: absolute;
-    margin-bottom: 20px;
-    text-align: center;
-    margin-left: 60%;
-    float: right;
-}
-
-.ProfileHeader .ProfileBody .Avatar img {
-    text-align: left;
     display: flex;
-    border-radius: 50%;
-    color: black;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-right: 250px;
+    width: calc(100% - 150px);
 }
 
-.ProfileHeader .ProfileBody .Avatar label {
-    text-align: left;
-    display: flex;
-    border: none;
-    text-decoration: none;
-    margin-left: 10px;
-    cursor: pointer;
-    width: 300px;
-    border-radius: 50%;
-    background: white;
-}
-
-.ProfileHeader .ProfileBody .Avatar img:hover {
-    opacity: 0.5;
-    transition: 0.3s ease;
-    cursor: pointer;
-}
-
-
-.Nickname {
-    color: white;
-    font-size: 25px;
-    margin-bottom: 1px;
-    text-align: left;
-}
-
-.User {
-    color: white;
-    font-size: 35px;
-    display: flex;
-    font-weight: bold;
-}
-
-.Username {
-    color: white;
-    font-size: 35px;
-    margin-bottom: 1px;
-    text-align: left;
-
-}
-
-.Username input {
-    color: white;
-    font-size: 25px;
-    margin-bottom: 1px;
+.Right .FriendsList {
+    margin-top: 20px;
+    width: 100%;
     text-align: center;
-    background-color: #1e2122;
-    border: none;
-    border-bottom: 1px solid white;
-    outline: none;
-}
-
-.Username input:focus {
-    outline: none;
-}
-
-.Username input::placeholder {
     color: white;
-    font-size: 25px;
-    margin-bottom: 1px;
-    text-align: center;
 }
 
-.Username input:hover {
-    opacity: 0.5;
-    transition: 0.3s ease;
-    cursor: pointer;
+ .FriendsList ul {
+    list-style-type: none;
+    padding: 0;
+    overflow-x: scroll;
+    white-space: nowrap;
 }
 
-.Username input:active {
-    outline: none;
-}
-
-.Username button {
-    background-color: #333;
-    border: none;
-    color: #fff;
-    font-weight: 700;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    font-size: 20px;
-    margin-left: 10px;
-    cursor: pointer;
-    outline: none;
-}
-
-.Username button:hover {
-    opacity: 0.5;
-    transition: 0.3s ease;
-    cursor: pointer;
-}
-
-.Username button:active {
-    outline: none;
-}
-
-.FriendsList {
-    margin-bottom: 1px;
-}
-
-.FriendsList .FriendsListSearch h2 {
-    color: white;
-    font-size: 35px;
-    margin-bottom: 1px;
-    text-align: center;
-}
-
-.FriendsList .FriendsListSearch ul {
-    overflow: scroll;
-}
-
-.FriendsList .FriendsListSearch ul li {
+ .FriendsList li {
     display: inline-block;
+    padding: 10px;
+    border-radius: 5px;
     background-color: #333;
-    border: none;
-    color: #fff;
-    font-weight: 500;
-    padding: 10px 20px;
     text-align: center;
-    font-size: 20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+     width: auto;
+     max-width: 8ch;
 }
 
-.FriendsList .FriendsListSearch ul li:hover {
+ .FriendsList li:hover {
     opacity: 0.5;
     transition: 0.3s ease;
     cursor: pointer;
+}
+
+ .Popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh!important;
+    width: 100vw!important;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+ }
+
+ .Popup p {
+    font-size: 30px;
+    font-weight: 700;
+    color: white;
+    text-align: center;
+    margin-bottom: 20px;
+ }
+
+ .PopupMessage {
+    background: deepskyblue;
+     padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+     color: white;
+ }
+.PopupMessage:hover {
+    opacity: 0.5;
+    transition: 0.3s ease;
+    cursor: pointer;
+}
+
+ .PopupRemoveFriend {
+    background: red;
+     padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+     color: white;
+ }
+
+ .PopupRemoveFriend:hover {
+    opacity: 0.5;
+    transition: 0.3s ease;
+    cursor: pointer;
+ }
+
+.PopupClose {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 30px;
+    color: white;
+    cursor: pointer;
+    background: none;
+    border: none;
+    outline: none;
+    list-style: none;
+}
+
+.PopupClose:hover {
+    opacity: 0.5;
+    transition: 0.3s ease;
 }
 
 .AddFriend {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
     color: white;
-    margin-top: 100px;
-}
-
-.AddFriend h2 {
-    color: white;
-    margin-bottom: 10px;
-    text-align: center;
 }
 
 .AddFriend input {
-    color: white;
-    font-size: 25px;
-    margin-bottom: 100px;
-    text-align: center;
-    background-color: #1e2122;
+    width: 200px;
+    padding: 8px;
     border: none;
+    border-radius: 5px;
+    outline: none;
     border-bottom: 1px solid white;
-    outline: none;
-}
-
-.AddFriend input:focus {
-    outline: none;
+    background: #1e2122;
+    color: white;
 }
 
 .AddFriend input::placeholder {
     color: white;
-    font-size: 25px;
-    margin-bottom: 1px;
-    text-align: center;
 }
 
 .AddFriend input:hover {
     opacity: 0.5;
     transition: 0.3s ease;
-    cursor: pointer;
-}
-
-.AddFriend input:active {
-    outline: none;
 }
 
 .AddFriend button {
-    background-color: #333;
-    border: none;
-    color: #fff;
-    font-weight: 700;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    font-size: 20px;
     margin-left: 10px;
-    cursor: pointer;
+    padding: 8px;
+    border: none;
+    border-radius: 5px;
     outline: none;
+    background: #333;
+    color: white;
+    cursor: pointer;
 }
 
 .AddFriend button:hover {
     opacity: 0.5;
     transition: 0.3s ease;
-    cursor: pointer;
 }
 
-.AddFriend button:active {
-    outline: none;
-}
-
- .RequestReceived ul {
-    overflow: scroll;
-}
-
- .RequestReceived ul li {
-    display: inline-block;
-    border: none;
-    font-weight: 500;
-    padding: 10px 20px;
-    text-align: center;
-    font-size: 20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-     cursor: pointer;
-}
-
- .RequestReceived ul li:hover {
-    opacity: 0.5;
-    transition: 0.3s ease;
-    cursor: pointer;
-}
-
-.FriendsList .Popup {
-    position: fixed;
-    left: 70%;
-    top: 350px;
-    transform: translate(-50%, -50%);
-    width: auto;
-    height: auto;
-    z-index: 9999;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-}
-
-.FriendsList .Popup ul li {
-    display: inline-block;
-    background-color: #333;
-    border: none;
-    color: #fff;
-    font-weight: 500;
-    padding: 10px 20px;
-    text-align: center;
-    font-size: 20px;
-    cursor: pointer;
-}
-
-.FriendsList .Popup ul li:hover {
-    opacity: 0.5;
-    transition: 0.3s ease;
-    cursor: pointer;
-}
-
-.FriendsList .Popup .PopupRemoveFriend {
-    background: #9c0303;
-}
-
-
-
-.popupError {
-    position: fixed;
-    left: 450px;
-    top: 100px;
-    transform: translate(-50%, -50%);
-    width: auto;
-    height: auto;
-    z-index: 9999;
-    border-radius: 5px;
-    color: white;
-    background-color: #9c0303;
-    font-size: 20px;
-    animation: fadein 2s;
-    -moz-animation: fadein 2s; /* Firefox */
-    -webkit-animation: fadein 2s; /* Safari et Chrome */
-    -o-animation: fadein 2s; /* Opera */
-}
-
-.vignets {
-
-    animation: fadein 2s;
-    -moz-animation: fadein 2s; /* Firefox */
-    -webkit-animation: fadein 2s; /* Safari et Chrome */
-    -o-animation: fadein 2s; /* Opera */
-}
-@keyframes fadein {
-    from {
-        opacity:0;
+@media screen and (max-width: 600px) {
+    .ProfileHeader {
+        display: none;
     }
-    to {
-        opacity:1;
+    .ProfileBody {
+        flex-direction: column;
+    }
+
+    .Left,
+    .Right {
+        margin-left: 0 !important;
+        width: 100%;
+    }
+
+    .Left .Avatar {
+    }
+
+    .Left .Avatar img {
+        width: 200px;
+        height: 200px;
     }
 }
-@-moz-keyframes fadein { /* sur Firefox */
-    from {
-        opacity:0;
+
+@media screen and (max-width: 1200px) {
+
+    .ProfileHeader {
+        height: 30px;
     }
-    to {
-        opacity:1;
+
+    .ProfileBody {
+        flex-direction: column;
     }
-}
-@-webkit-keyframes fadein { /* sur Safari et Chrome */
-    from {
-        opacity:0;
+
+    .Right {
+        margin-left: 80px !important;
+        width: 100%;
     }
-    to {
-        opacity:1;
-    }
-}
-@-o-keyframes fadein { /* sur Opera */
-    from {
-        opacity:0;
-    }
-    to {
-        opacity: 1;
+
+    .Left {
+        margin-left: 80px !important;
+        width: 100%;
     }
 }
+

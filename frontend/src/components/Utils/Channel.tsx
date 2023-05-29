@@ -108,13 +108,19 @@ function Channel() {
                     <i className='bx bx-x bx-x-icon' onClick={() => setShowPopup(false)}></i>
                     <div className="popupContent">
                     {/*    input with button to create a public channel */}
-                        <input
-                            type="text"
-                            placeholder="Enter Channel Name"
-                            value={ChannelName}
-                            onChange={(e) => setChannelName(e.target.value)}
-                            onKeyDown={handleKeyDown}
-                        />
+                        <div className="CreateChannel">
+                            <h3>Create a public channel</h3>
+                            <div className="inputButtonWrapper">
+                            <input
+                                type="text"
+                                placeholder="Enter Channel Name"
+                                value={ChannelName}
+                                onChange={(e) => setChannelName(e.target.value)}
+                                onKeyDown={handleKeyDown}
+                            />
+                            <button className="CreateButton" onClick={() => createPublicChannel(ChannelName)}>Create</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             )}

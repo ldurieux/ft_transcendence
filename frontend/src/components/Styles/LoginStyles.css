@@ -4,12 +4,32 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #fff;
-    text-decoration: none;
 }
 
-.AuthBody a {
-color: #fff;
+.btn-42-login {
+    background-color: #00babc;
+    border: none;
+
+    display: block;
+    line-height: 1.6em;
+    font-size: 1.8em;
+    border-radius: .32em;
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+    text-transform: uppercase;
+
     text-decoration: none;
-    font-size: 50px;
+    font-family: "Futura PT", "Futura", "Helvetica";
+
+    width: 400px;
+}
+
+.btn-42-login img {
+    height: 20px;
+}
+
+.btn-42-login .separator {
+    padding-left: 10px;
+    padding-right: 10px;
 }
