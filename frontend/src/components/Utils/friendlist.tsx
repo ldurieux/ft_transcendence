@@ -32,7 +32,6 @@ function Friendlist() {
 
     async function AddToList() {
         try {
-            let newList = list;
             const user = await get("user?username=" + friend);
             if (!user.id) {
                 setFriend("");
@@ -40,9 +39,9 @@ function Friendlist() {
             }
             const result = await post("user/friend", { id: user.id });
             if (result.status === "created") {
-                newList.push(user);
-                setList(newList);
                 setRequest(request.filter((item) => item.id !== user.id));
+                const result = await get("user/self");
+                setList(result.friends);
             }
             setFriend("");
         } catch (error) {
@@ -95,6 +94,17 @@ function Friendlist() {
         })();
     }, []);
 
+    useEffect(() => {
+        const interval = setInterval(() => {
+            (async () => {
+                const result = await get("user/self");
+                setList(result.friends);
+                setRequest(result.receivedRequests);
+            })();
+        }, 3000);
+        return () => clearInterval(interval);
+    }, []);
+
     return (
         <div>
             <Popup
@@ -104,7 +114,12 @@ function Friendlist() {
             >
                 {selectedFriendIndex !== null && (
                     <div className="Popup">
-                        <p>{list[selectedFriendIndex]?.display_name}</p>
+                        <div className="FriendInformation">
+                            <img
+                                src={list[selectedFriendIndex]?.profile_picture}/>
+                            <p>{list[selectedFriendIndex]?.display_name}</p>
+                        </div>
+                        <div className="FriendsOptions">
                         <ul>
                             <li
                                 className="PopupMessage"
@@ -125,6 +140,7 @@ function Friendlist() {
                                 Close
                             </li>
                         </ul>
+                        </div>
                     </div>
                 )}
             </Popup>

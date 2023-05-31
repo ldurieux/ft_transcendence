@@ -82,7 +82,6 @@ function ProfileUser({children}) {
                 />
             </div>
             <div className="User">
-                <br />
                 {user?.auths?.[0].username ?? "--"}
                 <br />
             </div>

@@ -118,7 +118,7 @@ function Channel() {
             </div>
             <div className="Chat">
                 <div className="ChatBoxHeader">
-                    <h3>{channel.display_name}</h3>
+                    <h3>{channel?.display_name}</h3>
                 </div>
                 <div className="ChatBox">
                     <div className="ChatBoxBody">

@@ -9,12 +9,15 @@ const Header = () => {
     const [isSidebarOpen, setSidebarOpen] = useState(true);
 
     useEffect(() => {
+        const interval = setInterval(() => {
         (async () => {
             if (localStorage.getItem('token')) {
                 const result = await get('user/self');
                 setUser(result);
             }
         })();
+        }, 2000);
+        return () => clearInterval(interval);
     }, [])
 
     const toggleSidebarOpen = () => {
