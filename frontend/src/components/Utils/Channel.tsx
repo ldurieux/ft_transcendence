@@ -10,6 +10,7 @@ function Channel() {
     const [ChannelName, setChannelName] = useState("");
     const [channel, setChannel] = useState("");
     const [chanSettings, setChanSettings] = useState(false);
+    const [showList, setShowList] = useState(false);
 
     // useEffect to get the list of channels and friends
     useEffect(() => {
@@ -151,6 +152,11 @@ function Channel() {
                             />
                             <button className="CreateButton" onClick={() => createPublicChannel(ChannelName)}>Create</button>
                             </div>
+                        </div>
+                        <div className="ShowPublicChannel">
+                            <button>
+                                Show Public Channels
+                            </button>
                         </div>
                     </div>
                 </div>

@@ -13,7 +13,8 @@ const Header = () => {
         (async () => {
             if (localStorage.getItem('token')) {
                 const result = await get('user/self');
-                setUser(result);
+                if (result)
+                    setUser(result);
             }
         })();
         }, 2000);
