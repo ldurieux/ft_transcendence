@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { get, post } from "./Request.tsx";
+import { websocketclient } from 'ws';
 
 function Channel() {
     const [friendsList, setFriendsList] = useState([]);
