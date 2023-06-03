@@ -222,7 +222,7 @@ export class ChannelService {
         }
 
         if (await this.channelExist(name)) {
-            throw new HttpException("Channel already exist", HttpStatus.CONFLICT)
+            throw new HttpException("ChatMain already exist", HttpStatus.CONFLICT)
         }
 
         const channel: Channel = new Channel()
@@ -246,7 +246,7 @@ export class ChannelService {
         }
 
         if (await this.channelExist(name)) {
-            throw new HttpException("Channel already exist", HttpStatus.CONFLICT)
+            throw new HttpException("ChatMain already exist", HttpStatus.CONFLICT)
         }
 
         const channel: Channel = new Channel();
@@ -292,7 +292,7 @@ export class ChannelService {
             }
         });
         if (!channel) {
-            throw new HttpException("Channel does not exist", HttpStatus.NOT_FOUND);
+            throw new HttpException("ChatMain does not exist", HttpStatus.NOT_FOUND);
         }
         return channel;
     }

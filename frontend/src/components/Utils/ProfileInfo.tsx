@@ -1,5 +1,6 @@
 import React, {useEffect, useState, useRef } from "react";
 import {get, post} from "./Request.tsx";
+import {wrapMapToPropsConstant} from "react-redux/es/connect/wrapMapToProps";
 
 
 
@@ -8,6 +9,7 @@ function ProfileUser({children}) {
     const inputRef = useRef(null);
     const [error, setError] = useState(null);
     const [username, setUsername] = useState("");
+    const defaultAvatar = require("./42-logo.png");
 
     async function timeout(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
@@ -70,7 +72,12 @@ function ProfileUser({children}) {
             </p>
             <div className="Avatar">
                 <label htmlFor="avatarInput">
-                    <img id="avatar" src={user?.profile_picture} alt="Avatar" />
+                    <img
+                        src={user?.profile_picture ?? defaultAvatar}
+                        alt="Avatar"
+                        width="100"
+                        height="100"
+                    />
                 </label>
                 <input
                     type="file"

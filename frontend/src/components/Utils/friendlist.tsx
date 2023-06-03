@@ -9,6 +9,7 @@ function Friendlist() {
     const [show, setShow] = useState(false);
     const [selectedFriendIndex, setSelectedFriendIndex] = useState(null);
     const [error, setError] = useState(null);
+    const defaultAvatar = require("./42-logo.png");
 
     const popupCloseHandler = (e) => {
         setShow(e);
@@ -116,7 +117,7 @@ function Friendlist() {
                     <div className="Popup">
                         <div className="FriendInformation">
                             <img
-                                src={list[selectedFriendIndex]?.profile_picture}/>
+                                src={list[selectedFriendIndex]?.profile_picture ?? defaultAvatar}/>
                             <p>{list[selectedFriendIndex]?.display_name}</p>
                         </div>
                         <div className="FriendsOptions">

@@ -84,20 +84,7 @@ body {
     justify-content: flex-end;
 }
 
-.Chat .ChatBoxHeader {
-    position: sticky;
-    top: 0;
-    padding: 10px;
-    text-align: center;
-    background-color: #333;
-}
-
-.Chat .ChatBoxHeader h3 {
-    margin: 0;
-    color: white;
-}
-
-.Chat .ChatBoxBody {
+.Chat .ChatBox {
     height: 70vh;
     width: 100%;
     overflow: scroll;

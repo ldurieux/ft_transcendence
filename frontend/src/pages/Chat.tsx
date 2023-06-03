@@ -1,6 +1,6 @@
 import React, {Component, useEffect} from "react";
 import "../components/Styles/ChatStyles.css";
-import Channel from "../components/Utils/Channel.tsx";
+import ChatMain from "../components/Utils/ChatMain.tsx";
 
 class Chat extends Component {
 
@@ -11,7 +11,7 @@ class Chat extends Component {
 
         return (
             <div>
-                <Channel/>
+                <ChatMain/>
             </div>
         );
     }
