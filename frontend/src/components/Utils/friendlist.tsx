@@ -60,6 +60,7 @@ function Friendlist() {
                 return;
             }
             await post("user/friend", { id: user.id });
+            await post("channel", { type: 'dm', other: user.id });
             setList([...list, user]);
             setRequest(request.filter((item) => item.id !== user.id));
         } catch (error) {

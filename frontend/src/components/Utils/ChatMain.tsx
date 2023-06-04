@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { get, post } from "./Request.tsx";
 import Channel from "./Channel.tsx";
+import List from "./list.tsx";
 
 function ChatMain() {
     const [friendsList, setFriendsList] = useState([]);
@@ -20,6 +21,7 @@ function ChatMain() {
             const channels = await get("channel");
             setFriendsList(result.friends);
             setChannelList(channels);
+            console.log(channels)
         })();
     }, []);
 
@@ -64,6 +66,15 @@ function ChatMain() {
         }
     }
 
+    async function joinChannel(chan) {
+        try {
+            const result = await post("channel/join", { id: chan.id });
+            console.log(result);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     const handleKeyDown = (event) => {
         if (event.key === 'Enter') {
             // 👇 Get input value
@@ -84,7 +95,7 @@ function ChatMain() {
                         className={`ChanButton ${selectedList === "ChatMain" ? "ChanButtonSelected" : "ButtonUnselected"}`}
                         onClick={() => switchList("ChatMain")}
                     >
-                        ChatMain
+                        Channel
                     </button>
                     <button
                         className={`ChanButton ${selectedList === "Friends" ? "ChanButtonSelected" : "ButtonUnselected"}`}
@@ -96,22 +107,32 @@ function ChatMain() {
                 {selectedList === "ChatMain" ? (
                     <ul className="Channels">
                         {channelList.length > 0 &&
-                            channelList.map((item, index) => (
-                                <li key={index} onClick={() => openChannel(item)}>
-                                    {item?.display_name}
-                                    <i className="bx bx-plus" onClick={() => handlePlusButtonClick(item)}></i>
-                                </li>
-                            ))}
+                            channelList.map((item, index) => {
+                                if (item.type !== "dm") {
+                                    return (
+                                        <li key={index} onClick={() => openChannel(item)}>
+                                            {item?.display_name}
+                                            <i className="bx bx-plus" onClick={() => handlePlusButtonClick(item)}></i>
+                                        </li>
+                                    );
+                                }
+                                return null;
+                            })}
                     </ul>
                 ) : (
                     <ul className="Channels">
-                        {friendsList.length > 0 &&
-                            friendsList.map((item, index) => (
-                                <li key={index} onClick={() => openChannel(item)}>
-                                    {item?.display_name}
-                                    <i className="bx bx-plus"></i>
-                                </li>
-                            ))}
+                        {channelList.length > 0 &&
+                            channelList.map((item, index) => {
+                                if (item.type === "dm") {
+                                    return (
+                                        <li key={index} onClick={() => openChannel(item)}>
+                                            {item?.display_name}
+                                            <i className="bx bx-plus" onClick={() => handlePlusButtonClick(item)}></i>
+                                        </li>
+                                    );
+                                }
+                                return null;
+                            })}
                     </ul>
                 )}
                 <div className="bx-cog-container">
@@ -150,11 +171,16 @@ function ChatMain() {
                             </div>
                         </div>
                         <div className="ShowPublicChannel">
-                            <button>
+                            <button onClick={() => setShowList(!showList)}>
                                 Show Public Channels
                             </button>
                         </div>
                     </div>
+                    <List
+                        list={channelList}
+                        onClick={joinChannel}
+                        showList={showList}
+                    />
                 </div>
             )}
             {chanSettings && (

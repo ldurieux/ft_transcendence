@@ -1,7 +1,6 @@
-import React, {useEffect, useState, useContext} from "react";
+import React, {useEffect, useState} from "react";
 import { startTransition } from "react";
 import { get } from "../Utils/Request.tsx";
-import UserContext from "../Utils/context.tsx";
 
 const Header = () => {
     //getAvatar from profile.tsx
@@ -17,7 +16,7 @@ const Header = () => {
                     setUser(result);
             }
         })();
-        }, 2000);
+        }, 5000);
         return () => clearInterval(interval);
     }, [])
 
@@ -43,39 +42,39 @@ const Header = () => {
           </div>
               <ul className={`nav-links ${isSidebarOpen ? "" : "close"}`}>
             <li>
-                <a onClick={() => startTransition(() => {
+                <p onClick={() => startTransition(() => {
                     window.location.href = "/login";})}>
                     <i className='bx bx-log-in'></i>
                     <span className="links_name">Login</span>
-                </a>
+                </p>
             </li>
             <li>
-                <a onClick={() => startTransition(() => {
+                <p onClick={() => startTransition(() => {
                     window.location.href = "/Game";})}>
                     <i className='bx bx-game'></i>
                     <span className="links_name">Game</span>
-                </a>
+                </p>
             </li>
             <li>
-                <a onClick={() => startTransition(() => {
+                <p onClick={() => startTransition(() => {
                     window.location.href = "/profile";})}>
                     <i className='bx bx-user-circle'></i>
                     <span className="links_name">Profile</span>
-                </a>
+                </p>
             </li>
             <li>
-                <a onClick={() => startTransition(() => {
+                <p onClick={() => startTransition(() => {
                     window.location.href = "/leaderboard";})}>
                     <i className='bx bx-list-ol'></i>
                     <span className="links_name">Leaderboard</span>
-                </a>
+                </p>
             </li>
             <li>
-                <a onClick={() => startTransition(() => {
+                <p onClick={() => startTransition(() => {
                     window.location.href = "/chat";})}>
                     <i className='bx bx-chat'></i>
                     <span className="links_name">Chat</span>
-                </a>
+                </p>
             </li>
             <li>
           <div className="profile-details">
