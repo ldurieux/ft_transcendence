@@ -26,7 +26,7 @@ export class ChannelController {
                 throw new HttpException("", HttpStatus.BAD_REQUEST);
             }
 
-            return this.channelService.getChannelInfo(user, val);
+            return await this.channelService.getChannelInfo(user, val);
         }
         
         return this.channelService.listSelfChannel(user);

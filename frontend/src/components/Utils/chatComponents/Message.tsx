@@ -1,8 +1,8 @@
 import React from "react";
-import "../Styles/messageStyles.css";
+import "../../Styles/messageStyles.css";
 
 function Message({message}) {
-    const defaultAvatar = require("./42-logo.png");
+    const defaultAvatar = require("../42-logo.png");
 
     return (
         <div className="message">

@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { get, post } from "./Request.tsx";
-import Channel from "./Channel.tsx";
-import List from "./list.tsx";
+import Channel from "./chatComponents/Channel.tsx";
+import ChannelList from "./list.tsx";
 
 function ChatMain() {
-    const [friendsList, setFriendsList] = useState([]);
     const [channelList, setChannelList] = useState([]);
     const [selectedList, setSelectedList] = useState("ChatMain");
     const [message, setMessage] = useState("");
@@ -13,13 +12,12 @@ function ChatMain() {
     const [channel, setChannel] = useState("");
     const [chanSettings, setChanSettings] = useState(false);
     const [showList, setShowList] = useState(false);
+    const [chanParams, setChanParams] = useState({});
 
     // useEffect to get the list of channels and friends
     useEffect(() => {
         (async () => {
-            const result = await get("user/self");
             const channels = await get("channel");
-            setFriendsList(result.friends);
             setChannelList(channels);
             console.log(channels)
         })();
@@ -41,6 +39,8 @@ function ChatMain() {
 
     const openChannel = (channel) => {
         setChannel(channel);
+        const result = get ("channel?id=" + channel.id);
+        setChanParams(result);
         console.log(channelList);
     }
 
@@ -69,6 +69,7 @@ function ChatMain() {
     async function joinChannel(chan) {
         try {
             const result = await post("channel/join", { id: chan.id });
+            setChannelList([...channelList, chan]);
             console.log(result);
         } catch (error) {
             console.error(error);
@@ -141,7 +142,7 @@ function ChatMain() {
             </div>
             <div className="Chat">
                 <div className="ChatBox">
-                    <Channel channel={channel} />
+                    <Channel channel={chanParams} />
                 </div>
                 <div className="ChatInput">
                     <input
@@ -176,8 +177,7 @@ function ChatMain() {
                             </button>
                         </div>
                     </div>
-                    <List
-                        list={channelList}
+                    <ChannelList
                         onClick={joinChannel}
                         showList={showList}
                     />

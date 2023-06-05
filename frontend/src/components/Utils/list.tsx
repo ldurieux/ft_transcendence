@@ -1,7 +1,23 @@
 import React from "react";
 import "../Styles/listStyles.css";
+import { useState, useEffect } from "react";
+import { get } from "./Request.tsx";
 
-function List({list, onClick, showList = false}) {
+async function getPublicChannels() {
+    const result = await get("channel/public");
+    return result;
+}
+
+function ChannelList({onClick, showList = false}) {
+    const [list, setList] = useState([]);
+
+    useEffect(() => {
+        (async () => {
+            const channels = await getPublicChannels();
+            setList(channels);
+        })();
+    }, []);
+
     return (
         <div className="list">
             {showList &&
@@ -20,4 +36,4 @@ function List({list, onClick, showList = false}) {
     );
 }
 
-export default List;
+export default ChannelList;
