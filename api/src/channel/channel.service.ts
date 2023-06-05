@@ -10,6 +10,8 @@ import { User } from 'src/user/user.entity';
 import { UserService } from 'src/user/user.service';
 import { Message } from 'src/message/message.entity';
 import { MessageService } from 'src/message/message.service';
+import { Action } from 'src/action/action.entity';
+import { ActionService } from 'src/action/action.service';
 
 @Injectable()
 export class ChannelService {
@@ -17,7 +19,8 @@ export class ChannelService {
         @InjectRepository(Channel)
         private channelRepository: Repository<Channel>,
         private readonly userService: UserService,
-        private readonly messageService: MessageService
+        private readonly messageService: MessageService,
+        private readonly actionService: ActionService,
     ) {}
 
     async listPublic() {
@@ -107,6 +110,9 @@ export class ChannelService {
             throw new HttpException("User already in channel", HttpStatus.CONFLICT)
         }
 
+        if (await this.actionService.isBanned(self, channel))
+            throw new HttpException("Banned", HttpStatus.FORBIDDEN)
+
         channel.users.push(self);
         return this.channelRepository.save(channel);
     }
@@ -123,6 +129,8 @@ export class ChannelService {
         if (this.userService.isBlocked(from, user.id) || this.userService.isBlocked(user, from.id)) {
             throw new HttpException("User is blocked", HttpStatus.FORBIDDEN);
         }
+        if (await this.actionService.isBanned(user, channel))
+            throw new HttpException("User is banned", HttpStatus.FORBIDDEN)
 
         channel.users.push(user);
         await this.channelRepository.save(channel);
@@ -136,6 +144,28 @@ export class ChannelService {
         channel.users = channel.users.filter(e => e.id != user.id)
         channel.admins = channel.admins.filter(e => e.id != user.id)
         await this.channelRepository.save(channel);
+    }
+
+    async banUser(from: User, user: User, channelId: number, duration: number) {
+        const channel: Channel = await this.getChannel(channelId, true);
+
+        if (await this.actionService.isBanned(user, channel))
+            throw new HttpException("User already banned", HttpStatus.CONFLICT)
+
+        await this.kickUser(from, user, channelId);
+
+        await this.actionService.addBan(user, channel, duration);
+    }
+
+    async muteUser(from: User, user: User, channelId: number, duration: number) {
+        const channel: Channel = await this.getChannel(channelId, true);
+
+        this.canEditUser(from, user, channel);
+
+        if (await this.actionService.isMuted(user, channel))
+            throw new HttpException("User already muted", HttpStatus.CONFLICT)
+
+        await this.actionService.addMute(user, channel, duration);
     }
 
     async promoteUser(from: User, user: User, channelId: number) {
@@ -356,6 +386,9 @@ export class ChannelService {
 
     async sendMessage(user: User, channelId: number, text: string): Promise<Message> {
         const channel: Channel = await this.getChannel(channelId, true);
+
+        if (await this.actionService.isMuted(user, channel))
+            throw new HttpException("Muted", HttpStatus.FORBIDDEN)
 
         if (channel.users.some(e => e.id == user.id)) {
             delete channel.users;

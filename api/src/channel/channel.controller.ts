@@ -133,6 +133,44 @@ export class ChannelController {
     }
 
     @UseGuards(AuthGuard)
+    @Post('ban')
+    async banUser(@Request() req) {
+        const from: User = await this.userService.getUser(req['user']);
+
+        const { userId, channelId, duration } = req.body;
+        if (typeof userId !== 'number' || typeof channelId !== 'number' || typeof duration !== 'number') {
+            throw new HttpException("", HttpStatus.BAD_REQUEST)
+        }
+
+        if (duration <= 0) {
+            throw new HttpException("", HttpStatus.BAD_REQUEST)
+        }
+
+        const user: User = await this.userService.getUser(userId);
+        await this.channelService.banUser(from, user, channelId, duration);
+        return { status: "banned" };
+    }
+
+    @UseGuards(AuthGuard)
+    @Post('mute')
+    async muteUser(@Request() req) {
+        const from: User = await this.userService.getUser(req['user']);
+
+        const { userId, channelId, duration } = req.body;
+        if (typeof userId !== 'number' || typeof channelId !== 'number' || typeof duration !== 'number') {
+            throw new HttpException("", HttpStatus.BAD_REQUEST)
+        }
+
+        if (duration <= 0) {
+            throw new HttpException("", HttpStatus.BAD_REQUEST)
+        }
+
+        const user: User = await this.userService.getUser(userId);
+        await this.channelService.muteUser(from, user, channelId, duration);
+        return { status: "muted" };
+    }
+
+    @UseGuards(AuthGuard)
     @Post('promote')
     async promoteUser(@Request() req) {
         const from: User = await this.userService.getUser(req['user']);
