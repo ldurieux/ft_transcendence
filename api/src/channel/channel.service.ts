@@ -28,17 +28,42 @@ export class ChannelService {
             select: {
                 id: true,
                 display_name: true,
+            },
+            relations: {
+                users: true,
             }
         });
         return channels;
     }
 
     async listSelfChannel(user: User) {
-        const channels: Channel[] = await this.channelRepository.createQueryBuilder('channel')
+        let channels: Channel[] = await this.channelRepository.createQueryBuilder('channel')
             .leftJoinAndSelect('channel.users', 'user')
             .where('user.id = :userId', { userId: user.id })
             .select(['channel.id', 'channel.display_name', 'channel.type'])
             .getMany();
+
+        for (let i = 0; i < channels.length; i++) {
+            let channel: Channel = channels[i]
+
+            if (channel.type != "dm")
+                continue
+
+            channel = await this.channelRepository.findOne({
+                where: {
+                    id: channel.id
+                },
+                relations: {
+                    users: true
+                }
+            })
+
+            if (channel.users[0].id == user.id)
+                channels[i].display_name = channel.users[1].display_name
+            else
+                channels[i].display_name = channel.users[0].display_name
+        }
+
         return channels;
     }
 
@@ -47,6 +72,13 @@ export class ChannelService {
         
         if (!channel.users.some(e => e.id == user.id)) {
             throw new HttpException("User not in channel", HttpStatus.FORBIDDEN);
+        }
+
+        if (channel.type == "dm") {
+            if (channel.users[0].id == user.id)
+                channel.display_name = channel.users[1].display_name
+            else
+                channel.display_name = channel.users[0].display_name
         }
 
         delete channel.password_hash;

@@ -6,6 +6,7 @@ import { ChannelService } from './channel.service';
 import { UserService } from 'src/user/user.service';
 
 import { User } from 'src/user/user.entity';
+import { Channel } from './channel.entity';
 
 @Controller('channel')
 export class ChannelController {
@@ -62,8 +63,15 @@ export class ChannelController {
 
     @UseGuards(AuthGuard)
     @Get('public')
-    async getPublicChannels() {
-        return this.channelService.listPublic();
+    async getPublicChannels(@Request() req) {
+        const id = req['user']
+
+        let channels: Channel[] = await this.channelService.listPublic();
+
+        channels = channels.filter(c => !c.users.some(u => u.id == id))
+        channels.forEach(c => delete c.users)
+
+        return channels
     }
 
     @UseGuards(AuthGuard)
