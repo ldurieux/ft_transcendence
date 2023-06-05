@@ -15,6 +15,12 @@
     text-align: center;
 }
 
+.channel .channel-settings .bx-cog {
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+}
+
 .channel .channel-messages {
     height: 100%;
     width: 100%;

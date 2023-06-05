@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { get, post } from "./Request.tsx";
 import Channel from "./chatComponents/Channel.tsx";
 import ChannelList from "./list.tsx";
+import {PopupProvider} from "./chatComponents/PopupContext.tsx";
 
 function ChatMain() {
     const [channelList, setChannelList] = useState([]);
@@ -37,11 +38,10 @@ function ChatMain() {
         setShowPopup(true);
     };
 
-    const openChannel = (channel) => {
+    async function openChannel(channel)  {
         setChannel(channel);
-        const result = get ("channel?id=" + channel.id);
+        const result = await get ("channel?id=" + channel.id);
         setChanParams(result);
-        console.log(channelList);
     }
 
     async function leaveChannel() {
@@ -70,7 +70,6 @@ function ChatMain() {
         try {
             const result = await post("channel/join", { id: chan.id });
             setChannelList([...channelList, chan]);
-            console.log(result);
         } catch (error) {
             console.error(error);
         }
