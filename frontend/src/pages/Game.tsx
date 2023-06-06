@@ -1,10 +1,11 @@
 import React, { Component } from "react";
+import MyGame from "../components/Utils/game.tsx";
 
 class Game extends Component {
     render() {
         return (
             <div>
-                <h1>Game</h1>
+                <MyGame />
             </div>
         );
     }

@@ -14,6 +14,8 @@ import { FriendRequestModule } from './friend-request/friend-request.module';
 import { ChannelModule } from './channel/channel.module';
 import { Message } from './message/message.entity';
 
+import { EventsModule } from './socket_server/socket.chatModule';
+
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
@@ -30,7 +32,7 @@ import { Message } from './message/message.entity';
       }),
       inject: [ConfigService],
     }),
-    UserModule, AuthModule, FriendRequestModule, ChannelModule
+    UserModule, AuthModule, FriendRequestModule, ChannelModule, EventsModule
   ],
   controllers: [AppController],
 })
