@@ -1,25 +1,27 @@
 import { MessageBody, SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
+import { WebSocket } from 'ws';
 import { UseGuards } from '@nestjs/common';
 
 //@UseGuards(JWTGuardSocket)
 @WebSocketGateway({
+    transport: ['websocket'],
     cors: {
 		credentials: false,
 		origin: '*',
 	},
 })
 export class EventsGateway {
-    handleConnection(client: any, ...args: any[]) {
+    handleConnection(client: WebSocket, ...args: any[]) {
         console.log('Client connected');
     }
-    handleDisconnect(client: any) {
+    handleDisconnect(client: WebSocket) {
         console.log('Client disconnected');
     }
-    handleMessage(client: any, payload: any) {
+    handleMessage(client: WebSocket, payload: any) {
         console.log('Client message', payload);
     }
     @SubscribeMessage('message')
-    handleMessageEvent(client: any, payload: any) {
+    handleMessageEvent(client: WebSocket, payload: any) {
         console.log('Client message', payload);
     }
 }
