@@ -8,9 +8,6 @@ class Profile extends Component {
     static contextType = UserContext;
 
     render() {
-        if (!localStorage.getItem('token')) {
-            window.location.href = '/login';
-        }
 
     return (
         <div className="Profile">

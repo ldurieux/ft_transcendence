@@ -1,24 +1,25 @@
 import React, {useEffect, useState, useRef } from "react";
 import {get, post} from "./Request.tsx";
-
-
+import {UserContext} from "./context.tsx";
 
 function ProfileUser({children}) {
-    const [user, setUser] = useState({});
+    const {user, setUser} = React.useContext(UserContext);
     const inputRef = useRef(null);
     const [error, setError] = useState(null);
     const [username, setUsername] = useState("");
+    const defaultAvatar = require("./42-logo.png");
 
     async function timeout(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    useEffect(() => {
-        (async () => {
-            const result = await get('user/self');
-            setUser(result);
-        })()
-    }, [])
+    // useEffect(() => {
+    //     (async () => {
+    //         const result = await get('user/self');
+    //         setUser(result);
+    //         console.log(result)
+    //     })()
+    // }, [])
 
    async function changeAvatar(e) {
         try {
@@ -62,6 +63,12 @@ function ProfileUser({children}) {
         }
     }
 
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            changeUsername(username);
+        }
+    }
+
     // return (<div></div>);
     return (
         <div>
@@ -70,7 +77,12 @@ function ProfileUser({children}) {
             </p>
             <div className="Avatar">
                 <label htmlFor="avatarInput">
-                    <img id="avatar" src={user?.profile_picture} alt="Avatar" />
+                    <img
+                        src={user?.profile_picture ?? defaultAvatar}
+                        alt="Avatar"
+                        width="100"
+                        height="100"
+                    />
                 </label>
                 <input
                     type="file"
@@ -95,6 +107,7 @@ function ProfileUser({children}) {
                     placeholder="Username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
+                    onKeyDown={handleKeyDown}
                 />
                 <button onClick={changeUsername}>Edit</button>
             </div>

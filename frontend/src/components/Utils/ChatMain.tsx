@@ -1,24 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { get, post } from "./Request.tsx";
+import Channel from "./chatComponents/Channel.tsx";
+import ChannelList from "./list.tsx";
 
-function Channel() {
-    const [friendsList, setFriendsList] = useState([]);
+function ChatMain() {
     const [channelList, setChannelList] = useState([]);
-    const [selectedList, setSelectedList] = useState("Channel");
+    const [selectedList, setSelectedList] = useState("ChatMain");
     const [message, setMessage] = useState("");
     const [showPopup, setShowPopup] = useState(false);
     const [ChannelName, setChannelName] = useState("");
-    const [channel, setChannel] = useState("");
+    const [channel, setChannel] = useState(null);
     const [chanSettings, setChanSettings] = useState(false);
     const [showList, setShowList] = useState(false);
+    const [chanParams, setChanParams] = useState({});
 
     // useEffect to get the list of channels and friends
     useEffect(() => {
         (async () => {
-            const result = await get("user/self");
-            const channels = await get("channel");
-            setFriendsList(result.friends);
-            setChannelList(channels);
+            try {
+                const channels = await get("channel");
+                if (channels) {
+                    console.log(channels);
+                    setChannelList(channels);
+                }
+            }
+            catch (error) {
+            }
         })();
     }, []);
 
@@ -36,9 +43,14 @@ function Channel() {
         setShowPopup(true);
     };
 
-    const openChannel = (channel) => {
+    async function openChannel(channel)  {
         setChannel(channel);
-        console.log(channelList);
+        const result = await get ("channel?id=" + channel.id);
+        if (result >= 400 && result <= 599) {
+            console.log(result);
+            return;
+        }
+        setChanParams(result);
     }
 
     async function leaveChannel() {
@@ -56,8 +68,19 @@ function Channel() {
 
     async function createPublicChannel(chan) {
         try {
+            if (chan === "")
+                return ;
             const result = await post("channel", { type: "public", name: chan });
             setChannelList([...channelList, result]);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function joinChannel(chan) {
+        try {
+            const result = await post("channel/join", { id: chan.id });
+            setChannelList([...channelList, chan]);
         } catch (error) {
             console.error(error);
         }
@@ -80,8 +103,8 @@ function Channel() {
                 <ul className="ChooseList">
                     {/* 2 buttons to choose channel or friends list */}
                     <button
-                        className={`ChanButton ${selectedList === "Channel" ? "ChanButtonSelected" : "ButtonUnselected"}`}
-                        onClick={() => switchList("Channel")}
+                        className={`ChanButton ${selectedList === "ChatMain" ? "ChanButtonSelected" : "ButtonUnselected"}`}
+                        onClick={() => switchList("ChatMain")}
                     >
                         Channel
                     </button>
@@ -92,25 +115,35 @@ function Channel() {
                         Friends
                     </button>
                 </ul>
-                {selectedList === "Channel" ? (
+                {selectedList === "ChatMain" ? (
                     <ul className="Channels">
-                        {channelList.length > 0 &&
-                            channelList.map((item, index) => (
-                                <li key={index} onClick={() => openChannel(item)}>
-                                    {item?.display_name}
-                                    <i className="bx bx-plus" onClick={() => handlePlusButtonClick(item)}></i>
-                                </li>
-                            ))}
+                        {channelList && channelList.length > 0 &&
+                            channelList.map((item, index) => {
+                                if (item.type !== "dm") {
+                                    return (
+                                        <li key={index} onClick={() => openChannel(item)}>
+                                            {item?.display_name}
+                                            <i className="bx bx-plus" onClick={() => handlePlusButtonClick(item)}></i>
+                                        </li>
+                                    );
+                                }
+                                return null;
+                            })}
                     </ul>
                 ) : (
                     <ul className="Channels">
-                        {friendsList.length > 0 &&
-                            friendsList.map((item, index) => (
-                                <li key={index} onClick={() => openChannel(item)}>
-                                    {item?.display_name}
-                                    <i className="bx bx-plus"></i>
-                                </li>
-                            ))}
+                        {channelList && channelList.length > 0 &&
+                            channelList.map((item, index) => {
+                                if (item.type === "dm") {
+                                    return (
+                                        <li key={index} onClick={() => openChannel(item)}>
+                                            {item?.display_name}
+                                            <i className="bx bx-plus" onClick={() => handlePlusButtonClick(item)}></i>
+                                        </li>
+                                    );
+                                }
+                                return null;
+                            })}
                     </ul>
                 )}
                 <div className="bx-cog-container">
@@ -118,14 +151,11 @@ function Channel() {
                 </div>
             </div>
             <div className="Chat">
-                <div className="ChatBoxHeader">
-                    <h3>{channel?.display_name}</h3>
-                </div>
-                <div className="ChatBox">
-                    <div className="ChatBoxBody">
-
+                {channel && (
+                    <div className="ChatBox">
+                        <Channel channel={chanParams} />
                     </div>
-                </div>
+                )}
                 <div className="ChatInput">
                     <input
                         type="text"
@@ -139,13 +169,12 @@ function Channel() {
                 <div className="popup">
                     <i className='bx bx-x bx-x-icon' onClick={() => setShowPopup(false)}></i>
                     <div className="popupContent">
-                    {/*    input with button to create a public channel */}
                         <div className="CreateChannel">
                             <h3>Create a public channel</h3>
                             <div className="inputButtonWrapper">
                             <input
                                 type="text"
-                                placeholder="Enter Channel Name"
+                                placeholder="Name"
                                 value={ChannelName}
                                 onChange={(e) => setChannelName(e.target.value)}
                                 onKeyDown={handleKeyDown}
@@ -154,18 +183,22 @@ function Channel() {
                             </div>
                         </div>
                         <div className="ShowPublicChannel">
-                            <button>
+                            <button onClick={() => setShowList(!showList)}>
                                 Show Public Channels
                             </button>
                         </div>
                     </div>
+                    <ChannelList
+                        onClick={joinChannel}
+                        showList={showList}
+                    />
                 </div>
             )}
             {chanSettings && (
                 <div className="popup">
                     <i className='bx bx-x bx-x-icon' onClick={() => setChanSettings(false)}></i>
                     <div className="popupContent">
-                        <button className="leaveButton" onClick={leaveChannel}>Leave Channel</button>
+                        <button className="leaveButton" onClick={leaveChannel}>Leave ChatMain</button>
                     </div>
                 </div>
             )}
@@ -173,4 +206,4 @@ function Channel() {
     );
 }
 
-export default Channel;
+export default ChatMain;

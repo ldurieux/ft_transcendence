@@ -9,6 +9,7 @@ function Friendlist() {
     const [show, setShow] = useState(false);
     const [selectedFriendIndex, setSelectedFriendIndex] = useState(null);
     const [error, setError] = useState(null);
+    const defaultAvatar = require("./42-logo.png");
 
     const popupCloseHandler = (e) => {
         setShow(e);
@@ -59,6 +60,7 @@ function Friendlist() {
                 return;
             }
             await post("user/friend", { id: user.id });
+            await post("channel", { type: 'dm', other: user.id });
             setList([...list, user]);
             setRequest(request.filter((item) => item.id !== user.id));
         } catch (error) {
@@ -85,6 +87,11 @@ function Friendlist() {
         };
     }, []);
 
+    const handleKeyDown = (event) => {
+        if (event.key === "Enter") {
+            AddToList();
+        }
+    }
 
     useEffect(() => {
         (async () => {
@@ -116,7 +123,7 @@ function Friendlist() {
                     <div className="Popup">
                         <div className="FriendInformation">
                             <img
-                                src={list[selectedFriendIndex]?.profile_picture}/>
+                                src={list[selectedFriendIndex]?.profile_picture ?? defaultAvatar}/>
                             <p>{list[selectedFriendIndex]?.display_name}</p>
                         </div>
                         <div className="FriendsOptions">
@@ -171,6 +178,7 @@ function Friendlist() {
                     placeholder="Username"
                     value={friend}
                     onChange={(e) => setFriend(e.target.value)}
+                    onKeyDown={handleKeyDown}
                 />
                 <button onClick={AddToList}>Add</button>
             </div>

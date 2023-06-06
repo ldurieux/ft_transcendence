@@ -13,6 +13,7 @@ import { AuthModule } from './auth/auth.module';
 import { FriendRequestModule } from './friend-request/friend-request.module';
 import { ChannelModule } from './channel/channel.module';
 import { Message } from './message/message.entity';
+import { Action } from './action/action.entity';
 
 import { EventsModule } from './socket_server/socket.chatModule';
 
@@ -28,7 +29,7 @@ import { EventsModule } from './socket_server/socket.chatModule';
         password: configService.get('POSTGRES_PASSWORD'),
         database: configService.get('POSTGRES_USER'),
         synchronize: true,
-        entities: [User, Auth, FriendRequest, Channel, Message],
+        entities: [User, Auth, FriendRequest, Channel, Message, Action],
       }),
       inject: [ConfigService],
     }),
