@@ -1,24 +1,33 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useContext} from "react";
 import { startTransition } from "react";
 import { get } from "../Utils/Request.tsx";
+import {UserContext} from "../Utils/context.tsx";
 
 const Header = () => {
     //getAvatar from profile.tsx
-    const [user, setUser] = useState({});
     const [isSidebarOpen, setSidebarOpen] = useState(true);
+    const {user, setUser} = useContext(UserContext);
 
     useEffect(() => {
-        const interval = setInterval(() => {
-        (async () => {
-            if (localStorage.getItem('token')) {
+        const checkAuthentication = async () => {
+            try {
                 const result = await get('user/self');
-                if (result)
-                    setUser(result);
+                setUser(result);
+            } catch (error) {
+                console.error(error);
             }
-        })();
-        }, 5000);
-        return () => clearInterval(interval);
-    }, [])
+        };
+
+        if (localStorage.getItem('token')) {
+            checkAuthentication();
+        }
+    }, [setUser]);
+
+
+    const logOut = () => {
+        localStorage.removeItem('token');
+        window.location.href = "/login";
+    }
 
     const toggleSidebarOpen = () => {
         setSidebarOpen(!isSidebarOpen);
@@ -28,10 +37,7 @@ const Header = () => {
         toggleSidebarOpen();
     };
 
-    const logOut = () => {
-        localStorage.removeItem('token');
-        window.location.href = "/login";
-    }
+
 
   return (
       <div>

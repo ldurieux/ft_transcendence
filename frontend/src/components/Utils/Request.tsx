@@ -1,16 +1,16 @@
-import React from "react";
-
+import React, {useContext} from "react";
+import {UserContext} from "./context.tsx";
 
 
 function get (path) {
-    return makeRequest('GET', path)
+    return MakeRequest('GET', path)
 }
 
 function post (path, data, multipart = false) {
-    return makeRequest('POST', path, data, multipart)
+    return MakeRequest('POST', path, data, multipart)
 }
 
-function makeRequest(method, path, data = null, multipart = false) {
+function MakeRequest(method, path, data = null, multipart = false) {
     const headers = {
         "content-type": "application/json", // a changer selon si POST multipart
         "authorization" : `Bearer ${localStorage.getItem('token')}`
@@ -29,6 +29,10 @@ function makeRequest(method, path, data = null, multipart = false) {
         }
     ).then(response => {
         if (!response.ok) {
+            if (response.status === 401) {
+                localStorage.removeItem('token');
+                window.location.href = '/login';
+            }
             throw new Error();
         }
         if (response.headers.get('content-type').includes('application/json')) {

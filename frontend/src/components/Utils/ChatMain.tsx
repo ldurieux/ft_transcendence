@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { get, post } from "./Request.tsx";
 import Channel from "./chatComponents/Channel.tsx";
 import ChannelList from "./list.tsx";
-import {PopupProvider} from "./chatComponents/PopupContext.tsx";
 
 function ChatMain() {
     const [channelList, setChannelList] = useState([]);
@@ -10,7 +9,7 @@ function ChatMain() {
     const [message, setMessage] = useState("");
     const [showPopup, setShowPopup] = useState(false);
     const [ChannelName, setChannelName] = useState("");
-    const [channel, setChannel] = useState("");
+    const [channel, setChannel] = useState(null);
     const [chanSettings, setChanSettings] = useState(false);
     const [showList, setShowList] = useState(false);
     const [chanParams, setChanParams] = useState({});
@@ -18,9 +17,15 @@ function ChatMain() {
     // useEffect to get the list of channels and friends
     useEffect(() => {
         (async () => {
-            const channels = await get("channel");
-            setChannelList(channels);
-            console.log(channels)
+            try {
+                const channels = await get("channel");
+                if (channels) {
+                    console.log(channels);
+                    setChannelList(channels);
+                }
+            }
+            catch (error) {
+            }
         })();
     }, []);
 
@@ -41,6 +46,10 @@ function ChatMain() {
     async function openChannel(channel)  {
         setChannel(channel);
         const result = await get ("channel?id=" + channel.id);
+        if (result >= 400 && result <= 599) {
+            console.log(result);
+            return;
+        }
         setChanParams(result);
     }
 
@@ -59,6 +68,8 @@ function ChatMain() {
 
     async function createPublicChannel(chan) {
         try {
+            if (chan === "")
+                return ;
             const result = await post("channel", { type: "public", name: chan });
             setChannelList([...channelList, result]);
         } catch (error) {
@@ -106,7 +117,7 @@ function ChatMain() {
                 </ul>
                 {selectedList === "ChatMain" ? (
                     <ul className="Channels">
-                        {channelList.length > 0 &&
+                        {channelList && channelList.length > 0 &&
                             channelList.map((item, index) => {
                                 if (item.type !== "dm") {
                                     return (
@@ -121,7 +132,7 @@ function ChatMain() {
                     </ul>
                 ) : (
                     <ul className="Channels">
-                        {channelList.length > 0 &&
+                        {channelList && channelList.length > 0 &&
                             channelList.map((item, index) => {
                                 if (item.type === "dm") {
                                     return (
@@ -140,9 +151,11 @@ function ChatMain() {
                 </div>
             </div>
             <div className="Chat">
-                <div className="ChatBox">
-                    <Channel channel={chanParams} />
-                </div>
+                {channel && (
+                    <div className="ChatBox">
+                        <Channel channel={chanParams} />
+                    </div>
+                )}
                 <div className="ChatInput">
                     <input
                         type="text"
@@ -156,13 +169,12 @@ function ChatMain() {
                 <div className="popup">
                     <i className='bx bx-x bx-x-icon' onClick={() => setShowPopup(false)}></i>
                     <div className="popupContent">
-                    {/*    input with button to create a public channel */}
                         <div className="CreateChannel">
                             <h3>Create a public channel</h3>
                             <div className="inputButtonWrapper">
                             <input
                                 type="text"
-                                placeholder="Enter ChatMain Name"
+                                placeholder="Name"
                                 value={ChannelName}
                                 onChange={(e) => setChannelName(e.target.value)}
                                 onKeyDown={handleKeyDown}

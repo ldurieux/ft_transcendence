@@ -1,11 +1,9 @@
 import React, {useEffect, useState, useRef } from "react";
 import {get, post} from "./Request.tsx";
-import {wrapMapToPropsConstant} from "react-redux/es/connect/wrapMapToProps";
-
-
+import {UserContext} from "./context.tsx";
 
 function ProfileUser({children}) {
-    const [user, setUser] = useState({});
+    const {user, setUser} = React.useContext(UserContext);
     const inputRef = useRef(null);
     const [error, setError] = useState(null);
     const [username, setUsername] = useState("");
@@ -15,12 +13,13 @@ function ProfileUser({children}) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    useEffect(() => {
-        (async () => {
-            const result = await get('user/self');
-            setUser(result);
-        })()
-    }, [])
+    // useEffect(() => {
+    //     (async () => {
+    //         const result = await get('user/self');
+    //         setUser(result);
+    //         console.log(result)
+    //     })()
+    // }, [])
 
    async function changeAvatar(e) {
         try {

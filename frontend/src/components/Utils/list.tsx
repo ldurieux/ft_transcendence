@@ -13,8 +13,14 @@ function ChannelList({onClick, showList = false}) {
 
     useEffect(() => {
         (async () => {
-            const channels = await getPublicChannels();
-            setList(channels);
+            try {
+                const channels = await getPublicChannels();
+                if (channels)
+                    setList(channels);
+            }
+            catch (error) {
+                return error;
+            }
         })();
     }, []);
 

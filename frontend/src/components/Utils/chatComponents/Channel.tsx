@@ -7,6 +7,11 @@ import {PopupContext} from "./PopupContext.tsx";
 
 function Channel({ channel }) {
     const { showPopup, setShowPopup } = useContext(PopupContext);
+    const isDM: boolean = channel.type === "dm";
+
+    if (!channel) {
+        return null;
+    }
 
     const handleTogglePopup = () => {
         setShowPopup(!showPopup);
@@ -16,14 +21,16 @@ function Channel({ channel }) {
         <div className="channel">
             <div className="channel-name">{channel.display_name}</div>
             <div className="channel-settings">
-                <i className="bx bx-cog" onClick={handleTogglePopup}></i>
+                {!isDM &&
+                    <i className="bx bx-cog" onClick={handleTogglePopup}></i>
+                }
             </div>
             <div className="channel-messages">
                 {/*{channel.messages.map((message) => (*/}
                 {/*    <Message message={message} />*/}
                 {/*))}*/}
             </div>
-            <PopupSettings
+                <PopupSettings
                 settings={channel}
                 showPopup={showPopup}
                 setShowPopup={setShowPopup}
