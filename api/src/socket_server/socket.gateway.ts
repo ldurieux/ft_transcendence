@@ -1,7 +1,6 @@
-import { MessageBody, SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
+import { MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { WebSocket } from 'ws';
-import { UseGuards } from '@nestjs/common';
-
+import { OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets';
 //@UseGuards(JWTGuardSocket)
 @WebSocketGateway({
     transport: ['websocket'],
@@ -10,19 +9,28 @@ import { UseGuards } from '@nestjs/common';
 		origin: '*',
 	},
 })
-export class EventsGateway {
-    handleConnection(client: WebSocket, ...args: any[]) {
-        console.log('Client connected');
+export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect{
+    @WebSocketServer() server: WebSocket;
+
+    afterInit(server: any) {
+        console.log('Init');
     }
-    handleDisconnect(client: WebSocket) {
+
+    handleConnection(client: any, ...args: any[]) {
+        console.log('baguette');
+    }
+    handleDisconnect(client: any) {
         console.log('Client disconnected');
     }
-    handleMessage(client: WebSocket, payload: any) {
-        console.log('Client message', payload);
-    }
     @SubscribeMessage('message')
-    handleMessageEvent(client: WebSocket, payload: any) {
+    async onChgEvent(client: any, payload: any) {
+        console.log(client);
         console.log('Client message', payload);
+        return (payload);
+        console.log('test');
     }
+    @SubscribeMessage('send_message')
+    async listenForMessages(@MessageBody() data: string) {
+        console.log(data);
+  }
 }
-

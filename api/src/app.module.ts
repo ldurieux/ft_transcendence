@@ -38,5 +38,4 @@ import { EventsModule } from './socket_server/socket.chatModule';
   controllers: [AppController],
 })
 
-export class AppModule {
-}
+export class AppModule {}
