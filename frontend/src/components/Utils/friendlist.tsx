@@ -87,6 +87,11 @@ function Friendlist() {
         };
     }, []);
 
+    const handleKeyDown = (event) => {
+        if (event.key === "Enter") {
+            AddToList();
+        }
+    }
 
     useEffect(() => {
         (async () => {
@@ -173,6 +178,7 @@ function Friendlist() {
                     placeholder="Username"
                     value={friend}
                     onChange={(e) => setFriend(e.target.value)}
+                    onKeyDown={handleKeyDown}
                 />
                 <button onClick={AddToList}>Add</button>
             </div>

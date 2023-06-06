@@ -4,7 +4,6 @@ import { get } from "../Utils/Request.tsx";
 import {UserContext} from "../Utils/context.tsx";
 
 const Header = () => {
-    //getAvatar from profile.tsx
     const [isSidebarOpen, setSidebarOpen] = useState(true);
     const {user, setUser} = useContext(UserContext);
 

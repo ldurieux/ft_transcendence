@@ -63,6 +63,12 @@ function ProfileUser({children}) {
         }
     }
 
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            changeUsername(username);
+        }
+    }
+
     // return (<div></div>);
     return (
         <div>
@@ -101,6 +107,7 @@ function ProfileUser({children}) {
                     placeholder="Username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
+                    onKeyDown={handleKeyDown}
                 />
                 <button onClick={changeUsername}>Edit</button>
             </div>
