@@ -1,0 +1,29 @@
+.channel {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    background-color: #2f3136;
+    border-right: 1px solid #202225;
+}
+
+.channel .channel-name {
+    padding: 10px;
+    border-bottom: 1px solid #202225;
+    background-color: #23272a;
+    color: white;
+    text-align: center;
+}
+
+.channel .channel-settings .bx-cog {
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.channel .channel-messages {
+    height: 100%;
+    width: 100%;
+    overflow: scroll;
+    padding: 10px;
+}

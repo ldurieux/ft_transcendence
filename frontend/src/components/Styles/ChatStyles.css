@@ -84,20 +84,7 @@ body {
     justify-content: flex-end;
 }
 
-.Chat .ChatBoxHeader {
-    position: sticky;
-    top: 0;
-    padding: 10px;
-    text-align: center;
-    background-color: #333;
-}
-
-.Chat .ChatBoxHeader h3 {
-    margin: 0;
-    color: white;
-}
-
-.Chat .ChatBoxBody {
+.Chat .ChatBox {
     height: 70vh;
     width: 100%;
     overflow: scroll;
@@ -123,7 +110,7 @@ body {
     color: white;
 }
 
-.popup .popupContent .leaveButton {
+.leaveButton {
     background-color: #333;
     color: white;
     border: none;
@@ -132,11 +119,19 @@ body {
     cursor: pointer;
 }
 
-.popup .popupContent .leaveButton:hover {
+.leaveButton:hover {
     opacity: 0.5;
     transition: 0.3s ease;
 }
 
+.ShowPublicChannels button {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 10px;
+    margin: 10px;
+    cursor: pointer;
+}
 
 /* Media queries */
 @media (max-width: 1200px) {

@@ -33,10 +33,6 @@ class Leaderboard extends Component {
     }
 
     render() {
-        if (localStorage.getItem("token") === null) {
-            window.location.href = "/login";
-        }
-
         const {data} = this.state;
 
         return (

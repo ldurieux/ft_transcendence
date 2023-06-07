@@ -1,0 +1,20 @@
+.list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: scroll;
+    border: 2px solid #e7e7e7;
+}
+
+.list li {
+    padding: 5px;
+    border-bottom: 1px solid white;
+    background-color: #1e2122;
+    color: white;
+    text-align: center;
+}
+
+.list li:hover {
+    background-color: #333;
+    cursor: pointer;
+}

@@ -31,6 +31,44 @@
     text-align: center;
 }
 
+.Left .Avatar .avatarInput {
+    display: none;
+}
+
+.Left .Avatar .avatarInput + label {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: white;
+    color: white;
+    text-align: center;
+    line-height: 30px;
+    cursor: pointer;
+}
+
+.Left .Avatar .avatarInput + label:hover {
+    opacity: 0.5;
+    transition: 0.3s;
+}
+
+.Left .Avatar .avatarInput + label:after {
+    content: "Edit";
+}
+
+.Left .Avatar .avatarInput:checked + label:after {
+    content: "Done";
+}
+
+.Left .Avatar .avatarInput:checked + label {
+    background: #333;
+}
+
+.Left .Avatar .avatarInput:checked + label:hover {
+    opacity: 0.5;
+    transition: 0.3s;
+}
+
 .Left .Avatar img {
     width: 300px;
     height: 300px;
@@ -128,7 +166,6 @@
     background-color: #333;
     text-align: center;
      width: auto;
-     max-width: 8ch;
 }
 
  .FriendsList li:hover {
@@ -149,11 +186,42 @@
     align-items: center;
  }
 
+ .Popup .FriendInformation {
+    background: #1e2122;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+ }
+
+ .Popup .FriendInformation img {
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+ }
+
  .Popup p {
     font-size: 30px;
     font-weight: 700;
     color: white;
     text-align: center;
+    margin-bottom: 20px;
+ }
+
+ .Popup .FriendsOptions {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+ }
+
+ .Popup .FriendsOptions ul {
+    list-style-type: none;
+    padding: 0;
     margin-bottom: 20px;
  }
 
@@ -261,6 +329,34 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.RequestReceived {
+    text-align: center;
+    border-radius: 5px;
+    color: white;
+    margin-top: 10px;
+}
+
+.RequestReceived ul {
+    margin-top: 10px;
+    list-style-type: none;
+    padding: 0;
+}
+
+.RequestReceived ul li {
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #333;
+    text-align: center;
+    width: auto;
+    border-bottom: 1px solid white;
+}
+
+.RequestReceived ul li:hover {
+    opacity: 0.5;
+    transition: 0.3s ease;
+    cursor: pointer;
 }
 
 @media screen and (max-width: 600px) {

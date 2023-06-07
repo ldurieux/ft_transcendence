@@ -1,0 +1,59 @@
+.popup-settings {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    height: 400px;
+    background-color: #1e2122;
+    border-radius: 10px;
+    z-index: 100;
+}
+
+.popup-settings .popup-settings-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 25px;
+    box-sizing: border-box;
+}
+
+.popup-settings .popup-settings-inner .popup-settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.popup-settings .popup-settings-inner .popup-settings-header .popup-settings-title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: white;
+}
+
+.popup-settings .popup-settings-inner .popup-settings-header .popup-settings-close {
+    cursor: pointer;
+    font-size: 24px;
+    font-weight: 600;
+    color: #aaa;
+}
+
+.popup-settings .popup-settings-inner .popup-settings-content {
+    margin: 20px 0;
+    font-size: 16px;
+    font-weight: 500;
+    color: white;
+}
+
+.popup-settings .popup-settings-inner .popup-settings-content ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+}
+
+.popup-settings .popup-settings-inner .popup-settings-content ul li {
+    margin: 10px 0;
+}
