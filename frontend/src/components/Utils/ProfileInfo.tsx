@@ -104,6 +104,7 @@ function ProfileUser({children}) {
                 <input
                     ref={inputRef}
                     type="text"
+                    maxLength={15}
                     placeholder="Username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}

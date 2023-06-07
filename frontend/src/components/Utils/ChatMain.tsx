@@ -13,14 +13,16 @@ function ChatMain() {
     const [chanSettings, setChanSettings] = useState(false);
     const [showList, setShowList] = useState(false);
     const [chanParams, setChanParams] = useState({});
+    const [user, setUser] = useState({});
 
     // useEffect to get the list of channels and friends
     useEffect(() => {
         (async () => {
             try {
+                const tmp = await get("user/self");
+                setUser(tmp);
                 const channels = await get("channel");
                 if (channels) {
-                    console.log(channels);
                     setChannelList(channels);
                 }
             }
@@ -47,7 +49,6 @@ function ChatMain() {
         setChannel(channel);
         const result = await get ("channel?id=" + channel.id);
         if (result >= 400 && result <= 599) {
-            console.log(result);
             return;
         }
         setChanParams(result);
@@ -55,12 +56,17 @@ function ChatMain() {
 
     async function leaveChannel() {
         try {
-            console.log(channel);
-            await post("channel/leave", { id: channel.id });
-            //update channelList to remove the channel
-            const newChannelList = channelList.filter((item) => item.id !== channel.id);
-            setChannelList(newChannelList);
-            setChanSettings(false);
+            const result = await post("channel/leave", { id: channel.id });
+            if (result.status >= 400 && result.status <= 500) {
+                return ;
+            }
+            else {
+                //update channelList to remove the channel
+                const newChannelList = channelList.filter((item) => item.id !== channel.id);
+                setChannelList(newChannelList);
+                setChanSettings(false);
+                setChannel(null);
+            }
         } catch (error) {
             console.error(error);
         }
@@ -71,7 +77,12 @@ function ChatMain() {
             if (chan === "")
                 return ;
             const result = await post("channel", { type: "public", name: chan });
-            setChannelList([...channelList, result]);
+            if (result.status >= 400 && result.status <= 500) {
+                return ;
+            }
+            else {
+                setChannelList([...channelList, result]);
+            }
         } catch (error) {
             console.error(error);
         }
@@ -80,7 +91,11 @@ function ChatMain() {
     async function joinChannel(chan) {
         try {
             const result = await post("channel/join", { id: chan.id });
-            setChannelList([...channelList, chan]);
+            if (result.status >= 400 && result.status <= 500) {
+                return ;
+            }
+            else
+                setChannelList([...channelList, chan]);
         } catch (error) {
             console.error(error);
         }
@@ -123,7 +138,9 @@ function ChatMain() {
                                     return (
                                         <li key={index} onClick={() => openChannel(item)}>
                                             {item?.display_name}
-                                            <i className="bx bx-plus" onClick={() => handlePlusButtonClick(item)}></i>
+                                            {channel?.id === item?.id &&
+                                                <i className='bx bx-exit' onClick={leaveChannel}></i>
+                                            }
                                         </li>
                                     );
                                 }
@@ -153,7 +170,7 @@ function ChatMain() {
             <div className="Chat">
                 {channel && (
                     <div className="ChatBox">
-                        <Channel channel={chanParams} />
+                        <Channel channel={chanParams} currentUser={user}/>
                     </div>
                 )}
                 <div className="ChatInput">
@@ -174,6 +191,7 @@ function ChatMain() {
                             <div className="inputButtonWrapper">
                             <input
                                 type="text"
+                                maxLength={15}
                                 placeholder="Name"
                                 value={ChannelName}
                                 onChange={(e) => setChannelName(e.target.value)}

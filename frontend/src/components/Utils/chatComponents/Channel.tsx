@@ -5,7 +5,7 @@ import { get } from "../Request.tsx";
 import PopupSettings from "./chanSettingsPopup.tsx";
 import {PopupContext} from "./PopupContext.tsx";
 
-function Channel({ channel }) {
+function Channel({ channel, currentUser }) {
     const { showPopup, setShowPopup } = useContext(PopupContext);
     const isDM: boolean = channel.type === "dm";
 
@@ -34,6 +34,7 @@ function Channel({ channel }) {
                 settings={channel}
                 showPopup={showPopup}
                 setShowPopup={setShowPopup}
+                currentUser={currentUser}
             />
         </div>
     );
