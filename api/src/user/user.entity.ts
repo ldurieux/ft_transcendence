@@ -1,6 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToMany, JoinTable, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToMany, JoinTable, ManyToOne, OneToOne, JoinColumn } from 'typeorm';
 import { Auth } from '../auth/auth.entity'
 import { FriendRequest } from 'src/friend-request/friend-request.entity';
+import { Game } from '../game/game.entity';
 
 @Entity()
 export class User {
@@ -32,4 +33,8 @@ export class User {
 
   @Column({default: 0})
   points: number;
+
+  @OneToOne(() => Game)
+  @JoinColumn()
+  game: Game;
 }
