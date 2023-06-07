@@ -1,37 +1,54 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "../Styles/ChatStyles.css";
-import { webSocket } from 'ws';
+import { websocketRef } from 'ws';
+
 
 function MyGame() {
     const [message, setMessage] = useState("");
+    const [isConnected, setIsConnected] = useState(false);
     const url = `ws://${process.env.REACT_APP_WEB_HOST}:3001`;
-    const socket = new WebSocket(url);
+    let socketRef: websocketRef = useRef(null);
 
-    async function sendWebSocketMessage(message) {
-        try {
-            console.log(message);
-            const result = socket.send(JSON.stringify({ message }));
-            console.log(result);
+    useEffect(() => {
+        const socket = new WebSocket(url);
+        socketRef.current = socket;
+        socket.onopen = () => {
+            console.log('Connected to server');
+            setIsConnected(true);
         }
-        catch (error) {
-            console.error(error);
+
+        socket.onmessage = (event) => {
+            const receiveMessage = event.data;
+            console.log('Message recu: ', receiveMessage);
         }
-    }
+
+        socket.onclose = () => {
+            console.log('Disconnected from server');
+            setIsConnected(false);
+        }
+
+        return () => {
+            if (socketRef.current) {
+                socketRef.current.close();
+            }
+        };
+    }, []);
+
+
+    const sendMessage = () => {
+        console.log(socketRef);
+        if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+            console.log('Sending message: ', message);
+            const baguette = {event: 'message', data: message};
+            socketRef.current.send(JSON.stringify(baguette));
+        }
+    };
 
     const handlekeydown = (e) => {
         if (e.key === "Enter") {
-            sendWebSocketMessage({type: "message", text: "truc"});
+            sendMessage();
             setMessage("")
         }
-    }
-
-    socket.onopen = () => {
-        socket.send(JSON.stringify({type: "message", text: "truc"}));
-        console.log('Connected to server');
-    }
-
-    socket.onclose = () => {
-        console.log('Disconnected from server');
     }
 
     return (

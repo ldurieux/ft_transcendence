@@ -1,13 +1,11 @@
 import { MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { WebSocket } from 'ws';
 import { OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets';
+import { subscribe } from 'diagnostics_channel';
+import { send } from 'process';
 //@UseGuards(JWTGuardSocket)
 @WebSocketGateway({
-    transport: ['websocket'],
-    cors: {
-		credentials: false,
-		origin: '*',
-	},
+    transport: ['websocket']
 })
 export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect{
     @WebSocketServer() server: WebSocket;
@@ -17,20 +15,20 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     }
 
     handleConnection(client: any, ...args: any[]) {
-        console.log('baguette');
+        console.log('Client isConnected');
     }
     handleDisconnect(client: any) {
         console.log('Client disconnected');
     }
+
     @SubscribeMessage('message')
-    async onChgEvent(client: any, payload: any) {
-        console.log(client);
+    async onChgEvent(client: WebSocket, payload: any) {
         console.log('Client message', payload);
-        return (payload);
-        console.log('test');
     }
+
     @SubscribeMessage('send_message')
-    async listenForMessages(@MessageBody() data: string) {
-        console.log(data);
-  }
+    async onSendMessage(client: WebSocket, payload: any) {
+        console.log('Client message', payload);
+        client.send('truc');
+    }
 }
