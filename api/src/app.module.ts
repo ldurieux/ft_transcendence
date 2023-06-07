@@ -15,6 +15,8 @@ import { ChannelModule } from './channel/channel.module';
 import { Message } from './message/message.entity';
 import { Action } from './action/action.entity';
 
+import { EventsModule } from './socket_server/socket.chatModule';
+
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
@@ -31,10 +33,9 @@ import { Action } from './action/action.entity';
       }),
       inject: [ConfigService],
     }),
-    UserModule, AuthModule, FriendRequestModule, ChannelModule
+    UserModule, AuthModule, FriendRequestModule, ChannelModule, EventsModule
   ],
   controllers: [AppController],
 })
 
-export class AppModule {
-}
+export class AppModule {}
