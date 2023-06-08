@@ -19,6 +19,8 @@ import { MessageService } from 'src/message/message.service';
 import { Action } from 'src/action/action.entity';
 import { ActionService } from 'src/action/action.service';
 
+import { EventsGateway } from 'src/socket_server/socket.gateway';
+
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
@@ -28,7 +30,7 @@ import { ActionService } from 'src/action/action.service';
     TypeOrmModule.forFeature([Message]),
     TypeOrmModule.forFeature([Action]),
   ],
-  providers: [UserService, AuthService, ChannelService, FriendRequestService, MessageService, ActionService, JwtService],
+  providers: [UserService, AuthService, ChannelService, FriendRequestService, MessageService, ActionService, EventsGateway, JwtService],
   controllers: [ChannelController],
 })
 export class ChannelModule {}
