@@ -1,6 +1,3 @@
-import React, {useContext} from "react";
-import {UserContext} from "./context.tsx";
-
 
 function get (path) {
     return MakeRequest('GET', path)

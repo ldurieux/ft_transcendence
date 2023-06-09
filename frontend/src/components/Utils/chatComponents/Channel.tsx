@@ -4,6 +4,7 @@ import "../../Styles/channelStyles.css";
 import { get } from "../Request.tsx";
 import PopupSettings from "./chanSettingsPopup.tsx";
 import {PopupContext} from "./PopupContext.tsx";
+import { websocketRef} from "ws";
 
 function Channel({ channel, currentUser }) {
     const { showPopup, setShowPopup } = useContext(PopupContext);

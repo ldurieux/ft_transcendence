@@ -1,5 +1,5 @@
-import React, {useEffect, useState, useRef } from "react";
-import {get, post} from "./Request.tsx";
+import React, { useState, useRef, useEffect } from "react";
+import { post, get } from "./Request.tsx";
 import {UserContext} from "./context.tsx";
 
 function ProfileUser({children}) {
@@ -13,13 +13,13 @@ function ProfileUser({children}) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    // useEffect(() => {
-    //     (async () => {
-    //         const result = await get('user/self');
-    //         setUser(result);
-    //         console.log(result)
-    //     })()
-    // }, [])
+    useEffect(() => {
+        (async () => {
+            const result = await get('user/self');
+            setUser(result);
+            console.log(result)
+        })()
+    }, [])
 
    async function changeAvatar(e) {
         try {

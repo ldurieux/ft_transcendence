@@ -4,11 +4,6 @@ import popupStyles from "../Styles/PopupStyles.css";
 function Popup(props: PopupProps) {
     const [show, setShow] = useState(false);
 
-    const closeHandler = (e) => {
-        setShow(false);
-        props.onClose(false);
-    }
-
     useEffect(() => {
         setShow(props.show);
     }, [props.show]);

@@ -22,4 +22,27 @@ export const UserProvider: React.FC = ({ children }) => {
     );
 };
 
+//context for socket connection
+interface SocketContextProps {
+    socket: {
+        isConnected: boolean;
+    }
+    setSocket: React.Dispatch<React.SetStateAction<any>>;
+}
+
+export const SocketContext = createContext<SocketContextProps>({
+    socket: { isConnected: false },
+    setSocket: () => {},
+});
+
+export const SocketProvider: React.FC = ({ children }) => {
+    const [socket, setSocket] = useState({ isConnected: false });
+
+    return (
+        <SocketContext.Provider value={{ socket, setSocket }}>
+            {children}
+        </SocketContext.Provider>
+    );
+}
+
 export default UserContext;

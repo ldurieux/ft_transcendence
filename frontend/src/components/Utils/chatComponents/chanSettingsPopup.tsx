@@ -1,7 +1,7 @@
 import React, {useContext} from "react";
 import PopupContext from "./PopupContext.tsx";
 import "../../Styles/PopupStyles.css";
-import {post, get} from "../Request.tsx";
+import {post} from "../Request.tsx";
 
 
 

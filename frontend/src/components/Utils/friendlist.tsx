@@ -6,7 +6,6 @@ function Friendlist() {
     const [list, setList] = useState([]);
     const [friend, setFriend] = useState("");
     const [request, setRequest] = useState([]);
-    const [show, setShow] = useState(false);
     const [selectedFriendIndex, setSelectedFriendIndex] = useState(null);
     const [error, setError] = useState(null);
     const defaultAvatar = require("./42-logo.png");
@@ -70,22 +69,19 @@ function Friendlist() {
         }
     }
 
-    useEffect(() => {
-        const handleOutsideClick = (event) => {
-            const listElement = document.querySelector(".FriendsList ul");
-            const clickedElement = event.target;
-
-            if (listElement && !listElement.contains(clickedElement)) {
-                setShow(false);
-            }
-        };
-
-        document.body.addEventListener("click", handleOutsideClick);
-
-        return () => {
-            document.body.removeEventListener("click", handleOutsideClick);
-        };
-    }, []);
+    // useEffect(() => {
+    //     const handleOutsideClick = (event) => {
+    //         const listElement = document.querySelector(".FriendsList ul");
+    //         const clickedElement = event.target;
+    //
+    //     };
+    //
+    //     document.body.addEventListener("click", handleOutsideClick);
+    //
+    //     return () => {
+    //         document.body.removeEventListener("click", handleOutsideClick);
+    //     };
+    // }, []);
 
     const handleKeyDown = (event) => {
         if (event.key === "Enter") {
@@ -123,6 +119,7 @@ function Friendlist() {
                     <div className="Popup">
                         <div className="FriendInformation">
                             <img
+                                alt={list[selectedFriendIndex]?.display_name}
                                 src={list[selectedFriendIndex]?.profile_picture ?? defaultAvatar}/>
                             <p>{list[selectedFriendIndex]?.display_name}</p>
                         </div>

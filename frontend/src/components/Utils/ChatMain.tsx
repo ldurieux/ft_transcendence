@@ -24,6 +24,7 @@ function ChatMain() {
                 const channels = await get("channel");
                 if (channels) {
                     setChannelList(channels);
+                    console.log(channels);
                 }
             }
             catch (error) {
@@ -82,6 +83,7 @@ function ChatMain() {
             }
             else {
                 setChannelList([...channelList, result]);
+                setChannelName("");
             }
         } catch (error) {
             console.error(error);
