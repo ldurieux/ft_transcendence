@@ -18,7 +18,7 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
 
     handleConnection(client: WebSocket, ...args: any[]) {
         console.log("connected");
-        // client.data = {}
+        client.data = {}
         // console.log(args);
         //
         // if (args.length < 1) {
@@ -120,7 +120,7 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     }
 
     handleDisconnect(client: WebSocket) {
-        //this.broadcast(client.data.user, { event: "disconnect", data: { user: client.data.user } })
+        this.broadcast(client.data.user, { event: "disconnect", data: { user: client.data.user } })
     }
 
     async broadcast(from: number, data: object) {

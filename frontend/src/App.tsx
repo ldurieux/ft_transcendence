@@ -1,24 +1,22 @@
-import './App.css';
-import React, { useEffect, useContext, useRef } from 'react';
+import React, {useEffect, useContext, useRef, useState} from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { PopupProvider } from "./components/Utils/chatComponents/PopupContext.tsx";
 import { SocketProvider, SocketContext } from "./components/Utils/context.tsx";
-import {websocketRef} from "ws";
 
 const Header = React.lazy(() => import('./components/Header/index.tsx'));
 const FrontRoute = React.lazy(() => import('./components/redirect.tsx'));
 
 function App() {
     const url = `ws://${process.env.REACT_APP_WEB_HOST}:3001`;
-    const socketRef: websocketRef = useRef(null);
-    const { setSocket } = useContext(SocketContext);
+    const socketRef = useRef<WebSocket | null>(null);
+    const {setSocket} = useContext(SocketContext);
+    const socket = new WebSocket(url);
 
     useEffect(() => {
-        const socket = new WebSocket(url);
         socketRef.current = socket;
 
         socket.onopen = () => {
-            const baguette = {event: 'auth', data: {data: `Bearer ${localStorage.getItem('token')}`}};
+            const baguette = { event: 'auth', data: { data: `Bearer ${localStorage.getItem('token')}` } };
             socket.send(JSON.stringify(baguette));
             console.log('Connected to server');
             setSocket(socket);
@@ -26,7 +24,6 @@ function App() {
 
         socket.onmessage = (event) => {
             const receiveMessage = event.data;
-            console.log('Message recu: ', receiveMessage);
         };
 
         socket.onclose = () => {
@@ -34,10 +31,10 @@ function App() {
         };
 
         // Clean up function
-        // return () => {
-        //     socketRef.current.close();
-        // };
-    }, [setSocket]);
+        return () => {
+            socketRef.current?.close();
+        };
+    }, [setSocket, url]);
 
     return (
         <div className="App-header">
@@ -46,7 +43,7 @@ function App() {
                     <div className="App">
                         <BrowserRouter>
                             <Header />
-                            <FrontRoute />
+                            <FrontRoute socket={socket}/>
                         </BrowserRouter>
                     </div>
                 </SocketProvider>

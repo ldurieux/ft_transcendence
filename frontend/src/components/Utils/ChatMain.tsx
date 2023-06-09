@@ -3,7 +3,7 @@ import { get, post } from "./Request.tsx";
 import Channel from "./chatComponents/Channel.tsx";
 import ChannelList from "./list.tsx";
 
-function ChatMain() {
+function ChatMain({socket}) {
     const [channelList, setChannelList] = useState([]);
     const [selectedList, setSelectedList] = useState("ChatMain");
     const [message, setMessage] = useState("");
@@ -24,7 +24,6 @@ function ChatMain() {
                 const channels = await get("channel");
                 if (channels) {
                     setChannelList(channels);
-                    console.log(channels);
                 }
             }
             catch (error) {
@@ -172,17 +171,12 @@ function ChatMain() {
             <div className="Chat">
                 {channel && (
                     <div className="ChatBox">
-                        <Channel channel={chanParams} currentUser={user}/>
+                        <Channel socket={socket}
+                            channel={chanParams} currentUser={user}
+                                 setChanParams={setChanParams}
+                        />
                     </div>
                 )}
-                <div className="ChatInput">
-                    <input
-                        type="text"
-                        placeholder="Enter Message"
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
-                    />
-                </div>
             </div>
             {showPopup && (
                 <div className="popup">

@@ -25,18 +25,18 @@ export const UserProvider: React.FC = ({ children }) => {
 //context for socket connection
 interface SocketContextProps {
     socket: {
-        isConnected: boolean;
+        ws: WebSocket;
     }
     setSocket: React.Dispatch<React.SetStateAction<any>>;
 }
 
 export const SocketContext = createContext<SocketContextProps>({
-    socket: { isConnected: false },
+    socket: { ws: null },
     setSocket: () => {},
 });
 
 export const SocketProvider: React.FC = ({ children }) => {
-    const [socket, setSocket] = useState({ isConnected: false });
+    const [socket, setSocket] = useState({ ws: null });
 
     return (
         <SocketContext.Provider value={{ socket, setSocket }}>
