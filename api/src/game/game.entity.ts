@@ -1,5 +1,4 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn } from 'typeorm';
-import { User } from 'src/user/user.entity';
 
 @Entity()
 export class Game {
@@ -11,4 +10,10 @@ export class Game {
 
     @Column({default: 0})
     lose: number;
+
+    @Column({default: false})
+    in_game: boolean;
+
+    @Column({default: 0})
+    score: number;
 }

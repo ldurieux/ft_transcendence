@@ -18,6 +18,8 @@ import { Message } from 'src/message/message.entity';
 import { MessageService } from 'src/message/message.service';
 import { Action } from 'src/action/action.entity';
 import { ActionService } from 'src/action/action.service';
+import { GameService } from 'src/game/game.service';
+import { Game } from 'src/game/game.entity';
 
 @Module({
   imports: [
@@ -27,8 +29,9 @@ import { ActionService } from 'src/action/action.service';
     TypeOrmModule.forFeature([Channel]),
     TypeOrmModule.forFeature([Message]),
     TypeOrmModule.forFeature([Action]),
+    TypeOrmModule.forFeature([Game]),
   ],
-  providers: [UserService, AuthService, ChannelService, FriendRequestService, MessageService, ActionService, JwtService],
+  providers: [UserService, AuthService, ChannelService, FriendRequestService, MessageService, ActionService, JwtService, GameService],
   controllers: [ChannelController],
 })
 export class ChannelModule {}

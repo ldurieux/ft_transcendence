@@ -7,15 +7,17 @@ import { User } from './user/user.entity';
 import { Auth } from './auth/auth.entity';
 import { FriendRequest } from './friend-request/friend-request.entity';
 import { Channel } from './channel/channel.entity';
+import { Game } from './game/game.entity';
 
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { FriendRequestModule } from './friend-request/friend-request.module';
 import { ChannelModule } from './channel/channel.module';
+
 import { Message } from './message/message.entity';
 import { Action } from './action/action.entity';
 
-import { EventsModule } from './socket_server/socket.chatModule';
+import { SocketModule } from 'src/socket/socket.module';
 
 @Module({
   imports: [
@@ -29,11 +31,11 @@ import { EventsModule } from './socket_server/socket.chatModule';
         password: configService.get('POSTGRES_PASSWORD'),
         database: configService.get('POSTGRES_USER'),
         synchronize: true,
-        entities: [User, Auth, FriendRequest, Channel, Message, Action],
+        entities: [Game, User, Auth, FriendRequest, Channel, Message, Action],
       }),
       inject: [ConfigService],
     }),
-    UserModule, AuthModule, FriendRequestModule, ChannelModule, EventsModule
+    UserModule, AuthModule, FriendRequestModule, ChannelModule,
   ],
   controllers: [AppController],
 })

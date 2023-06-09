@@ -1,36 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+
 import { Game } from './game.entity';
-import { User } from '../user/user.entity';
+import { User } from 'src/user/user.entity';
 
 @Injectable()
 export class GameService {
     constructor(
         @InjectRepository(Game)
         private gameRepository: Repository<Game>,
-        @InjectRepository(User)
-        private userRepository: Repository<User>,
     ) {}
     
-    async createGame(user: User) {
-        const game = new Game();
-        game.win = 0;
-        game.lose = 0;
-        return this.gameRepository.save(game);
-    }
-    
-    async updateGame(user: User, win: boolean) {
-        const game = await this.gameRepository.findOne({ where: { user: user } });
-        if (win) {
-        game.win += 1;
-        } else {
-        game.lose += 1;
+    async createemptyGame(user: User): Promise<Game> {
+        if (user.game) {
+            return user.game;
         }
-        return this.gameRepository.save(game);
+        const game: Game = new Game();
+        return (game);
     }
-    
-    async getGame(user: User) {
-        return this.gameRepository.findOne({ where: { user: user } });
+
+    async getGame(id: any): Promise<Game> {
+        return this.gameRepository.findOne(id);
     }
+
 }

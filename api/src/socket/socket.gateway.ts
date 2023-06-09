@@ -10,14 +10,14 @@ import { send } from 'process';
 export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect{
     @WebSocketServer() server: WebSocket;
 
-    afterInit(server: any) {
+    afterInit(server: WebSocket) {
         console.log('Init');
     }
 
-    handleConnection(client: any, ...args: any[]) {
+    handleConnection(client: WebSocket) {
         console.log('Client isConnected');
     }
-    handleDisconnect(client: any) {
+    handleDisconnect(client: WebSocket) {
         console.log('Client disconnected');
     }
 

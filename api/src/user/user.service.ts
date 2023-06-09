@@ -7,6 +7,7 @@ import { Auth } from 'src/auth/auth.entity';
 import { AuthService } from 'src/auth/auth.service';
 import { FriendRequestService } from 'src/friend-request/friend-request.service';
 import { FriendRequest } from 'src/friend-request/friend-request.entity';
+import { GameService } from 'src/game/game.service';
 
 @Injectable()
 export class UserService {
@@ -15,6 +16,7 @@ export class UserService {
         private userRepository: Repository<User>,
         private readonly authService: AuthService,
         private readonly friendService: FriendRequestService,
+        private readonly gameService: GameService
     ) {}
 
     async getUser(id: number, self: boolean = false): Promise<User> {
@@ -98,6 +100,7 @@ export class UserService {
         const user: User = new User();
         user.auths = new Array<Auth>;
         user.display_name = username;
+        user.game = await this.gameService.createemptyGame(user);
 
         switch (method) {
             case 'local': {
@@ -131,7 +134,6 @@ export class UserService {
                 return this.loginOrRegister(method, data);
             }
         }
-
         return this.authService.getJwt(user);
     }
 
