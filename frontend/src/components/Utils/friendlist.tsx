@@ -175,6 +175,7 @@ function Friendlist() {
 
                 <input
                     type="text"
+                    maxLength={15}
                     placeholder="Username"
                     value={friend}
                     onChange={(e) => setFriend(e.target.value)}
@@ -186,8 +187,8 @@ function Friendlist() {
                 <h2>Request Received</h2>
                 <ul>
                     {request.length > 0 &&
-                        request.map((item) => (
-                            <li onClick={() => AcceptRequest(item)}>{item?.display_name}</li>
+                        request.map((item, key) => (
+                            <li key={key} onClick={() => AcceptRequest(item)}>{item?.display_name}</li>
                         ))}
                 </ul>
             </div>

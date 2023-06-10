@@ -254,10 +254,14 @@ body {
     justify-content: space-between;
 }
 
-.Channels li:hover .bx-plus,
-.Friends li:hover .bx-plus {
-    display: inline-block;
+.Channels li:hover .bx-exit,
+.Friends li:hover .bx-exit {
     margin-left: 10px; /* Ajoutez une marge à gauche pour l'espacement */
+}
+
+.Channels li:hover .bx-exit:hover {
+    color: #ccc;
+    background: red;
 }
 
 .bx-plus {
