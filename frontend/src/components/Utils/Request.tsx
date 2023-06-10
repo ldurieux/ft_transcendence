@@ -26,7 +26,8 @@ function MakeRequest(method, path, data = null, multipart = false) {
         }
     ).then(response => {
         if (!response.ok) {
-            if (response.status === 401) {
+            if (response.status === 401 || response.status === 403 ||
+                response.status === 404) {
                 localStorage.removeItem('token');
                 window.location.href = '/login';
             }
@@ -45,45 +46,3 @@ function MakeRequest(method, path, data = null, multipart = false) {
 }
 
 export {get, post};
-
-/*
-*
-* get (path) {
-*   return makeRequest('GET', path)
-* }
-*
-* post (path, data) {
-*   return makeRequest('POST', path, data)
-* }
-*
-* put (path, data) {
-*   return makeRequest('PUT', path, data)
-* }
-*
-* ...
-*
-* makeRequest (method, path, data = null) {
-*   const headers = {
-*      "content-type": "application/json", // a changer selon si POST multipart
-*      "authorization" : `Bearer ${localstore.get('token')}`
-* }
-*   const response = await fetch(
-*   `http://${process.env.host}:${process.env.port}/${path}`,
-*   {
-*       method,
-*       headers,
-*       body: null // logique a gerer en fonction du type de post (multiform/part ou json etc)
-*   });
-*
-*   if (!response.ok) {
-*          throw new Error();
-*   }
-*
-*   if (response.headers.get('content-type').includes('application/json')) {
-*       return response.json();
-*   } else {
-*       return response.text()
-*   }
-*   return null;
-* }
-* */

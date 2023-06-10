@@ -22,10 +22,6 @@ function App() {
             setSocket(socket);
         };
 
-        socket.onmessage = (event) => {
-            const receiveMessage = event.data;
-        };
-
         socket.onclose = () => {
             console.log('Disconnected from server');
         };

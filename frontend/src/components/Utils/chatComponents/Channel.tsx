@@ -1,11 +1,11 @@
-import React, {useContext, useEffect, useState} from "react";
-import Message from "./Message.tsx";
+import React, {useContext, useEffect, useState, useRef} from "react";
 import "../../Styles/channelStyles.css";
 import { get, post } from "../Request.tsx";
 import PopupSettings from "./chanSettingsPopup.tsx";
 import {PopupContext} from "./PopupContext.tsx";
 import { websocketRef} from "ws";
 import { SocketContext } from "../context.tsx";
+import "../../Styles/messageStyles.css";
 
 async function getChannelMessages(channelId) {
     try {
@@ -20,12 +20,21 @@ async function getChannelMessages(channelId) {
 }
 
 function Channel({ socket, channel, currentUser, setChanParams }) {
+    const bottomChat = useRef<null | HTMLDivElement>(null);
     const { showPopup, setShowPopup } = useContext(PopupContext);
     const isDM: boolean = channel.type === "dm";
     const [messages, setMessages] = useState([]);
     const [message, setMessage] = useState("");
+    const defaultAvatar = require("../42-logo.png");
+
 
     console.log(messages);
+
+    useEffect(() => {
+        if (bottomChat.current) {
+            bottomChat.current?.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'start' });
+        }
+    }, [socket, messages]);
 
     useEffect(() => {
         (async () => {
@@ -53,6 +62,11 @@ function Channel({ socket, channel, currentUser, setChanParams }) {
                         return newParams;
                     });
                 }
+                if (ret.event === "message") {
+                    //add the message to the messages list
+                    console.log(ret.data);
+                    setMessages((prev) => [...prev, ret.data]);
+                }
             };
         }
     }, [socket, channel]);
@@ -62,16 +76,7 @@ function Channel({ socket, channel, currentUser, setChanParams }) {
     }
 
     async function sendMessage(channelId) {
-        try {
-            const result = await post("channel/message", { id: channelId, text: message });
-            if (!(result.status >= 400 && result.status <= 500)) {
-                //add our message to messages list
-                setMessages((prev) => [...prev, result]);
-            }
-        }
-        catch (error) {
-
-        }
+        await post("channel/message", { id: channelId, text: message });
     }
 
     const handleKeyPress = (e) => {
@@ -96,9 +101,37 @@ function Channel({ socket, channel, currentUser, setChanParams }) {
             <div className="channel-messages">
                 {messages &&
                     messages.length > 0 &&
-                    messages.map((item, key) => (
-                        <Message message={item} />
-                ))}
+                    messages.map((item, key) => {
+                    return (
+                        <div key={key} className="message">
+                            {/*<img*/}
+                            {/*    src={item.owner.profile_picture ? item.owner.profile_picture : defaultAvatar}*/}
+                            {/*    alt="avatar"*/}
+                            {/*    className="message-avatar"*/}
+                            {/*/>*/}
+                            {
+                                item.owner?.id === currentUser?.id ?
+                                <div className="message-content-user">
+                                <div className="message-header">
+                                    <div className="message-username">{item.owner.display_name}</div>
+                                    {/*<div className="message-time">{item.created_at}</div>*/}
+                                </div>
+                                <div className="message-body">{item.text}</div>
+                                </div>
+                                :
+                                <div className="message-content-other">
+                                    <div className="message-header">
+                                        <div className="message-username">{item.owner.display_name}</div>
+                                        {/*<div className="message-time">{item.created_at}</div>*/}
+                                    </div>
+                                    <div className="message-body">{item.text}</div>
+                                </div>
+                            }
+                        </div>
+                    );
+                })
+                }
+                <div ref={bottomChat}></div>
             </div>
             <div className="channel-input">
                 <input

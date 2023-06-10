@@ -432,7 +432,7 @@ export class ChannelService {
 
         if (channel.users.some(e => e.id == user.id)) {
             for (const to of channel.users) {
-                this.websocket.sendTo(to.id, { event: "message", data: { channel: channel.id, user: user.id, message: text } })
+                this.websocket.sendTo(to.id, { event: "message", data: { channel: channel.id, owner: user, text: text } })
             }
 
             delete channel.users;
