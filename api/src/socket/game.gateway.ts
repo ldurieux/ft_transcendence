@@ -1,10 +1,11 @@
 import * as WebSocket from 'ws';
 import { WebSocketGateway, WebSocketServer, OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage } from '@nestjs/websockets';
+import { UseGuards } from '@nestjs/common';
 
 import { UserService } from 'src/user/user.service';
 import { GameService } from '../game/game.service';
 import { AuthService } from '../auth/auth.service';
-import { AuthGuard } from 'src/auth/auth.guard';
+import { SocketGuard } from './socket.service';
 
 
 @WebSocketGateway(3001, {
@@ -31,7 +32,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         console.log('Client disconnected');
     }
 
-    @AuthGuard(Auth)
+    @UseGuards(SocketGuard)
     @SubscribeMessage('dataPongPad')
     onEvent(client: WebSocket, data: any) {
         console.log('Client message', data);
