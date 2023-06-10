@@ -1,9 +1,8 @@
 import { WebSocketServer } from "@nestjs/websockets";
 import * as WebSocket from 'ws';
 import { WebSocketGateway } from '@nestjs/websockets';
-import { GameGateway } from "./game/game.gateway";
 
-@WebSocketGateway(3001, { 
+@WebSocketGateway({ 
     transports: ['websocket']
 })
 export class SocketServer {
@@ -11,7 +10,6 @@ export class SocketServer {
     ) {}
     @WebSocketServer() server: WebSocket;
     clients: Map<string, WebSocket> = new Map();
-    
 
     afterInit(server: WebSocket) {
         console.log('Init');
@@ -19,11 +17,20 @@ export class SocketServer {
 
     handleConnection(client: WebSocket) {
         console.log('Client isConnected');
+        console.log(client);
         this.clients.set(client.toString(), client);
     }
 
     handleDisconnect(client: WebSocket) {
         console.log('Client disconnected');
         this.clients.delete(client.toString());
+    }
+
+    getServer() {
+        return this.server;
+    }
+
+    getClients() {
+        return this.clients;
     }
 }

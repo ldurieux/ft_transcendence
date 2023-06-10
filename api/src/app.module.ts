@@ -35,7 +35,7 @@ import { SocketServerModule } from 'src/socket/socketServer.module';
       }),
       inject: [ConfigService],
     }),
-    UserModule, AuthModule, FriendRequestModule, ChannelModule
+    UserModule, AuthModule, FriendRequestModule, ChannelModule, //SocketServerModule
   ],
   controllers: [AppController],
 })

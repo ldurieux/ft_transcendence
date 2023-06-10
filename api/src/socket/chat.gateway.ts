@@ -6,13 +6,17 @@ import { SocketServer } from './socket.server';
 
 @WebSocketGateway()
 @Injectable()
-export class GameGateway {
-    constructor(
+export class ChatGateway {
+    constructor( 
         @Inject(SocketServer) private socketServer: SocketServer,
     ) {}
 
     @UseGuards(SocketGuard)
-    @SubscribeMessage('message')
-    async handleMessage(@MessageBody() data: string, @ConnectedSocket() client) {
+    async sendTo(to: number, data: object) {
+        const raw = JSON.stringify(data)
+        for (const client of this.socketServer.getClients()) {
+            if (client[1].socket.data == to)
+                client[1].socket.send(raw)
+        }
     }
 }

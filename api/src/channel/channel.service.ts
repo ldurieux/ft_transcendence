@@ -13,7 +13,7 @@ import { MessageService } from 'src/message/message.service';
 import { Action } from 'src/action/action.entity';
 import { ActionService } from 'src/action/action.service';
 
-import { EventsGateway } from 'src/socket_server/socket.gateway';
+import { ChatGateway } from 'src/socket/chat.gateway';
 
 @Injectable()
 export class ChannelService {
@@ -23,7 +23,7 @@ export class ChannelService {
         private readonly userService: UserService,
         private readonly messageService: MessageService,
         private readonly actionService: ActionService,
-        private readonly websocket: EventsGateway
+        private readonly websocket: ChatGateway
     ) {}
 
     async listPublic() {
