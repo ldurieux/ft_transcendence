@@ -19,6 +19,8 @@ import { Action } from './action/action.entity';
 
 import { SocketServerModule } from 'src/socket/socketServer.module';
 
+import { GameModule } from './game/game.module';
+
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
@@ -35,7 +37,7 @@ import { SocketServerModule } from 'src/socket/socketServer.module';
       }),
       inject: [ConfigService],
     }),
-    UserModule, AuthModule, FriendRequestModule, ChannelModule//, SocketServerModule
+    UserModule, AuthModule, FriendRequestModule, ChannelModule, SocketServerModule, GameModule
   ],
   controllers: [AppController],
 })

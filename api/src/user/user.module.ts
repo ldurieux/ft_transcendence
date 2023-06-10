@@ -24,7 +24,7 @@ import { GameService } from 'src/game/game.service';
     TypeOrmModule.forFeature([FriendRequest]),
     TypeOrmModule.forFeature([Game]),
   ],
-  providers: [UserService, AuthService, FriendRequestService, JwtService, GameService],
+  providers: [UserService, AuthService, FriendRequestService, JwtService, GameService, AuthModule, FriendRequestModule],
   controllers: [UserController],
 })
 export class UserModule {}

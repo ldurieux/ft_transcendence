@@ -11,13 +11,13 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
     clients: Map<string, WebSocket> = new Map();
 
     afterInit(server: WebSocket) {
-        console.log('Init');
+        // console.log('Init');
     }
 
     handleConnection(client: WebSocket) {
-        console.log('Client isConnected');
-        console.log(client.toString());
-        this.clients.set(client.toString(), client);
+        // console.log('Client isConnected');
+        // console.log(client.toString());
+        // this.clients.set(client.toString(), client);
     }
 
     handleDisconnect(client: WebSocket) {

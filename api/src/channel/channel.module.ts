@@ -34,7 +34,7 @@ import { SocketServer } from 'src/socket/socket.server';
     TypeOrmModule.forFeature([Action]),
     TypeOrmModule.forFeature([Game]),
   ],
-  providers: [SocketServer, ChatGateway, UserService, AuthService, ChannelService, FriendRequestService, MessageService, ActionService, JwtService, GameService],
+  providers: [UserService, AuthService, ChannelService, FriendRequestService, MessageService, ActionService, GameService, ChatGateway, SocketServer, JwtService],
   controllers: [ChannelController],
 })
 export class ChannelModule {}

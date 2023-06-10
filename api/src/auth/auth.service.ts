@@ -79,12 +79,6 @@ export class AuthService {
         if (!auth) {
             throw new HttpException("User does not exist", HttpStatus.NOT_FOUND);
         }
-        if (auth.user === null) {
-            await this.authRepository.remove(auth);
-
-            throw new HttpException("This is impossible, try again", HttpStatus.EXPECTATION_FAILED);
-            return auth.user;
-        }
         return auth.user;
     }
 
@@ -127,8 +121,13 @@ export class AuthService {
         return auth;
     }
 
-    getJwt(user: User) {
-        return jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+    getJwt(user: User): string {
+        let newvar: string;
+        console.log("JWT_SECRET: " + process.env.JWT_SECRET);
+        console.log("user.id: " + user.id);
+        newvar = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: 'id' });
+        console.log("JWT: " + newvar);
+        return newvar;
     }
 
     private async getUsername42(code: string): Promise<string> {
