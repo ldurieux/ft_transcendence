@@ -17,7 +17,7 @@ import { ChannelModule } from './channel/channel.module';
 import { Message } from './message/message.entity';
 import { Action } from './action/action.entity';
 
-import { SocketModule } from 'src/socket/socket.module';
+import { SocketServerModule } from 'src/socket/socketServer.module';
 
 @Module({
   imports: [
@@ -35,7 +35,7 @@ import { SocketModule } from 'src/socket/socket.module';
       }),
       inject: [ConfigService],
     }),
-    UserModule, AuthModule, FriendRequestModule, ChannelModule, SocketModule
+    UserModule, AuthModule, FriendRequestModule, ChannelModule, SocketServerModule, SocketServerModule
   ],
   controllers: [AppController],
 })
