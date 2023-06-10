@@ -3,27 +3,67 @@
     flex-direction: column;
     height: 100%;
     width: 100%;
-    background-color: #2f3136;
-    border-right: 1px solid #202225;
+    background-color: #1e2122;
+    border-right: 1px solid #2f3136;
 }
 
 .channel .channel-name {
-    padding: 10px;
-    border-bottom: 1px solid #202225;
-    background-color: #23272a;
-    color: white;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    height: 50px;
+    padding: 0 20px;
+    color: #b9bbbe;
+    font-size: 20px;
+    font-weight: 500;
+    border-bottom: 1px solid #2f3136;
 }
 
 .channel .channel-settings .bx-cog {
+    margin-left: auto;
+    color: #b9bbbe;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.channel .channel-settings .bx-cog:hover {
+    color: #dcddde;
+}
+
+.channel .channel-messages {
+    flex: 1;
+    padding: 20px;
+    overflow-y: scroll;
+}
+
+.channel .channel-input {
+    display: flex;
+    align-items: center;
+    height: 60px;
+    padding: 0 20px;
+    border-top: 1px solid #2f3136;
+}
+
+.channel .channel-input input {
+    height: 40px;
+    width: 100%;
+    background-color: #40444b;
+    border: 1px solid #2f3136;
+    border-radius: 3px;
+    color: #dcddde;
+    padding: 0 10px;
+    font-size: 16px;
+}
+
+.channel .channel-input .channel-input-button {
+    margin-left: 10px;
     color: white;
     font-size: 20px;
     cursor: pointer;
 }
 
-.channel .channel-messages {
-    height: 100%;
-    width: 100%;
-    overflow: scroll;
-    padding: 10px;
+.channel .channel-input .channel-input-button button {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
 }

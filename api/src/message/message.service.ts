@@ -29,7 +29,7 @@ export class MessageService {
             .leftJoin('message.channel', 'channel')
             .leftJoinAndSelect('message.owner', 'user')
             .where('channel.id = :channelId', { channelId: channel.id })
-            .select(['message.text', 'message.created_at', 'user.id'])
+            .select(['message.text', 'message.created_at', 'user.id', 'user.display_name', 'user.profile_picture'])
             .orderBy('message.created_at', 'ASC')
             .getMany();
     }

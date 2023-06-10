@@ -2,6 +2,8 @@
     display: flex;
     flex-direction: column;
     margin-bottom: 1rem;
+    overflow: auto; /* Activer le défilement */
+    scroll-behavior: smooth; /* Ajouter un défilement en douceur */
 }
 
 .message .message-avatar {
@@ -15,32 +17,88 @@
     margin-right: 1rem;
 }
 
-.message .message-content {
+.message .message-content-user {
     display: flex;
     flex-direction: column;
-    width: 100%;
+    width: 50%;
+    align-self: flex-end; /* Aligner à droite */
 }
 
-.message .message-content .message-header {
+.message .message-content-user .message-header {
+    display: flex;
+    align-self: flex-end;
+    margin-bottom: 0.5rem;
+}
+
+.message .message-content-user .message-header .message-username {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-right: 0.5rem;
+    color: white;
+}
+
+.message .message-content-user .message-header .message-time {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.message .message-content-user .message-body {
+    max-width: calc(100% - 4rem);
+    display: flex;
+    align-self: flex-end;
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+    color: white;
+    word-wrap: anywhere;
+    border-radius: 18px;
+    background: dodgerblue;
+}
+
+.message .message-content-other {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    align-self: flex-start; /* Aligner à gauche */
+}
+
+.message .message-content-other .message-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 0.5rem;
 }
 
-.message .message-content .message-header .message-username {
+.message .message-content-other .message-header .message-username {
     font-weight: 600;
     font-size: 1rem;
     margin-right: 0.5rem;
+    color: white;
 }
 
-.message .message-content .message-header .message-time {
+.message .message-content-other .message-header .message-time {
     font-size: 0.8rem;
     color: #666;
 }
 
-.message .message-content .message-body {
+.message .message-content-other .message-body {
+    max-width: calc(100% - 4rem);
+    display: flex;
+    align-self: flex-start;
     font-size: 0.9rem;
-    line-height: 1.2rem;
-    color: #333;
+    color: white;
+    background: gray;
+    border-radius: 18px;
+    word-wrap: anywhere;
+    padding: 0.5rem 1rem;
+}
+
+
+.message .message-content-other:last-child,
+.message .message-content-user:last-child {
+    margin-bottom: 0; /* Supprimer la marge inférieure pour le dernier message */
+}
+
+.message .message-content-other:first-child,
+.message .message-content-user:first-child {
+    margin-top: auto; /* Pousser les premiers messages en haut */
 }

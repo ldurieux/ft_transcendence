@@ -21,6 +21,8 @@ import { ActionService } from 'src/action/action.service';
 import { GameService } from 'src/game/game.service';
 import { Game } from 'src/game/game.entity';
 
+import { EventsGateway } from 'src/socket_server/socket.gateway';
+
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
@@ -31,7 +33,7 @@ import { Game } from 'src/game/game.entity';
     TypeOrmModule.forFeature([Action]),
     TypeOrmModule.forFeature([Game]),
   ],
-  providers: [UserService, AuthService, ChannelService, FriendRequestService, MessageService, ActionService, JwtService, GameService],
+  providers: [UserService, AuthService, ChannelService, FriendRequestService, MessageService, ActionService, EventsGateway, JwtService],
   controllers: [ChannelController],
 })
 export class ChannelModule {}

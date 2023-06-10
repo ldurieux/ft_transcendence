@@ -85,29 +85,10 @@ body {
 }
 
 .Chat .ChatBox {
-    height: 70vh;
+    height: 80vh;
     width: 100%;
     overflow: scroll;
     padding: 10px;
-}
-
-.Chat .ChatInput {
-    height: 8vh;
-    width: 100%;
-}
-
-.Chat .ChatInput input {
-    width: 100%;
-    height: 100%;
-    font-size: 15px;
-    margin-bottom: 100px;
-    text-align: center;
-    background-color: #333;
-    border: none;
-    border-top: 2px solid white;
-    outline: none;
-    overflow: hidden;
-    color: white;
 }
 
 .leaveButton {

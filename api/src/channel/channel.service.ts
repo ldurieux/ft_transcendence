@@ -13,6 +13,8 @@ import { MessageService } from 'src/message/message.service';
 import { Action } from 'src/action/action.entity';
 import { ActionService } from 'src/action/action.service';
 
+import { EventsGateway } from 'src/socket_server/socket.gateway';
+
 @Injectable()
 export class ChannelService {
     constructor(
@@ -21,6 +23,7 @@ export class ChannelService {
         private readonly userService: UserService,
         private readonly messageService: MessageService,
         private readonly actionService: ActionService,
+        private readonly websocket: EventsGateway
     ) {}
 
     async listPublic() {
@@ -114,6 +117,11 @@ export class ChannelService {
             throw new HttpException("Banned", HttpStatus.FORBIDDEN)
 
         channel.users.push(self);
+
+        for (const to of channel.users) {
+            this.websocket.sendTo(to.id, { event: "join", data: { channel: channel.id, user: self.id } })
+        }
+
         return this.channelRepository.save(channel);
     }
 
@@ -133,6 +141,11 @@ export class ChannelService {
             throw new HttpException("User is banned", HttpStatus.FORBIDDEN)
 
         channel.users.push(user);
+
+        for (const to of channel.users) {
+            this.websocket.sendTo(to.id, { event: "join", data: { channel: channel.id, user: user.id } })
+        }
+
         await this.channelRepository.save(channel);
     }
 
@@ -144,6 +157,10 @@ export class ChannelService {
         channel.users = channel.users.filter(e => e.id != user.id)
         channel.admins = channel.admins.filter(e => e.id != user.id)
         await this.channelRepository.save(channel);
+
+        for (const to of channel.users) {
+            this.websocket.sendTo(to.id, { event: "leave", data: { channel: channel.id, user: user.id } })
+        }
     }
 
     async banUser(from: User, user: User, channelId: number, duration: number) {
@@ -223,6 +240,10 @@ export class ChannelService {
             throw new HttpException("User not in channel", HttpStatus.NOT_FOUND)
         }
 
+        for (const to of channel.users) {
+            this.websocket.sendTo(to.id, { event: "leave", data: { channel: channel.id, user: self.id } })
+        }
+
         channel.users = channel.users.filter(e => e.id != self.id);
 
         if (channel.users.length == 0) {
@@ -240,6 +261,10 @@ export class ChannelService {
 
     async deleteChannel(channelId: number) {
         const channel: Channel = await this.getChannel(channelId);
+
+        for (const to of channel.users) {
+            this.websocket.sendTo(to.id, { event: "delete", data: { channel: channel.id } })
+        }
 
         return this.channelRepository.remove(channel)
     }
@@ -274,6 +299,11 @@ export class ChannelService {
         channel.type = "dm";
         channel.users = [self, other]
 
+        for (const to of channel.users) {
+            this.websocket.sendTo(to.id, { event: "join", data: { channel: channel.id, user: self.id } })
+            this.websocket.sendTo(to.id, { event: "join", data: { channel: channel.id, user: other.id } })
+        }
+
         await this.channelRepository.save(channel)
         return channel;
     }
@@ -299,6 +329,11 @@ export class ChannelService {
         channel.users = [owner];
 
         await this.channelRepository.save(channel)
+
+        for (const to of channel.users) {
+            this.websocket.sendTo(to.id, { event: "join", data: { channel: channel.id, user: owner.id } })
+        }
+
         return channel;
     }
 
@@ -318,6 +353,11 @@ export class ChannelService {
         channel.users = [owner];
 
         await this.channelRepository.save(channel);
+
+        for (const to of channel.users) {
+            this.websocket.sendTo(to.id, { event: "join", data: { channel: channel.id, user: owner.id } })
+        }
+
         return channel;
     }
 
@@ -391,10 +431,15 @@ export class ChannelService {
             throw new HttpException("Muted", HttpStatus.FORBIDDEN)
 
         if (channel.users.some(e => e.id == user.id)) {
+            for (const to of channel.users) {
+                this.websocket.sendTo(to.id, { event: "message", data: { channel: channel.id, owner: user, text: text } })
+            }
+
             delete channel.users;
             delete channel.password_hash;
             delete channel.admins;
             delete channel.owner;
+
             return this.messageService.addMessage(user, channel, text);
         }
 

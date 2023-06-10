@@ -8,7 +8,7 @@ const Leaderboard = React.lazy(() => import("../pages/Leaderboard.tsx"));
 const Chat = React.lazy(() => import("../pages/Chat.tsx"));
 
 
-const FrontRoutes = () => {
+const FrontRoutes = ({socket}) => {
 
     return (
         <Routes>
@@ -18,7 +18,7 @@ const FrontRoutes = () => {
             } />
             <Route path="/game" element={<Game />} />
             <Route path="/leaderboard" element={<Leaderboard />} />
-            <Route path="/chat" element={<Chat />} />
+            <Route path="/chat" element={<Chat socket={socket}/>} />
         </Routes>
     );
 }
