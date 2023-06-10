@@ -12,11 +12,12 @@ export class GameService {
         private gameRepository: Repository<Game>,
     ) {}
     
-    async createemptyGame(user: User): Promise<Game> {
+    createemptyGame(user: User): Game {
         if (user.game) {
             return user.game;
         }
         const game: Game = new Game();
+        this.gameRepository.save(game);
         return (game);
     }
 

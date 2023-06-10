@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
+import { Game } from 'src/game/game.entity';
 
 import { Auth } from 'src/auth/auth.entity';
 import { AuthService } from 'src/auth/auth.service';
@@ -100,7 +101,6 @@ export class UserService {
         const user: User = new User();
         user.auths = new Array<Auth>;
         user.display_name = username;
-        user.game = await this.gameService.createemptyGame(user);
 
         switch (method) {
             case 'local': {
@@ -117,6 +117,7 @@ export class UserService {
             }
         }
 
+        user.game = this.gameService.createemptyGame(user);
         await this.userRepository.save(user);
         return this.authService.getJwt(user);
     }

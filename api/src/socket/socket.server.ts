@@ -15,9 +15,9 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
     }
 
     handleConnection(client: WebSocket) {
-        // console.log('Client isConnected');
-        // console.log(client.toString());
-        // this.clients.set(client.toString(), client);
+        console.log('Client isConnected');
+        console.log(client.toString());
+        this.clients.set(client.toString(), client);
     }
 
     handleDisconnect(client: WebSocket) {

@@ -35,7 +35,6 @@ export class AuthService {
                 method: method
             }
         });
-
         if (auth) return true;
         return false;
     }
@@ -62,7 +61,6 @@ export class AuthService {
         if (!valid) {
             throw new HttpException("Invalid password", HttpStatus.UNAUTHORIZED);
         }
-
         return auth.user;
     }
 
@@ -118,15 +116,13 @@ export class AuthService {
         auth.user = user;
 
         await this.authRepository.save(auth);
+        console.log("AUTH" + JSON.stringify(auth));
         return auth;
     }
 
     getJwt(user: User): string {
         let newvar: string;
-        console.log("JWT_SECRET: " + process.env.JWT_SECRET);
-        console.log("user.id: " + user.id);
-        newvar = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: 'id' });
-        console.log("JWT: " + newvar);
+        newvar = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1d' });
         return newvar;
     }
 
