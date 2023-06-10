@@ -10,4 +10,5 @@ import { JwtService } from '@nestjs/jwt';
 @Module({
     providers: [GameGateway, ChatGateway, SocketServer, SocketGuard, JwtService],
   })
-export class SocketServerModule {}
+
+  export class SocketServerModule {}

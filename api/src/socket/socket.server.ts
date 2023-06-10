@@ -1,11 +1,10 @@
-import { WebSocketServer } from "@nestjs/websockets";
 import * as WebSocket from 'ws';
-import { WebSocketGateway } from '@nestjs/websockets';
+import { OnGatewayConnection, OnGatewayDisconnect, MessageBody, OnGatewayInit ,SubscribeMessage, WebSocketGateway, ConnectedSocket, WebSocketServer } from '@nestjs/websockets';
 
 @WebSocketGateway({ 
     transports: ['websocket']
 })
-export class SocketServer {
+export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
     constructor(
     ) {}
     @WebSocketServer() server: WebSocket;
@@ -17,7 +16,7 @@ export class SocketServer {
 
     handleConnection(client: WebSocket) {
         console.log('Client isConnected');
-        console.log(client);
+        console.log(client.toString());
         this.clients.set(client.toString(), client);
     }
 

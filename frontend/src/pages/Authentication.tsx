@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { UserContext } from "../components/Utils/context.tsx";
+import { UserContext } from '../components/Utils/context.tsx';
 import "../components/Styles/LoginStyles.css";
 import {useNavigate} from "react-router-dom";
 
