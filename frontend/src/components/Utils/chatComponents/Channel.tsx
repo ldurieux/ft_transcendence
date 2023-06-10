@@ -56,7 +56,6 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
         if (socket) {
             socket.onmessage = (event) => {
                 const ret = JSON.parse(event.data)
-                console.log(ret)
                 if (ret.event === "leave" && ret.data.channel === channel.id) {
                     //remove the user who lived from users list
                     setUsers((prev) => {

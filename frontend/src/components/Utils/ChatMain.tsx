@@ -53,7 +53,6 @@ function ChatMain({socket}) {
         if (socket) {
             socket.onmessage = (e) => {
                 const data = JSON.parse(e.data);
-                console.log(data)
                 if (data.event === "leave" && data.user === user.id) {
                     const newChannelList = channelList.filter((item) => item.id !== channel.id);
                     setChannelList(newChannelList);
