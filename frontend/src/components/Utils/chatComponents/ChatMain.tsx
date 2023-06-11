@@ -14,6 +14,8 @@ function ChatMain({socket}) {
     const [showList, setShowList] = useState(false);
     const [chanParams, setChanParams] = useState({});
     const [user, setUser] = useState({});
+    const [ChannelPassword, setChannelPassword] = useState("");
+    const [popupSelectedList, setPopupSelectedList] = useState("Join");
 
     async function leaveChannel() {
         try {
@@ -69,6 +71,11 @@ function ChatMain({socket}) {
         setSelectedList(listType);
     }
 
+    function switchPopupList(listType) {
+        setPopupSelectedList(listType);
+        setChannelName("");
+    }
+
     const handlePlusButtonClick = (e) => {
         setChanSettings(true);
         setChannel(e);
@@ -108,14 +115,20 @@ function ChatMain({socket}) {
 
     async function createPublicChannel(chan) {
         try {
+            let result;
             if (chan === "")
                 return ;
-            const result = await post("channel", { type: "public", name: chan });
+            if (ChannelPassword !== "")
+                result = await post("channel", { type: "public", name: chan, password: ChannelPassword });
+            else
+                result = await post("channel", { type: "public", name: chan });
+            console.log(result)
             if (result.status >= 400 && result.status <= 500) {
                 return ;
             }
             else {
                 setChannelList([...channelList, result]);
+                setChannelPassword("");
                 setChannelName("");
             }
         } catch (error) {
@@ -123,14 +136,21 @@ function ChatMain({socket}) {
         }
     }
 
-    async function joinChannel(chan) {
+    async function joinChannel(chan, password = "") {
         try {
-            const result = await post("channel/join", { id: chan.id });
-            if (result.status >= 400 && result.status <= 500) {
-                return ;
+            console.log(password)
+            let result;
+            if (password === "")
+                result = await post("channel/join", { id: chan.id });
+            else
+                result = await post("channel/join", { id: chan.id, password: password });
+            console.log(result)
+            if (!result) {
+                return true;
             }
             else
                 setChannelList([...channelList, chan]);
+            return false;
         } catch (error) {
             console.error(error);
         }
@@ -223,6 +243,28 @@ function ChatMain({socket}) {
                 <div className="popup">
                     <i className='bx bx-x bx-x-icon' onClick={() => setShowPopup(false)}></i>
                     <div className="popupContent">
+                        <ul className="ChooseList">
+                            <button
+                                className={`ChanButton ${selectedList === "ChatMain" ? "ChanButtonSelected" : "ButtonUnselected"}`}
+                                onClick={() => switchPopupList("Join")}
+                            >
+                                Join channel
+                            </button>
+                            <button
+                                className={`ChanButton ${selectedList === "Friends" ? "ChanButtonSelected" : "ButtonUnselected"}`}
+                                onClick={() => switchPopupList("Create")}
+                            >
+                                Create channel
+                            </button>
+                        </ul>
+                        {popupSelectedList === "Join" ? (
+                            <div className="JoinChannel">
+                            <h3>Join channel</h3>
+                            <ChannelList
+                                onClick={joinChannel}
+                            />
+                        </div>
+                            ) : (
                         <div className="CreateChannel">
                             <h3>Create a public channel</h3>
                             <div className="inputButtonWrapper">
@@ -234,19 +276,19 @@ function ChatMain({socket}) {
                                 onChange={(e) => setChannelName(e.target.value)}
                                 onKeyDown={handleKeyDown}
                             />
+                                <input
+                                    type="text"
+                                    maxLength={15}
+                                    placeholder="Password: optional"
+                                    value={ChannelPassword}
+                                    onChange={(e) => setChannelPassword(e.target.value)}
+                                />
                             <button className="CreateButton" onClick={() => createPublicChannel(ChannelName)}>Create</button>
                             </div>
                         </div>
-                        <div className="ShowPublicChannel">
-                            <button onClick={() => setShowList(!showList)}>
-                                Show Public Channels
-                            </button>
-                        </div>
+                        )
+                        }
                     </div>
-                    <ChannelList
-                        onClick={joinChannel}
-                        showList={showList}
-                    />
                 </div>
             )}
             {chanSettings && (

@@ -6,6 +6,15 @@
     border: 2px solid #e7e7e7;
 }
 
+.list ul {
+    list-style-type: none;
+    max-height: 150px;
+    margin: 0;
+    padding: 0;
+    overflow: scroll;
+    border: 2px solid #e7e7e7;
+}
+
 .list li {
     padding: 5px;
     border-bottom: 1px solid white;
@@ -17,4 +26,12 @@
 .list li:hover {
     background-color: #333;
     cursor: pointer;
+}
+
+@media only screen and (max-width: 768px) {
+
+    .list ul {
+        max-height: 70px;
+        font-size: 10px;
+    }
 }

@@ -7,17 +7,6 @@ import "../../Styles/messageStyles.css";
 import "../../Styles/PopupStyles.css";
 import Popup from "../popup.tsx";
 
-async function getChannelMessages(channelId) {
-    try {
-        const result = await get("channel/message?id=" + channelId);
-        if (result) {
-            return result;
-        }
-    }
-    catch (error) {
-    }
-}
-
 function Channel({ socket, channel, currentUser, setChanParams, setChannelList, updateChannelUsers, closeChannel }) {
     const bottomChat = useRef<null | HTMLDivElement>(null);
     const { showPopup, setShowPopup } = useContext(PopupContext);
@@ -37,8 +26,8 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
     useEffect(() => {
         (async () => {
             try {
-                if (channel.id !== "undefined") {
-                    const message = await getChannelMessages(channel.id);
+                if (channel.id !== undefined) {
+                    const message = await get("channel/message?id=" + channel.id);
                     setUsers(channel.users)
                     if (message) {
                         setMessages(message);
