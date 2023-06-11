@@ -6,7 +6,6 @@ body {
 .baguette {
     position: fixed;
     display: flex;
-    overflow: scroll;
     height: 100%;
     width: 100%;
 }
@@ -17,7 +16,6 @@ body {
     background-color: #1e2122;
     height: 80vh;
     width: 250px;
-    overflow: scroll;
     border: 2px solid #e7e7e7;
 }
 
@@ -130,7 +128,18 @@ body {
     .ChanList {
         margin-left: 80px;
         width: calc(100% - 80px);
-        height: 200px;
+        height: 180px;
+    }
+
+    .ChooseList button {
+        width: 100%;
+        font-size: 12px;
+    }
+
+    .ChanList .Channels {
+        overflow: scroll;
+        max-height: 100px;
+        font-size: 10px;
     }
 
     .bx-cog-container {
@@ -146,10 +155,18 @@ body {
     .Chat {
         position: static;
         top: auto;
-        height: calc(100vh - 280px);
+        height: calc(100vh - 45vh);
         width: 100%;
         margin-top: 200px;
         margin-left: 80px;
+        border: none;
+    }
+
+    .ChatBox {
+        height: 100%;
+        width: 100%;
+        overflow: scroll;
+        padding: 10px;
     }
 }
 

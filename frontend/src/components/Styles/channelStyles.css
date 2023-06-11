@@ -59,6 +59,7 @@
     color: white;
     font-size: 20px;
     cursor: pointer;
+    background: transparent;
 }
 
 .channel .channel-input .channel-input-button button {
@@ -66,4 +67,10 @@
     border: none;
     outline: none;
     cursor: pointer;
+    color: white;
+}
+
+.channel .channel-input .channel-input-button button:hover {
+    opacity: 0.5;
+    transition: 0.3s ease;
 }

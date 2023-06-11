@@ -93,6 +93,16 @@
 }
 
 
+@media screen and (max-width: 768px) {
+    .message .message-content-user .message-body {
+        max-width: calc(100% - 1rem);
+    }
+
+    .message .message-content-other .message-body {
+        max-width: calc(100% - 1rem);
+    }
+}
+
 .message .message-content-other:last-child,
 .message .message-content-user:last-child {
     margin-bottom: 0; /* Supprimer la marge inférieure pour le dernier message */

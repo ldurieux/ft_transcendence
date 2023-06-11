@@ -1,11 +1,10 @@
 import React, {useContext, useEffect, useState, useRef} from "react";
+import { useNavigate } from 'react-router-dom';
 import "../../Styles/channelStyles.css";
 import { get, post } from "../Request.tsx";
-import PopupSettings from "./chanSettingsPopup.tsx";
 import {PopupContext} from "./PopupContext.tsx";
-import { websocketRef} from "ws";
-import { SocketContext } from "../context.tsx";
 import "../../Styles/messageStyles.css";
+import "../../Styles/PopupStyles.css";
 
 async function getChannelMessages(channelId) {
     try {
@@ -15,20 +14,17 @@ async function getChannelMessages(channelId) {
         }
     }
     catch (error) {
-        return null;
     }
 }
 
-function Channel({ socket, channel, currentUser, setChanParams }) {
+function Channel({ socket, channel, currentUser, setChanParams, setChannelList, updateChannelUsers, closeChannel }) {
     const bottomChat = useRef<null | HTMLDivElement>(null);
     const { showPopup, setShowPopup } = useContext(PopupContext);
     const isDM: boolean = channel.type === "dm";
     const [messages, setMessages] = useState([]);
     const [message, setMessage] = useState("");
+    const [users, setUsers] = useState([]);
     const defaultAvatar = require("../42-logo.png");
-
-
-    console.log(messages);
 
     useEffect(() => {
         if (bottomChat.current) {
@@ -39,33 +35,43 @@ function Channel({ socket, channel, currentUser, setChanParams }) {
     useEffect(() => {
         (async () => {
             try {
-                const message = await getChannelMessages(channel.id);
-                if (message) {
-                    setMessages(message);
+                if (channel.id !== "undefined") {
+                    const message = await getChannelMessages(channel.id);
+                    setUsers(channel.users)
+                    if (message) {
+                        setMessages(message);
+                    }
+                }
+                else {
+                    setMessages([]);
                 }
             }
             catch (error) {
                 return error;
             }
         })();
-    }, [channel]);
+    }, [channel.id]);
 
     useEffect(() => {
         if (socket) {
             socket.onmessage = (event) => {
                 const ret = JSON.parse(event.data)
-                if (ret.event === "leave") {
-                    //remove the user who lived from the channel with his user id
-                    setChanParams((prev) => {
-                        const newParams = {...prev};
-                        newParams.users = newParams.users.filter((user) => user.id !== ret.user_id);
-                        return newParams;
+                if (ret.event === "leave" && ret.data.channel === channel.id) {
+                    //remove the user who lived from users list
+                    setUsers((prev) => {
+                        return prev.filter((user) => user.id !== ret.data.user);
                     });
+                    if (ret.data.user === currentUser.id)
+                        closeChannel();
                 }
-                if (ret.event === "message") {
+                if (ret.event === "join" && ret.data.channel === channel.id) {
+                    //add the user who joined to the channel
+                    setUsers((prev) => [...prev, ret.data.user]);
+                }
+                else if (ret.event === "message") {
                     //add the message to the messages list
-                    console.log(ret.data);
-                    setMessages((prev) => [...prev, ret.data]);
+                    if (ret.data.channel === channel.id)
+                        setMessages((prev) => [...prev, ret.data]);
                 }
             };
         }
@@ -88,6 +94,54 @@ function Channel({ socket, channel, currentUser, setChanParams }) {
 
     const handleTogglePopup = () => {
         setShowPopup(!showPopup);
+    };
+
+    async function kickUser(channel, userId) {
+        try {
+            if (currentUser.id === channel.owner.id) {
+                const result = await post(`channel/kick`, { userId: userId, channelId: channel.id });
+                if (result) {
+                    // Update the users list
+                    const updatedUsers = users.filter(user => user.id !== userId);
+                    setUsers(updatedUsers);
+
+                    // Update the channel list in the parent component
+                    updateChannelUsers(channel, updatedUsers);
+                }
+                return result;
+            }
+        } catch (error) {
+            // Gérer l'erreur ici
+            console.error("Erreur lors de la suppression de l'utilisateur :", error);
+        }
+    }
+
+    async function banUser(channel, userId) {
+        try {
+            const ret = await post(`channel/ban`, { userId: userId, channelId: channel.id, duration: 60 });
+            if (ret) {
+                //update the users list
+                setUsers((prev) => {
+                    return prev.filter((user) => user.id !== userId);
+                });
+            }
+        }
+        catch (error) {
+        }
+    }
+
+    async function muteUser(channel, userId) {
+        try {
+            const ret = await post(`channel/mute`, { userId: userId, channelId: channel.id, duration: 60 });
+            if (ret) {
+            }
+        }
+        catch (error) {
+        }
+    }
+
+    const handlePopupClose = () => {
+        setShowPopup(false);
     };
 
     return (
@@ -153,13 +207,49 @@ function Channel({ socket, channel, currentUser, setChanParams }) {
                     </button>
                 </div>
             </div>
-            {channel &&
-                <PopupSettings
-                settings={channel}
-                showPopup={showPopup}
-                setShowPopup={setShowPopup}
-                currentUser={currentUser}
-            />
+            {showPopup &&
+                    <div className="popup-settings">
+                        <div className="popup-settings-inner">
+                            <div className="popup-settings-header">
+                                <div className="popup-settings-title">{channel?.display_name}</div>
+                                <div className="popup-settings-close" onClick={handlePopupClose}>
+                                    <i className="bx bx-x"></i>
+                                </div>
+                            </div>
+                            <div className="popup-settings-content">
+                                <ul>
+                                    <li style={{ fontWeight: "700" }}>Owner:
+                                        <p style={{ fontWeight: "100" }}>{channel.owner?.display_name}</p>
+                                    </li>
+                                    <li style={{ fontWeight: "700" }}>Users:</li>
+                                    <ul>
+                                        {users &&
+                                            users.length > 0 &&
+                                            users.map((item, key) => {
+                                                return (
+                                                    <li key={key}>
+                                                        {item.display_name}
+                                                        {currentUser.id === channel.owner.id &&
+                                                            currentUser.id !== item.id &&
+                                                            <button onClick={() => kickUser(channel, item.id)}>Kick</button>
+                                                        }
+                                                        {currentUser.id === channel.owner.id &&
+                                                            currentUser.id !== item.id &&
+                                                            <button onClick={() => banUser(channel, item.id)}>Ban</button>
+                                                        }
+                                                        {currentUser.id === channel.owner.id &&
+                                                            currentUser.id !== item.id &&
+                                                            <button onClick={() => muteUser(channel, item.id)}>Mute</button>
+                                                        }
+                                                    </li>
+                                                );
+                                            })
+                                        }
+                                    </ul>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
             }
         </div>
     );

@@ -15,6 +15,24 @@ function ChatMain({socket}) {
     const [chanParams, setChanParams] = useState({});
     const [user, setUser] = useState({});
 
+    async function leaveChannel() {
+        try {
+            const result = await post("channel/leave", { id: channel.id });
+            if (result.status >= 400 && result.status <= 500) {
+                return ;
+            }
+            else {
+                //update channelList to remove the channel
+                const newChannelList = channelList.filter((item) => item.id !== channel.id);
+                setChannelList(newChannelList);
+                setChanSettings(false);
+                setChannel(null);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     // useEffect to get the list of channels and friends
     useEffect(() => {
         (async () => {
@@ -30,6 +48,20 @@ function ChatMain({socket}) {
             }
         })();
     }, []);
+
+    useEffect(() => {
+        if (socket) {
+            socket.onmessage = (e) => {
+                const data = JSON.parse(e.data);
+                if (data.event === "leave" && data.user === user.id) {
+                    const newChannelList = channelList.filter((item) => item.id !== channel.id);
+                    setChannelList(newChannelList);
+                    setChanSettings(null);
+                    setChannel(null);
+                }
+            }
+        }
+    }, [socket]);
 
     // Function to handle button click and update the selected list
     function switchList(listType) {
@@ -54,22 +86,23 @@ function ChatMain({socket}) {
         setChanParams(result);
     }
 
-    async function leaveChannel() {
-        try {
-            const result = await post("channel/leave", { id: channel.id });
-            if (result.status >= 400 && result.status <= 500) {
-                return ;
-            }
-            else {
-                //update channelList to remove the channel
-                const newChannelList = channelList.filter((item) => item.id !== channel.id);
-                setChannelList(newChannelList);
-                setChanSettings(false);
-                setChannel(null);
-            }
-        } catch (error) {
-            console.error(error);
-        }
+    async function closeChannel() {
+        //remove the channel from the list
+        const newChannelList = channelList.filter((item) => item.id !== channel.id);
+        setChannelList(newChannelList);
+        setChannel(null);
+        setChanParams({});
+    }
+
+    function updateChannelUsers(channel, updatedUsers) {
+        setChannelList(prevChannelList => {
+            return prevChannelList.map(prevChannel => {
+                if (prevChannel.id === channel.id) {
+                    return { ...prevChannel, users: updatedUsers };
+                }
+                return prevChannel;
+            });
+        });
     }
 
     async function createPublicChannel(chan) {
@@ -169,11 +202,18 @@ function ChatMain({socket}) {
                 </div>
             </div>
             <div className="Chat">
-                {channel && (
+                {channel &&
+                    chanParams &&
+                    (
                     <div className="ChatBox">
-                        <Channel socket={socket}
-                            channel={chanParams} currentUser={user}
-                                 setChanParams={setChanParams}
+                        <Channel
+                            socket={socket}
+                            channel={chanParams}
+                            currentUser={user}
+                            setChanParams={setChanParams}
+                            setChannelList={setChannelList}
+                            updateChannelUsers={updateChannelUsers}
+                            closeChannel={closeChannel}
                         />
                     </div>
                 )}

@@ -119,7 +119,7 @@ export class ChannelService {
         channel.users.push(self);
 
         for (const to of channel.users) {
-            this.websocket.sendTo(to.id, { event: "join", data: { channel: channel.id, user: self.id } })
+            this.websocket.sendTo(to.id, { event: "join", data: { channel: channel.id, user: self } })
         }
 
         return this.channelRepository.save(channel);
@@ -157,6 +157,8 @@ export class ChannelService {
         channel.users = channel.users.filter(e => e.id != user.id)
         channel.admins = channel.admins.filter(e => e.id != user.id)
         await this.channelRepository.save(channel);
+
+        this.websocket.sendTo(user.id, { event: "leave", data: { channel: channel.id, user: user.id } })
 
         for (const to of channel.users) {
             this.websocket.sendTo(to.id, { event: "leave", data: { channel: channel.id, user: user.id } })
@@ -260,7 +262,7 @@ export class ChannelService {
     }
 
     async deleteChannel(channelId: number) {
-        const channel: Channel = await this.getChannel(channelId);
+        const channel: Channel = await this.getChannel(channelId, true);
 
         for (const to of channel.users) {
             this.websocket.sendTo(to.id, { event: "delete", data: { channel: channel.id } })
