@@ -434,6 +434,7 @@ export class ChannelService {
 
         if (channel.users.some(e => e.id == user.id)) {
             for (const to of channel.users) {
+                console.log("TEXT" + text);
                 this.websocket.sendTo(to.id, { event: "message", data: { channel: channel.id, owner: user, text: text } })
             }
 

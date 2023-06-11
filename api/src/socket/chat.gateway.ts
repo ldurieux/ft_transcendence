@@ -14,9 +14,15 @@ export class ChatGateway {
     @UseGuards(SocketGuard)
     async sendTo(to: number, data: object) {
         const raw = JSON.stringify(data)
-        for (const client of this.socketServer.getClients()) {
-            if (client[1].socket.data == to)
-                client[1].socket.send(raw)
+        console.log('send to', to);
+        for (const client of this.socketServer.getServer().clients) {
+            console.log('send to', client.data.user);
+            if (client.data.user == to)
+            {
+                console.log('send to', to);
+                console.log('send to', JSON.stringify(data));
+                client.send(raw)
+            }
         }
     }
 }
