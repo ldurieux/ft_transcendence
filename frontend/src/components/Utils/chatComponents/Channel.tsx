@@ -5,6 +5,7 @@ import { get, post } from "../Request.tsx";
 import {PopupContext} from "./PopupContext.tsx";
 import "../../Styles/messageStyles.css";
 import "../../Styles/PopupStyles.css";
+import Popup from "../popup.tsx";
 
 async function getChannelMessages(channelId) {
     try {
@@ -24,7 +25,8 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
     const [messages, setMessages] = useState([]);
     const [message, setMessage] = useState("");
     const [users, setUsers] = useState([]);
-    const defaultAvatar = require("../42-logo.png");
+    const [selectedUser, setSelectedUser] = useState(null);
+    const defaultAvatar = require("./42-logo.png");
 
     useEffect(() => {
         if (bottomChat.current) {
@@ -144,8 +146,38 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
         setShowPopup(false);
     };
 
+    const popupCloseHandler = (e) => {
+        setShow(e);
+    };
+
     return (
         <div className="channel">
+            <Popup
+                title={selectedUser?.display_name}
+                show={selectedUser !== null}
+                onClose={popupCloseHandler}
+            >
+                {setSelectedUser !== null && (
+                    <div className="Popup">
+                        <div className="FriendInformation">
+                            <img
+                                alt={selectedUser?.display_name}
+                                src={selectedUser?.profile_picture ?? defaultAvatar}/>
+                            <p>{selectedUser?.display_name}</p>
+                        </div>
+                        <div className="FriendsOptions">
+                            <ul>
+                                <li
+                                    className="PopupClose"
+                                    onClick={() => setSelectedUser(null)}
+                                >
+                                    Close
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                )}
+            </Popup>
             <div className="channel-name">{channel.display_name}</div>
             <div className="channel-settings">
                 {!isDM &&
@@ -175,7 +207,9 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                                 :
                                 <div className="message-content-other">
                                     <div className="message-header">
-                                        <div className="message-username">{item.owner.display_name}</div>
+                                        <div className="message-username"
+                                            onClick={() => setSelectedUser(item.owner)}
+                                        >{item.owner.display_name}</div>
                                         {/*<div className="message-time">{item.created_at}</div>*/}
                                     </div>
                                     <div className="message-body">{item.text}</div>

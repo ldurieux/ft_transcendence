@@ -119,9 +119,10 @@
 //         }
 //     }
 
-//     handleDisconnect(client: WebSocket) {
-//         this.broadcast(client.data.user, { event: "disconnect", data: { user: client.data.user } })
-//     }
+    // handleDisconnect(client: WebSocket) {
+    //     this.broadcast(client.data.user, { event: "disconnect", data: { user: client.data.user } })
+    //     console.log("disconnected");
+    // }
 
 //     async broadcast(from: number, data: object) {
 //         const raw = JSON.stringify(data)

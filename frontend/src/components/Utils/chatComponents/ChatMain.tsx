@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { get, post } from "./Request.tsx";
-import Channel from "./chatComponents/Channel.tsx";
-import ChannelList from "./list.tsx";
+import { get, post } from "../Request.tsx";
+import Channel from "./Channel.tsx";
+import ChannelList from "../list.tsx";
 
 function ChatMain({socket}) {
     const [channelList, setChannelList] = useState([]);
@@ -51,6 +51,7 @@ function ChatMain({socket}) {
 
     useEffect(() => {
         if (socket) {
+            console.log("socket is set")
             socket.onmessage = (e) => {
                 const data = JSON.parse(e.data);
                 if (data.event === "leave" && data.user === user.id) {

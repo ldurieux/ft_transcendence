@@ -75,6 +75,12 @@
     color: white;
 }
 
+.message .message-content-other .message-header .message-username:hover {
+    opacity: 0.5;
+    transition: 0.3s ease;
+    cursor: pointer;
+}
+
 .message .message-content-other .message-header .message-time {
     font-size: 0.8rem;
     color: #666;
