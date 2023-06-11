@@ -15,6 +15,9 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
     const [message, setMessage] = useState("");
     const [users, setUsers] = useState([]);
     const [selectedUser, setSelectedUser] = useState(null);
+    const [isAdmin, setIsAdmin] = useState(false);
+    const [Owner, setOwner] = useState({});
+    const [admins, setAdmins] = useState([]);
     const defaultAvatar = require("./42-logo.png");
 
     useEffect(() => {
@@ -26,12 +29,25 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
     useEffect(() => {
         (async () => {
             try {
+                console.log(channel)
                 if (channel.id !== undefined) {
                     const message = await get("channel/message?id=" + channel.id);
                     setUsers(channel.users)
                     if (message) {
                         setMessages(message);
                     }
+                }
+                //search if the current user is in admins list
+                if (channel.admins) {
+                    setAdmins(channel.admins)
+                    const admin = channel.admins.find((admin) => admin.id === currentUser.id);
+                    if (admin) {
+                        setIsAdmin(true);
+                    }
+                }
+                //search if the current user is the owner of the channel
+                if (channel.owner) {
+                    setOwner(channel.owner);
                 }
                 else {
                     setMessages([]);
@@ -149,6 +165,32 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
         }
         catch (error) {
 
+        }
+    }
+
+    async function promoteUser(channel,user) {
+        try {
+            const ret = await post(`channel/promote`, { userId: user.id, channelId: channel.id });
+            if (ret) {
+                //add in admin list
+                setAdmins((prev) => [...prev, user]);
+            }
+        }
+        catch (error) {
+        }
+    }
+
+    async function demoteUser(channel,user) {
+        try {
+            const ret = await post(`channel/demote`, { userId: user.id, channelId: channel.id });
+            if (ret) {
+                //remove from admin list
+                setAdmins((prev) => {
+                    return prev.filter((admin) => admin.id !== user.id);
+                });
+            }
+        }
+        catch (error) {
         }
     }
 
@@ -271,6 +313,24 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                                     <li style={{ fontWeight: "700" }}>Owner:
                                         <p style={{ fontWeight: "100" }}>{channel.owner?.display_name}</p>
                                     </li>
+                                    <ul style={{ fontWeight: "700" }}>Moderators:
+                                        <p style={{ fontWeight: "100" }}>
+                                            {
+                                            admins &&
+                                            admins.length > 0 &&
+                                            admins.map((item, key) => {
+                                                return (
+                                                    <li key={key}>
+                                                        {item?.display_name}
+                                                        {currentUser.id === Owner.id &&
+                                                            <button onClick={() => demoteUser(channel, item)}>Demote</button>
+                                                        }
+                                                    </li>
+                                                )
+                                            })
+                                        }
+                                        </p>
+                                    </ul>
                                     <li style={{ fontWeight: "700" }}>Users:</li>
                                     <ul>
                                         {users &&
@@ -279,17 +339,22 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                                                 return (
                                                     <li key={key}>
                                                         {item.display_name}
-                                                        {currentUser.id === channel.owner.id &&
-                                                            currentUser.id !== item.id &&
+                                                        {/*add or condition if user is in list admin*/}
+                                                        {(currentUser.id === channel.owner.id || isAdmin) &&
+                                                            currentUser.id !== item.id && item.id !== channel.owner.id &&
                                                             <button onClick={() => kickUser(channel, item.id)}>Kick</button>
                                                         }
-                                                        {currentUser.id === channel.owner.id &&
-                                                            currentUser.id !== item.id &&
+                                                        {(currentUser.id === channel.owner.id || isAdmin) &&
+                                                            currentUser.id !== item.id && item.id !== channel.owner.id &&
                                                             <button onClick={() => banUser(channel, item.id)}>Ban</button>
                                                         }
-                                                        {currentUser.id === channel.owner.id &&
-                                                            currentUser.id !== item.id &&
+                                                        {(currentUser.id === channel.owner.id || isAdmin) &&
+                                                            currentUser.id !== item.id && item.id !== channel.owner.id &&
                                                             <button onClick={() => muteUser(channel, item.id)}>Mute</button>
+                                                        }
+                                                        {(currentUser.id === channel.owner.id || isAdmin) &&
+                                                            currentUser.id !== item.id && item.id !== channel.owner.id &&
+                                                            <button onClick={() => promoteUser(channel, item)}>Promote</button>
                                                         }
                                                     </li>
                                                 );
