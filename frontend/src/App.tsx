@@ -8,13 +8,10 @@ const FrontRoute = React.lazy(() => import('./components/redirect.tsx'));
 
 function App() {
     const url = `ws://${process.env.REACT_APP_WEB_HOST}:3001`;
-    const socketRef = useRef<WebSocket | null>(null);
     const {setSocket} = useContext(SocketContext);
     const socket = new WebSocket(url);
 
     useEffect(() => {
-        socketRef.current = socket;
-
         socket.onopen = () => {
             const baguette = { event: 'auth', data: { data: `Bearer ${localStorage.getItem('token')}` } };
             socket.send(JSON.stringify(baguette));
@@ -28,7 +25,7 @@ function App() {
 
         // Clean up function
         return () => {
-            socketRef.current?.close();
+            socket.close();
         };
     }, [setSocket, url]);
 

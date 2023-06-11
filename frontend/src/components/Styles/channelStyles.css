@@ -74,3 +74,72 @@
     opacity: 0.5;
     transition: 0.3s ease;
 }
+
+.Popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh!important;
+    width: 100vw!important;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.Popup .FriendInformation {
+    background: #1e2122;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.Popup .FriendInformation img {
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+}
+
+.Popup p {
+    font-size: 30px;
+    font-weight: 700;
+    color: white;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.Popup .FriendsOptions {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.Popup .FriendsOptions ul {
+    list-style-type: none;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+.PopupClose {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 30px;
+    color: white;
+    cursor: pointer;
+    background: none;
+    border: none;
+    outline: none;
+    list-style: none;
+}
+
+.PopupClose:hover {
+    opacity: 0.5;
+    transition: 0.3s ease;
+}
