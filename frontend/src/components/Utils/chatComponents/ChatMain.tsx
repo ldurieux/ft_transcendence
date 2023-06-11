@@ -294,7 +294,7 @@ function ChatMain({socket}) {
                                     />
                                     Private
                                 </div>
-                            <input
+                            <input className="nameInput"
                                 type="text"
                                 maxLength={15}
                                 placeholder="Name"
@@ -303,7 +303,7 @@ function ChatMain({socket}) {
                                 onKeyDown={handleKeyDown}
                             />
                                 {!check &&
-                                    <input
+                                    <input className="passwordInput"
                                         type="text"
                                         maxLength={15}
                                         placeholder="Password: optional"

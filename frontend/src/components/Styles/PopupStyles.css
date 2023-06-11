@@ -5,9 +5,10 @@
     transform: translate(-50%, -50%);
     width: 400px;
     height: 400px;
-    background-color: #1e2122;
+    background-color: #464545;
     border-radius: 10px;
     z-index: 100;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .popup-settings .popup-settings-inner {
@@ -56,4 +57,32 @@
 
 .popup-settings .popup-settings-inner .popup-settings-content ul li {
     margin: 10px 0;
+}
+
+.popup-settings .popup-settings-inner .popup-settings-content button {
+    background-color: #1e2122;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 3px;
+    border: 1px solid #aaa;
+}
+
+.popup-settings .popup-settings-inner .popup-settings-content button:hover {
+    background-color: #333;
+}
+
+.popup-settings .popup-settings-inner .popup-settings-content input {
+    background-color: #1e2122;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 3px;
+    border: 1px solid #aaa;
+}
+
+.popup-settings .popup-settings-inner .popup-settings-content input:hover {
+    background-color: #333;
 }
