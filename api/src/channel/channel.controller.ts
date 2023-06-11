@@ -107,12 +107,12 @@ export class ChannelController {
     async addUser(@Request() req) {
         const from: User = await this.userService.getUser(req['user'], true);
 
-        const { userId, channelId } = req.body;
-        if (typeof userId !== 'number' || typeof channelId !== 'number') {
+        const { username, channelId } = req.body;
+        if (typeof username !== 'string' || typeof channelId !== 'number') {
             throw new HttpException("", HttpStatus.BAD_REQUEST)
         }
 
-        const user: User = await this.userService.getUser(userId, true);
+        const user: User = await this.userService.getUserByUsername(username, true);
         await this.channelService.addUser(from, user, channelId);
         return { status: "added" };
     }

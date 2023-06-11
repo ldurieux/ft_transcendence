@@ -36,10 +36,13 @@ export class UserService {
         return user;
     }
 
-    async getUserByUsername(username: string): Promise<User> {
+    async getUserByUsername(username: string, blocked: boolean = false): Promise<User> {
         const user: User = await this.userRepository.findOne({
             where: {
                 display_name: username
+            },
+            relations: {
+                blocked: blocked
             }
         })
         if (!user) {

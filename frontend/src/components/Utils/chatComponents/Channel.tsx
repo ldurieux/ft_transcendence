@@ -18,6 +18,7 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
     const [isAdmin, setIsAdmin] = useState(false);
     const [Owner, setOwner] = useState({});
     const [admins, setAdmins] = useState([]);
+    const [username, setUsername] = useState("");
     const defaultAvatar = require("./42-logo.png");
 
     useEffect(() => {
@@ -29,7 +30,6 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
     useEffect(() => {
         (async () => {
             try {
-                console.log(channel)
                 if (channel.id !== undefined) {
                     const message = await get("channel/message?id=" + channel.id);
                     setUsers(channel.users)
@@ -194,6 +194,18 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
         }
     }
 
+    async function inviteUser(channel) {
+        try {
+            const ret = await post(`channel/add`, { username: username, channelId: channel.id });
+            if (ret?.status === "added") {
+                setUsername("");
+            }
+        }
+        catch (error) {
+            setUsername("");
+        }
+    }
+
     const handlePopupClose = () => {
         setShowPopup(false);
     };
@@ -286,6 +298,7 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     onKeyDown={handleKeyPress}
+                    maxLength={4096}
                 />
                 <div className="channel-input-button">
                     <button
@@ -361,6 +374,18 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                                             })
                                         }
                                     </ul>
+                                    {(currentUser.id === channel.owner.id || isAdmin) &&
+                                        channel.type === "private" &&
+                                    <ul>
+                                        <input
+                                            type="text"
+                                            placeholder="Invite user"
+                                            value={username}
+                                            onChange={(e) => setUsername(e.target.value)}
+                                        />
+                                        <button onClick={() => inviteUser(channel)}>Invite</button>
+                                    </ul>
+                                    }
                                 </ul>
                             </div>
                         </div>

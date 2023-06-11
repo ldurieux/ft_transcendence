@@ -16,6 +16,7 @@ function ChatMain({socket}) {
     const [user, setUser] = useState({});
     const [ChannelPassword, setChannelPassword] = useState("");
     const [popupSelectedList, setPopupSelectedList] = useState("Join");
+    const [check, setCheck] = useState(false);
 
     async function leaveChannel() {
         try {
@@ -115,21 +116,36 @@ function ChatMain({socket}) {
 
     async function createPublicChannel(chan) {
         try {
-            let result;
-            if (chan === "")
-                return ;
-            if (ChannelPassword !== "")
-                result = await post("channel", { type: "public", name: chan, password: ChannelPassword });
-            else
-                result = await post("channel", { type: "public", name: chan });
-            console.log(result)
-            if (result.status >= 400 && result.status <= 500) {
-                return ;
+            if (!check) {
+                let result;
+                if (chan === "")
+                    return;
+                if (ChannelPassword !== "")
+                    result = await post("channel", {type: "public", name: chan, password: ChannelPassword});
+                else
+                    result = await post("channel", {type: "public", name: chan});
+                console.log(result)
+                if (result.status >= 400 && result.status <= 500) {
+                    return;
+                } else {
+                    setChannelList([...channelList, result]);
+                    setChannelPassword("");
+                    setChannelName("");
+                }
             }
             else {
-                setChannelList([...channelList, result]);
-                setChannelPassword("");
-                setChannelName("");
+                let result;
+                if (chan === "")
+                    return;
+                result = await post("channel", {type: "private", name: chan});
+                console.log(result)
+                if (result.status >= 400 && result.status <= 500) {
+                    return;
+                } else {
+                    setChannelList([...channelList, result]);
+                    setChannelPassword("");
+                    setChannelName("");
+                }
             }
         } catch (error) {
             console.error(error);
@@ -266,8 +282,18 @@ function ChatMain({socket}) {
                         </div>
                             ) : (
                         <div className="CreateChannel">
-                            <h3>Create a public channel</h3>
+                            <h3>Create a channel</h3>
                             <div className="inputButtonWrapper">
+                                <div className="privateChannel">
+                                    <input
+                                        type="checkbox"
+                                        id="private"
+                                        name="private"
+                                        checked={check}
+                                        onChange={() => setCheck(!check)}
+                                    />
+                                    Private
+                                </div>
                             <input
                                 type="text"
                                 maxLength={15}
@@ -276,13 +302,15 @@ function ChatMain({socket}) {
                                 onChange={(e) => setChannelName(e.target.value)}
                                 onKeyDown={handleKeyDown}
                             />
-                                <input
-                                    type="text"
-                                    maxLength={15}
-                                    placeholder="Password: optional"
-                                    value={ChannelPassword}
-                                    onChange={(e) => setChannelPassword(e.target.value)}
-                                />
+                                {!check &&
+                                    <input
+                                        type="text"
+                                        maxLength={15}
+                                        placeholder="Password: optional"
+                                        value={ChannelPassword}
+                                        onChange={(e) => setChannelPassword(e.target.value)}
+                                        />
+                                }
                             <button className="CreateButton" onClick={() => createPublicChannel(ChannelName)}>Create</button>
                             </div>
                         </div>
