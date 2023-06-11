@@ -8,6 +8,7 @@ function Friendlist() {
     const [request, setRequest] = useState([]);
     const [selectedFriendIndex, setSelectedFriendIndex] = useState(null);
     const [error, setError] = useState(null);
+    const [blocked, setBlocked] = useState([]);
     const defaultAvatar = require("./42-logo.png");
 
     const popupCloseHandler = (e) => {
@@ -89,11 +90,40 @@ function Friendlist() {
         }
     }
 
+    async function blockUser() {
+        try {
+            await post("user/block", { id: list[selectedFriendIndex].id });
+            setBlocked([...blocked, list[selectedFriendIndex]]);
+            setList(list.filter((item) => item.id !== list[selectedFriendIndex].id));
+            setSelectedFriendIndex(null);
+        }
+        catch (error) {
+            setError("Error blocking user");
+            await timeout(3000);
+            setError(null);
+        }
+    }
+
+    async function unblockUser(userId) {
+        try {
+            let ret = await get(`user/unblock?id=` + userId);
+            if (ret)
+                setBlocked(blocked.filter((item) => item.id !== userId));
+            setSelectedFriendIndex(null);
+        }
+        catch (error) {
+            setError("Error unblocking user");
+            await timeout(3000);
+            setError(null);
+        }
+    }
+
     useEffect(() => {
         (async () => {
             const result = await get("user/self");
             setList(result.friends);
             setRequest(result.receivedRequests);
+            setBlocked(result.blocked);
         })();
     }, []);
 
@@ -136,6 +166,12 @@ function Friendlist() {
                                 onClick={() => RemoveFriend(list[selectedFriendIndex])}
                             >
                                 Remove Friend
+                            </li>
+                            <li
+                                className="PopupBlock"
+                                onClick={() => blockUser()}
+                            >
+                                Block User
                             </li>
                             <li
                                 className="PopupClose"
@@ -186,6 +222,18 @@ function Friendlist() {
                     {request.length > 0 &&
                         request.map((item, key) => (
                             <li key={key} onClick={() => AcceptRequest(item)}>{item?.display_name}</li>
+                        ))}
+                </ul>
+            </div>
+            <div className="BlockedUser">
+                <h2>Blocked User</h2>
+                <ul>
+                    {blocked.length > 0 &&
+                        blocked.map((item, key) => (
+                            <li key={key}>
+                                {item.display_name}
+                                <button onClick={() => unblockUser(item.id)}>Unblock</button>
+                            </li>
                         ))}
                 </ul>
             </div>

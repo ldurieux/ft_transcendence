@@ -131,6 +131,27 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
         }
     }
 
+    async function blockUser() {
+        try {
+            let ret;
+            console.log(currentUser.id, selectedUser.id)
+            if (currentUser.id !== selectedUser.id) {
+                ret = await get(`user/block?id=` + selectedUser.id);
+                if (ret) {
+                    //get message
+                    const message = await get("channel/message?id=" + channel.id);
+                    if (message) {
+                        setMessages(message);
+                        setSelectedUser(null);
+                    }
+                }
+            }
+        }
+        catch (error) {
+
+        }
+    }
+
     const handlePopupClose = () => {
         setShowPopup(false);
     };
@@ -156,6 +177,12 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                         </div>
                         <div className="FriendsOptions">
                             <ul>
+                                <li
+                                    className="PopupBlockUser"
+                                    onClick={blockUser}
+                                >
+                                    Block
+                                </li>
                                 <li
                                     className="PopupClose"
                                     onClick={() => setSelectedUser(null)}

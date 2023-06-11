@@ -140,6 +140,7 @@ body {
   margin: 0 14px 0 12px;
   background: #1d1b31;
   transition: all 0.5s ease;
+  color: white;
 }
 
 .sidebar.close .profile-details img {

@@ -126,6 +126,27 @@
     margin-bottom: 20px;
 }
 
+.PopupBlockUser {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    background: red;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.PopupBlockUser:hover {
+    opacity: 0.5;
+    transition: 0.3s ease;
+}
+
 .PopupClose {
     position: absolute;
     top: 10px;
