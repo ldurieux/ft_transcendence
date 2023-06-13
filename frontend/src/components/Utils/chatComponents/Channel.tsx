@@ -6,20 +6,6 @@ import {PopupContext} from "./PopupContext.tsx";
 import "../../Styles/messageStyles.css";
 import "../../Styles/PopupStyles.css";
 import Popup from "../popup.tsx";
-<<<<<<< HEAD
-
-async function getChannelMessages(channelId) {
-    try {
-        const result = await get("channel/message?id=" + channelId);
-        if (result) {
-            return result;
-        }
-    }
-    catch (error) {
-    }
-}
-=======
->>>>>>> master
 
 function Channel({ socket, channel, currentUser, setChanParams, setChannelList, updateChannelUsers, closeChannel }) {
     const bottomChat = useRef<null | HTMLDivElement>(null);
@@ -29,13 +15,10 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
     const [message, setMessage] = useState("");
     const [users, setUsers] = useState([]);
     const [selectedUser, setSelectedUser] = useState(null);
-<<<<<<< HEAD
-=======
     const [isAdmin, setIsAdmin] = useState(false);
     const [Owner, setOwner] = useState({});
     const [admins, setAdmins] = useState([]);
     const [username, setUsername] = useState("");
->>>>>>> master
     const defaultAvatar = require("./42-logo.png");
 
     useEffect(() => {
@@ -249,15 +232,12 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                         <div className="FriendsOptions">
                             <ul>
                                 <li
-<<<<<<< HEAD
-=======
                                     className="PopupBlockUser"
                                     onClick={blockUser}
                                 >
                                     Block
                                 </li>
                                 <li
->>>>>>> master
                                     className="PopupClose"
                                     onClick={() => setSelectedUser(null)}
                                 >

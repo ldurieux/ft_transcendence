@@ -126,8 +126,6 @@
     margin-bottom: 20px;
 }
 
-<<<<<<< HEAD
-=======
 .PopupBlockUser {
     display: flex;
     justify-content: space-between;
@@ -149,7 +147,6 @@
     transition: 0.3s ease;
 }
 
->>>>>>> master
 .PopupClose {
     position: absolute;
     top: 10px;
