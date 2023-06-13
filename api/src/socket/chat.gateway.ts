@@ -11,16 +11,11 @@ export class ChatGateway {
         @Inject(SocketServer) private socketServer: SocketServer,
     ) {}
 
-    @UseGuards(SocketGuard)
     async sendTo(to: number, data: object) {
         const raw = JSON.stringify(data)
-        console.log('send to', to);
         for (const client of this.socketServer.getServer().clients) {
-            console.log('send to', client.data.user);
             if (client.data.user == to)
             {
-                console.log('send to', to);
-                console.log('send to', JSON.stringify(data));
                 client.send(raw)
             }
         }

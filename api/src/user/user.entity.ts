@@ -34,7 +34,9 @@ export class User {
   @Column({default: 0})
   points: number;
 
+  @Column({default: false})
+  inGame: boolean;
+
   @OneToOne(() => Game)
-  @JoinColumn()
   game: Game;
 }

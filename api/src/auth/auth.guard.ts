@@ -57,7 +57,7 @@ export class SocketGuard implements CanActivate {
         const decoded = this.jwtService.verify(token, { secret: process.env.JWT_SECRET });
         const { id } = decoded;
 
-        socket['user'] = { id };
+        socket.data.user = { id };
     } catch (err) {
         console.log("Invalid token was provided: " + token);
         throw new UnauthorizedException();

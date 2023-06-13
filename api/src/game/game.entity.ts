@@ -1,19 +1,20 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne, OneToOne } from 'typeorm';
+import { User } from 'src/user/user.entity';
 
 @Entity()
 export class Game {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({default: 0})
-    win: number;
-
-    @Column({default: 0})
-    lose: number;
-
     @Column({default: false})
-    in_game: boolean;
+    inGame: boolean;
 
-    @Column({default: 0})
-    score: number;
+    @Column()
+    games: {friend: User, score: {myScore: number, friendScore: number}, win: boolean}[];
+
+    @Column()
+    Wins: number;
+
+    @Column()
+    Losses: number;
 }

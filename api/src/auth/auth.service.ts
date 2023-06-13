@@ -77,6 +77,10 @@ export class AuthService {
         if (!auth) {
             throw new HttpException("User does not exist", HttpStatus.NOT_FOUND);
         }
+        if (!auth.user) {
+            await this.authRepository.remove(auth);
+            throw new HttpException("This is impossible, try again", HttpStatus.EXPECTATION_FAILED);
+        }
         return auth.user;
     }
 
