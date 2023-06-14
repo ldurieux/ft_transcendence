@@ -81,4 +81,8 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
         }
         return null;
     }
+
+    getId(client: WebSocket) {
+        return client.data.user;
+    }
 }

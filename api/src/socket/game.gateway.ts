@@ -5,6 +5,33 @@ import { SocketServer } from './socket.server';
 import { UserService } from 'src/user/user.service';
 import { GameService } from 'src/game/game.service';
 import { send } from 'process';
+import { Deque } from 'double-ended-queue';
+import { In, W } from 'typeorm';
+import { response } from 'express';
+
+interface Ball {
+    x: number;
+    y: number;
+    radius: number;
+    speed: number;
+    vectorRadians: number;
+}
+
+interface Paddle {
+    y: number;
+    width: number;
+    height: number;
+}
+
+interface Score {
+    player1Score: number;
+    player2Score: number;
+}
+
+interface PlayerId {
+    player1Id: number;
+    player2Id: number;
+}
 
 @WebSocketGateway()
 @Injectable()
@@ -14,6 +41,9 @@ export class GameGateway {
         private userService: UserService,
         private gameService: GameService,
     ) {}
+
+    InGame: Set<number>;
+    clientWaitingStack: Deque<WebSocket>;
 
     @UseGuards(SocketGuard)
     @SubscribeMessage('GetFriendList')
@@ -49,7 +79,7 @@ export class GameGateway {
             client.send(JSON.stringify({type: 'Error', Error: 'FriendNotOnline'}));
             return;
         }
-        if (friendSocket.game.inGame === true)
+        if (this.InGame.has(data.friendId))
         {
             client.send(JSON.stringify({type: 'Error', Error: 'FriendInGame'}));
             return;
@@ -79,43 +109,26 @@ export class GameGateway {
             client.send(JSON.stringify({type: 'Error', Error: 'friendNotOnline'}));
             return;
         }
-        friendSocket.send(JSON.stringify({type: 'gameInviteResponse', id: data.id, response: data.response}));
         client.send(JSON.stringify({type: 'gameInviteResponse', id: data.friendId, response: data.response}));
     }
 
     @UseGuards(SocketGuard)
     @SubscribeMessage('padPosition')
-    async PadPosition(@ConnectedSocket() client: WebSocket, @MessageBody( new ValidationPipe()) data: {id: number, position: number}) {
-        if (this.userService.getUser(data.id) === null || this.userService.getUser(data.id) === undefined)
-        {
-            client.send(JSON.stringify({type: 'Error', Error: 'YouNotExist'}));
-            return;
-        }
+    async receivePadPosition(@ConnectedSocket() client: WebSocket, @MessageBody( new ValidationPipe()) data: {paddleY: number}) {
+        const user = await this.userService.getUser(this.socketServer.getId(client));
+        this.gameService.updatePadPosition(user, data.paddleY);
     }
 
-    @UseGuards(SocketGuard)
-    @SubscribeMessage('padPosition')
-    async receivePadPosition(@ConnectedSocket() client: WebSocket, @MessageBody( new ValidationPipe()) data: {id: number, position: number}) {
-        if (this.userService.getUser(data.id) === null || this.userService.getUser(data.id) === undefined)
-        {
-            client.send(JSON.stringify({type: 'Error', Error: 'YouNotExist'}));
-            return;
-        }
-        const user = await this.userService.getUser(data.id);
-        this.gameService.updatePadPosition(user, data.position);
-        this.sendPadPosition(user.id, data.position);
-    }
-
-    async sendPadPosition(id: number, position: number) {
+    async sendPadPosition(id: number, paddleY: number) {
         const user = await this.userService.getUser(id);
         const client = this.socketServer.getSocket(id);
         if (client.readyState !== client.OPEN)
         {
-            user.game.inGame = false;
+            this.InGame.delete(id);
             this.gameService.playerDisconnect(user);
             return;
         }
-        client.send(JSON.stringify({type: 'padPosition', position: position}));
+        client.send(JSON.stringify({type: 'padPosition', position: paddleY}));
     }
 
     async sendBallData( id :number ,ball: {X: number, Y: number, radVector: number, speed: number}) {
@@ -124,7 +137,7 @@ export class GameGateway {
         const client = this.socketServer.getSocket(id);
         if (client.readyState !== client.OPEN)
         {
-            user.game.inGame = false;
+            this.InGame.delete(id);
             this.gameService.playerDisconnect(user);
             return;
         }
@@ -136,7 +149,7 @@ export class GameGateway {
         const client = this.socketServer.getSocket(id);
         if (client.readyState !== client.OPEN)
         {
-            user.game.inGame = false;
+            this.InGame.delete(id);
             this.gameService.playerDisconnect(user);
             return;
         }
@@ -145,7 +158,7 @@ export class GameGateway {
 
     @UseGuards(SocketGuard)
     @SubscribeMessage('gameStart')
-    async gameStart(@ConnectedSocket() client: WebSocket, @MessageBody( new ValidationPipe()) data: {id: number, friendId: number, gameType: boolean}) {
+    async gameStart(@ConnectedSocket() client: WebSocket, @MessageBody( new ValidationPipe()) data: {id: number, friendId: number}) {
         const user = await this.userService.getUser(data.id);
         if (!user || user === undefined)
         {
@@ -162,12 +175,13 @@ export class GameGateway {
         if (!friendSocket)
         {
             client.send(JSON.stringify({type: 'Error', Error: 'FriendNotOnline'}));
-            friend.game.inGame = false;
+            this.InGame.delete(friend.id);
             return;
         }
-        // if (data.gameType === true)
+
+        this.InGame.add(data.id);
+        this.InGame.add(data.friendId);
+
         this.gameService.PongGame(user, friend);
-        // else
-        //     this.gameService.startPongGame(await this.userService.getUser(data.id), null);
     }
 }

@@ -6,9 +6,6 @@ export class Game {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({default: false})
-    inGame: boolean;
-
     @Column()
     games: {friend: User, score: {myScore: number, friendScore: number}, win: boolean}[];
 
