@@ -1,7 +1,5 @@
-import { MessageBody, SubscribeMessage, WebSocketGateway, ConnectedSocket, WebSocketServer } from '@nestjs/websockets';
-import { OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets';
-import { Inject, UseGuards, Injectable } from '@nestjs/common';
-import { SocketGuard } from 'src/auth/auth.guard';
+import { WebSocketGateway } from '@nestjs/websockets';
+import { Inject, Injectable } from '@nestjs/common';
 import { SocketServer } from './socket.server'; 
 
 @WebSocketGateway()

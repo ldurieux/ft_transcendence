@@ -7,7 +7,9 @@ import { GameGateway } from 'src/socket/game.gateway';
 import { Game } from './game.entity';
 import { User } from 'src/user/user.entity';
 
-interface Screen {
+import { UserService } from 'src/user/user.service';
+
+interface GameScreen {
     width: number;
     height: number;
 }
@@ -21,6 +23,7 @@ interface Ball {
 }
 
 interface Paddle {
+    x: number;
     y: number;
     width: number;
     height: number;
@@ -42,7 +45,7 @@ interface Data {
     paddle1: Paddle;
     paddle2: Paddle;
     score: Score;
-    screen: Screen;
+    screen: GameScreen;
 }
 
 @Injectable()
@@ -50,7 +53,8 @@ export class GameService {
     constructor(
         @InjectRepository(Game)
         private gameRepository: Repository<Game>,
-        private gameGateway: GameGateway
+        private gameGateway: GameGateway,
+        private userService: UserService,
     ) {}
 
     find(playerId: number): Data | undefined {
@@ -72,28 +76,58 @@ export class GameService {
     }
 
     GameMap: Map<PlayerId, Data>;
-    private screen: Screen = {width: 800, height: 600};
+    private screen: GameScreen = {width: 800, height: 600};
 
-    async PongGame(player1: User, player2: User) {
+    async PongGame(player1: number, player2: number) {
         let gameData: Data
-        gameData.playerId.player1Id = player1.id;
-        gameData.playerId.player2Id = player2.id;
-        this.GameMap.set(gameData.playerId, gameData);
-        this.initBall(gameData.playerId);
+        gameData.screen = this.screen;
+        this.initBall(gameData);
+        this.initPaddles(gameData);
 
         this.GameMap.set(gameData.playerId, gameData);
+        await this.gameGateway.sendData(gameData);
+        await this.gameGateway.synchronizePlayer(gameData);
         while (1)
         {
+            gameData.ball.x = gameData.ball.x + Math.cos(gameData.ball.vectorRadians) * gameData.ball.speed;
+            gameData.ball.y = gameData.ball.y + Math.sin(gameData.ball.vectorRadians) * gameData.ball.speed;
+            if (gameData.ball.x - gameData.ball.radius < 0)
+            {
+                this.updateScore(gameData, gameData.playerId.player2Id);
+                this.resetBoard(gameData);
+            }
+            else if (gameData.ball.x + gameData.ball.radius > this.screen.width)
+            {
+                this.updateScore(gameData, gameData.playerId.player1Id);
+                this.resetBoard(gameData);
+            }
+            else if (gameData.ball.y - gameData.ball.radius <= 0 || gameData.ball.y + gameData.ball.radius >= this.screen.height)
+            {
+                gameData.ball.vectorRadians = Math.PI * 2 - gameData.ball.vectorRadians + 180;
+                this.gameGateway.sendBallData(gameData);
+            }
+            else if (gameData.ball.x - gameData.ball.radius <= gameData.paddle2.x + gameData.paddle2.width / 2 && gameData.ball.y > gameData.paddle2.y - gameData.paddle2.height / 2 && gameData.ball.y < gameData.paddle2.y + gameData.paddle2.height / 2)
+            {
+                gameData.ball.vectorRadians = Math.PI * 2 - gameData.ball.vectorRadians + 180;
+                gameData.ball.speed = gameData.ball.speed * 1.1;
+                this.gameGateway.sendBallData(gameData);
+            }
+            else if (gameData.ball.x + gameData.ball.radius >= gameData.paddle1.x - gameData.paddle1.width / 2 && gameData.ball.y > gameData.paddle1.y - gameData.paddle1.height / 2 && gameData.ball.y < gameData.paddle1.y + gameData.paddle1.height / 2)
+            {
+                gameData.ball.vectorRadians = Math.PI * 2 - gameData.ball.vectorRadians + 180;
+                gameData.ball.speed = gameData.ball.speed * 1.1;
+                this.gameGateway.sendBallData(gameData);
+            }
         }
     }
 
-    private resetBoard(ball: Ball, paddle1: Paddle, paddle2: Paddle, screen: Screen) {
-        this.initBall(ball);
-        this.initPaddles(paddle1, paddle2);
+    private async resetBoard(gameData: Data) {
+        this.initBall(gameData);
+        this.initPaddles(gameData);
+        this.gameGateway.sendData(gameData);
     }
 
-    private initBall(playerId: number) {
-        let gameData: Data = this.find(playerId);
+    private async initBall(gameData: Data) {
         gameData.ball.x = screen.width / 2;
         gameData.ball.y = screen.height / 2;
         gameData.ball.radius = 10;
@@ -107,59 +141,92 @@ export class GameService {
             gameData.ball.vectorRadians = rad;
     }
 
-    private initPaddles(playerId: number) {
-        let gameData: Data = this.find(playerId);
+    private async initPaddles(gameData: Data) {
         gameData.paddle1.y = this.screen.height / 2;
+        gameData.paddle1.x = this.screen.width - 20;
         gameData.paddle1.width = 20;
         gameData.paddle1.height = 100;
         gameData.paddle2.y = this.screen.height / 2;
+        gameData.paddle2.x = 20;
         gameData.paddle2.width = 20;
         gameData.paddle2.height = 100;
     }
 
-    private async updateScore(player1: User, player2: User, score: Score, player1Disconnect: boolean, player2Disconnect: boolean) {
-        if (score.player1Score >= 10 || player2Disconnect)
+    private async updateScore(gameData: Data, playerId: number, player1Disconnect: boolean = false, player2Disconnect: boolean = false) {
+        if (playerId === gameData.playerId.player1Id)
+            gameData.score.player1Score++;
+        if (playerId === gameData.playerId.player2Id)
+            gameData.score.player2Score++;
+        const player1: User = await this.userService.getUser(gameData.playerId.player1Id);
+        const player2: User = await this.userService.getUser(gameData.playerId.player2Id);
+        if (gameData.score.player1Score >= 10 || player2Disconnect)
         {
-            player1.game.games[player1.game.games.length - 1].score.myScore = score.player1Score;
-            player1.game.games[player1.game.games.length - 1].score.friendScore = score.player2Score;
-            player2.game.games[player2.game.games.length - 1].score.myScore = score.player2Score;
-            player2.game.games[player2.game.games.length - 1].score.friendScore = score.player1Score;
+            player1.game.games.push();
+            player2.game.games.push();
+            player1.game.games[player1.game.games.length - 1].score.myScore = gameData.score.player1Score;
+            player1.game.games[player1.game.games.length - 1].score.friendScore = gameData.score.player2Score;
+            player2.game.games[player2.game.games.length - 1].score.myScore = gameData.score.player2Score;
+            player2.game.games[player2.game.games.length - 1].score.friendScore = gameData.score.player1Score;
             player1.game.games[player1.game.games.length - 1].win = true;
             player2.game.games[player2.game.games.length - 1].win = false;
             player1.game.games[player1.game.games.length - 1].friend = player2;
             player2.game.games[player2.game.games.length - 1].friend = player1;
             player1.game.Wins++;
             player2.game.Losses++;
+            this.GameMap.delete(gameData.playerId);
+            this.gameGateway.endGame(player1.id, player2.id);
             return;
         }
-        else if (score.player2Score >= 10 || player1Disconnect)
+        else if (gameData.score.player2Score >= 10 || player1Disconnect)
         {
-            player1.game.games[player1.game.games.length - 1].score.myScore = score.player1Score;
-            player1.game.games[player1.game.games.length - 1].score.friendScore = score.player2Score;
-            player2.game.games[player2.game.games.length - 1].score.myScore = score.player2Score;
-            player2.game.games[player2.game.games.length - 1].score.friendScore = score.player1Score;
+            player1.game.games.push();
+            player2.game.games.push();
+            player1.game.games[player1.game.games.length - 1].score.myScore = gameData.score.player1Score;
+            player1.game.games[player1.game.games.length - 1].score.friendScore = gameData.score.player2Score;
+            player2.game.games[player2.game.games.length - 1].score.myScore = gameData.score.player2Score;
+            player2.game.games[player2.game.games.length - 1].score.friendScore = gameData.score.player1Score;
             player1.game.games[player1.game.games.length - 1].win = false;
             player2.game.games[player2.game.games.length - 1].win = true;
             player1.game.games[player1.game.games.length - 1].friend = player2;
             player2.game.games[player2.game.games.length - 1].friend = player1;
             player1.game.Losses++;
             player2.game.Wins++;
+            this.GameMap.delete(gameData.playerId);
+            this.gameGateway.endGame(player2.id, player1.id);
             return;
         }
-        this.gameGateway.sendScoreData(player1.id, {myScore: player1.game.games[player1.game.games.length - 1].score.myScore, friendScore: player1.game.games[player1.game.games.length - 1].score.friendScore});
-        this.gameGateway.sendScoreData(player2.id, {myScore: player2.game.games[player2.game.games.length - 1].score.myScore, friendScore: player2.game.games[player2.game.games.length - 1].score.friendScore});
+        this.gameGateway.sendScoreData(gameData);
     }
 
-    async updatePadPosition(playerId number, position: number)
+    async updatePadPosition(playerId: number, position: number)
     {
         let gameData: Data = this.find(playerId);
         if (gameData.playerId.player1Id === playerId)
         {
             gameData.paddle1.y = position;
+            this.gameGateway.sendPadPosition(gameData.playerId.player2Id, position, gameData.screen);
         }
         else
         {
             gameData.paddle2.y = position;
+            this.gameGateway.sendPadPosition(gameData.playerId.player1Id, position, gameData.screen);
         }
+    }
+
+    async playerDisconnect(playerId: number)
+    {
+        let gameData: Data = this.find(playerId);
+        if (gameData.playerId.player1Id === playerId)
+        {
+            this.updateScore(gameData, playerId, true);
+            this.gameGateway.endGame(gameData.playerId.player2Id, playerId, true);
+        }
+        else
+        {
+            this.updateScore(gameData, playerId, false, true);
+            this.gameGateway.endGame(gameData.playerId.player2Id, playerId, true);
+        }
+        this.GameMap.delete(gameData.playerId);
+
     }
 }
