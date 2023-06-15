@@ -13,6 +13,7 @@ import { User } from 'src/user/user.entity';
 import { SocketServer } from 'src/socket/socket.server';
 
 import { UserModule } from 'src/user/user.module';
+import { UserService } from 'src/user/user.service';
 
 @Module({
     imports: [
@@ -22,6 +23,6 @@ import { UserModule } from 'src/user/user.module';
         TypeOrmModule.forFeature([Game]),
         forwardRef(() => UserModule)
     ],
-    providers: [AuthService, FriendRequestService, GameService],
+    providers: [AuthService, FriendRequestService, GameService, UserService],
 })
 export class GameModule {}
