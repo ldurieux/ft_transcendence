@@ -67,7 +67,7 @@ export class GameGateway {
     clientWaitingStack: Deque<WaitingPlayer>;
 
     @UseGuards(SocketGuard)
-    @SubscribeMessage('GetFriendList')
+    @SubscribeMessage('friendList')
     async requestFriendList(@ConnectedSocket() client: WebSocket, id: number) {
         if (this.userService.getUser(id) === null || this.userService.getUser(id) === undefined)
         {
