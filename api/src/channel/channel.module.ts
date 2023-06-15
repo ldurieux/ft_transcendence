@@ -1,5 +1,5 @@
 
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { JwtService } from '@nestjs/jwt';
@@ -22,7 +22,7 @@ import { GameService } from 'src/game/game.service';
 import { Game } from 'src/game/game.entity';
 
 import { ChatGateway } from 'src/socket/chat.gateway';
-import { SocketServer } from 'src/socket/socket.server';
+import { GameModule } from 'src/game/game.module';
 
 @Module({
   imports: [
@@ -33,8 +33,9 @@ import { SocketServer } from 'src/socket/socket.server';
     TypeOrmModule.forFeature([Message]),
     TypeOrmModule.forFeature([Action]),
     TypeOrmModule.forFeature([Game]),
+    forwardRef(() => GameModule),
   ],
-  providers: [UserService, AuthService, ChannelService, FriendRequestService, MessageService, ActionService, GameService, ChatGateway, SocketServer, JwtService],
+  providers: [UserService, AuthService, ChannelService, FriendRequestService, MessageService, ActionService, GameService, ChatGateway, JwtService],
   controllers: [ChannelController],
 })
 export class ChannelModule {}

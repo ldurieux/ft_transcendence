@@ -3,13 +3,13 @@ import { Inject, UseGuards, Injectable, ValidationPipe } from '@nestjs/common';
 
 import { SocketGuard } from 'src/auth/auth.guard';
 import { SocketServer } from './socket.server'; 
+import { WebSocket } from 'ws';
 import { UserService } from 'src/user/user.service';
 import { GameService } from 'src/game/game.service';
 
 import { User } from 'src/user/user.entity';
 
 import { Deque } from 'double-ended-queue';
-import { response } from 'express';
 
 interface GameScreen {
     width: number;
