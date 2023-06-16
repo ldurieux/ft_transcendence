@@ -22,7 +22,7 @@ import { GameService } from 'src/game/game.service';
 import { Game } from 'src/game/game.entity';
 
 import { ChatGateway } from 'src/socket/chat.gateway';
-import { GameModule } from 'src/game/game.module';
+// import { GameModule } from 'src/game/game.module';
 
 @Module({
   imports: [
@@ -33,9 +33,8 @@ import { GameModule } from 'src/game/game.module';
     TypeOrmModule.forFeature([Message]),
     TypeOrmModule.forFeature([Action]),
     TypeOrmModule.forFeature([Game]),
-    forwardRef(() => GameModule),
   ],
-  providers: [UserService, AuthService, ChannelService, FriendRequestService, MessageService, ActionService, GameService, ChatGateway, JwtService],
+  providers: [UserService, AuthService, ChannelService, FriendRequestService, MessageService, ActionService, JwtService],
   controllers: [ChannelController],
 })
 export class ChannelModule {}

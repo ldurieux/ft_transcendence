@@ -2,7 +2,6 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
-import { Game } from 'src/game/game.entity';
 
 import { Auth } from 'src/auth/auth.entity';
 import { AuthService } from 'src/auth/auth.service';

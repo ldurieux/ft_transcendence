@@ -52,7 +52,7 @@ interface Data {
 export class GameService {
     constructor(
         @InjectRepository(Game)
-        private GameRepository: Repository<Game>,
+        private gameRepository: Repository<Game>,
         private gameGateway: GameGateway,
         private userService: UserService,
     ) {}
@@ -71,7 +71,7 @@ export class GameService {
             return user.game;
         }
         const game: Game = new Game();
-        this.GameRepository.save(game);
+        this.gameRepository.save(game);
         return (game);
     }
 

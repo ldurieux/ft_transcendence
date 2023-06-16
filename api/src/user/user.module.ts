@@ -15,6 +15,7 @@ import { AuthModule } from 'src/auth/auth.module';
 import { FriendRequestModule } from 'src/friend-request/friend-request.module';
 import { AuthService } from 'src/auth/auth.service';
 import { FriendRequestService } from 'src/friend-request/friend-request.service';
+
 import { GameModule } from 'src/game/game.module';
 
 @Module({
@@ -23,8 +24,10 @@ import { GameModule } from 'src/game/game.module';
     TypeOrmModule.forFeature([Auth]),
     TypeOrmModule.forFeature([FriendRequest]),
     TypeOrmModule.forFeature([Game]),
+    forwardRef(() => GameModule),
   ],
   providers: [UserService, AuthService, FriendRequestService, JwtService, AuthModule, FriendRequestModule],
   controllers: [UserController],
+  exports : [UserService]
 })
 export class UserModule {}

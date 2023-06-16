@@ -1,7 +1,9 @@
 import * as WebSocket from 'ws';
 import { OnGatewayConnection, OnGatewayDisconnect, MessageBody, OnGatewayInit ,SubscribeMessage, WebSocketGateway, ConnectedSocket, WebSocketServer } from '@nestjs/websockets';
 import { JwtService } from '@nestjs/jwt';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 @WebSocketGateway({ 
     transports: ['websocket']
 })

@@ -1,4 +1,4 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Inject, Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { Auth } from '../auth/auth.entity';
@@ -10,10 +10,9 @@ import { FriendRequestService } from '../friend-request/friend-request.service';
 import { GameService } from './game.service';
 
 import { User } from 'src/user/user.entity';
-import { SocketServer } from 'src/socket/socket.server';
 
 import { UserModule } from 'src/user/user.module';
-import { UserService } from 'src/user/user.service';
+import { SocketServerModule } from 'src/socket/socketServer.module';
 
 @Module({
     imports: [
@@ -21,8 +20,9 @@ import { UserService } from 'src/user/user.service';
         TypeOrmModule.forFeature([Auth]),
         TypeOrmModule.forFeature([FriendRequest]),
         TypeOrmModule.forFeature([Game]),
-        forwardRef(() => UserModule)
+        forwardRef(() => UserModule),
     ],
-    providers: [AuthService, FriendRequestService, GameService, UserService],
+    providers: [AuthService, FriendRequestService, GameService],
+    exports: [GameService],
 })
 export class GameModule {}
