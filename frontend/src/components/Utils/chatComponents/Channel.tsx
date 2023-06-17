@@ -32,6 +32,7 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
             try {
                 if (channel.id !== undefined) {
                     const message = await get("channel/message?id=" + channel.id);
+                    console.log(message)
                     setUsers(channel.users)
                     if (message) {
                         setMessages(message);
@@ -48,9 +49,6 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                 //search if the current user is the owner of the channel
                 if (channel.owner) {
                     setOwner(channel.owner);
-                }
-                else {
-                    setMessages([]);
                 }
             }
             catch (error) {
