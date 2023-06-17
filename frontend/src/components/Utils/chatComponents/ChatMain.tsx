@@ -48,19 +48,18 @@ function ChatMain({socket}) {
             catch (error) {
             }
         })();
-    }, []);
-
-    useEffect(() => {
-        if (socket) {
+        if (socket && !channel) {
             socket.onmessage = (e) => {
                 const data = JSON.parse(e.data);
-                console.log(data)
-                if (data.event === "join" && data.user.id === user.id) {
-
+                if (data.event === "join" && data.data.user.id === user.id) {
+                    setChannelList([...channelList, data.data.channel]);
+                }
+                else if (data.event === "leave" && data.data.user.id === user.id) {
+                    setChannelList(channelList.filter((item) => item.id !== data.data.channel.id));
                 }
             }
         }
-    }, [socket, channelList, channel, user]);
+    }, [socket, channelList]);
 
     // Function to handle button click and update the selected list
     function switchList(listType) {

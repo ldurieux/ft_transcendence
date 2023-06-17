@@ -20,8 +20,6 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
     const [username, setUsername] = useState("");
     const defaultAvatar = require("./42-logo.png");
 
-    console.log(admins)
-
     useEffect(() => {
         if (bottomChat.current) {
             bottomChat.current?.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'start' });
@@ -38,7 +36,6 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                         return map;
                     }, {});
                     setUsers(userMap);
-                    console.log(userMap)
                     if (message) {
                         setMessages(message);
                     }
@@ -66,6 +63,7 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
         if (socket) {
             socket.onmessage = (event) => {
                 const ret = JSON.parse(event.data)
+                console.log(ret.data);
                 if (ret.event === "leave" && ret.data.channel === channel.id) {
                     //remove the user who left from the channel
                     setUsers(prev => {
@@ -76,7 +74,7 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                     if (ret.data.user === currentUser.id)
                         closeChannel();
                 }
-                if (ret.event === "join" && ret.data.channel === channel.id) {
+                if (ret.event === "join" && ret.data.channel.id === channel.id) {
                     //add the user who joined to the channel
                     setUsers(prev => {
                         const updatedUsers = { ...prev };
