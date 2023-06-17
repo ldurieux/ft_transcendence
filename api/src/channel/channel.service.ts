@@ -144,9 +144,11 @@ export class ChannelService {
         for (const to of channel.users) {
             this.websocket.sendTo(to.id, {
                 event: "join", data: {
-                    channel: channel.id,
-                    type: channel.type,
-                    display_name: channel.display_name,
+                    channel: {
+                        id: channel.id,
+                        type: channel.type,
+                        display_name: channel.display_name,
+                    },
                     user: user
                 }
             })
