@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "../components/Utils/context.tsx";
 import "../components/Styles/LoginStyles.css";
 import {useNavigate} from "react-router-dom";
@@ -6,6 +6,8 @@ import {useNavigate} from "react-router-dom";
 const Authentication = () => {
     const { setUser } = useContext(UserContext);
     let navigate = useNavigate();
+    const [login, setLogin] = useState("");
+    const [password, setPassword] = useState("");
 
     useEffect(() => {
         const sendRequest = async (code) => {
@@ -41,6 +43,33 @@ const Authentication = () => {
 
     const logo = require("../components/Utils/42-logo.png");
 
+    async function localConnection()
+    {
+        try {
+            if (login === "" || password === "")
+                return;
+            const input = `http://${process.env.REACT_APP_WEB_HOST}:${process.env.REACT_APP_API_PORT}/user/login`;
+            const options = {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ method: "local", username: login, password: password }),
+            }
+            const response = await fetch(input, options);
+            if (response.status === 201) {
+                let data = await response.json();
+                const token = data.access_token;
+                if (token) {
+                    localStorage.setItem("token", token);
+                    setUser({ isLoggedIn: true }); // Définir isLoggedIn sur true
+                    navigate("/profile");
+                }
+            }
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
         <div className="AuthBody">
             <a
@@ -51,6 +80,23 @@ const Authentication = () => {
                 <span className="separator">|</span>
                 <span>Sign in as student</span>
             </a>
+            <input
+                className="input"
+                type="text"
+                placeholder="Login"
+                value={login}
+                onChange={(e) => setLogin(e.target.value)}
+            />
+            <input
+                className="input"
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+            />
+            <button className="btn-local-login" onClick={localConnection}>
+                Sign in
+            </button>
         </div>
     );
 };
