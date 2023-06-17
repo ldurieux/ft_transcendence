@@ -18,4 +18,13 @@ export class ChatGateway {
             }
         }
     }
+
+    isOnline(userId: number): boolean
+    {
+        for (const client of this.socketServer.getServer().clients) {
+            if (client.data.user == userId)
+                return true;
+        }
+        return false;
+    }
 }
