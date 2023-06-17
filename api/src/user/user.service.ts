@@ -147,7 +147,7 @@ export class UserService {
 
     async login2fa(id: number, code: string, withEnable: boolean = false) : Promise<string>
     {
-        const user: User = await this.getUser(id);
+        const user: User = await this.getUser(id, true);
 
         if (!user.twoFaEnabled && !withEnable)
             throw new HttpException("2fa not enabled", HttpStatus.BAD_REQUEST);
