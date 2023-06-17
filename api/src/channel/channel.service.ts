@@ -142,7 +142,14 @@ export class ChannelService {
         channel.users.push(user);
 
         for (const to of channel.users) {
-            this.websocket.sendTo(to.id, { event: "join", data: { channel: channel.id, user: user } })
+            this.websocket.sendTo(to.id, {
+                event: "join", data: {
+                    channel: channel.id,
+                    type: channel.type,
+                    display_name: channel.display_name,
+                    user: user
+                }
+            })
         }
 
         await this.channelRepository.save(channel);
