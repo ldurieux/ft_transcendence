@@ -13,7 +13,7 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
     const isDM: boolean = channel.type === "dm";
     const [messages, setMessages] = useState([]);
     const [message, setMessage] = useState("");
-    const [users, setUsers] = useState([]);
+    const [users, setUsers] = useState({});
     const [selectedUser, setSelectedUser] = useState(null);
     const [isAdmin, setIsAdmin] = useState(false);
     const [Owner, setOwner] = useState({});
@@ -32,8 +32,11 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
             try {
                 if (channel.id !== undefined) {
                     const message = await get("channel/message?id=" + channel.id);
-                    console.log(message)
-                    setUsers(channel.users)
+                    const userMap = channel.users.reduce((map, user) => {
+                        map[user.id] = user;
+                        return map;
+                    }, {});
+                    setUsers(userMap);
                     if (message) {
                         setMessages(message);
                     }
@@ -224,7 +227,7 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                         <div className="FriendInformation">
                             <img
                                 alt={selectedUser?.display_name}
-                                src={selectedUser?.profile_picture ?? defaultAvatar}/>
+                                src={users[selectedUser?.id]?.profile_picture ?? defaultAvatar}/>
                             <p>{selectedUser?.display_name}</p>
                         </div>
                         <div className="FriendsOptions">
@@ -256,6 +259,7 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                 {messages &&
                     messages.length > 0 &&
                     messages.map((item, key) => {
+                        console.log(item)
                     return (
                         <div key={key} className="message">
                             {/*<img*/}
@@ -267,7 +271,7 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                                 item.owner?.id === currentUser?.id ?
                                 <div className="message-content-user">
                                 <div className="message-header">
-                                    <div className="message-username">{item.owner.display_name}</div>
+                                    <div className="message-username">{users[item.owner.id].display_name}</div>
                                     {/*<div className="message-time">{item.created_at}</div>*/}
                                 </div>
                                 <div className="message-body">{item.text}</div>
