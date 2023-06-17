@@ -9,6 +9,8 @@ interface BallData {
 interface PaddleData {
     x: number;
     y: number;
+    width: number;
+    height: number;
 }
 
 interface Score {
@@ -38,26 +40,29 @@ let originalScreen: Screen;
 export class Ball {
     private ball: BallData;
 
-    constructor(ballData: BallData) {
-        this.ball.x = ballData.x;
-        this.ball.y = ballData.y;
-        this.ball.radianVector = ballData.radianVector;
-        this.ball.speed = ballData.speed;
-        this.ball.radius = ballData.radius;
-     }
+    resetBall(radianVector, speed) {
+        this.ball.x = canvas.width/2;
+        this.ball.y = canvas.height/2;
+        this.ball.radianVector = radianVector;
+        this.ball.speed = speed;
+    }
 
-    async updateBall(ballData: BallData) {
+    async move(ballData: BallData) {
         this.ball.x = ballData.x;
         this.ball.y = ballData.y;
         this.ball.radianVector = ballData.radianVector;
-        this.ball.speed = ballData.speed;
+        this.updateSpeed(ballData.speed);
+    }
+
+    updateSpeed(speed: number) {
+        this.ball.speed = speed / (originalScreen.width / screen.width + originalScreen.height / screen.height) * 2;
     }
 
     getBall() {
         return this.ball;
     }
 
-    async drawBall() {
+    async render() {
         ctx.save();
         ctx.beginPath();
         ctx.arc(this.ball.x, this.ball.y, this.ball.radius, 0, Math.PI*2);
@@ -70,37 +75,46 @@ export class Ball {
     moveBall() {
         this.ball.x += this.ball.speed * Math.cos(this.ball.radianVector);
         this.ball.y += this.ball.speed * Math.sin(this.ball.radianVector);
+        this.render();
     }
 }
 
-export class Paddle {
+class Player {
     private paddle: PaddleData;
+    private score: Score;
 
-    constructor(paddleData: PaddleData) {
+    constructor(paddle: PaddleData) {
+        this.resetPaddle();
+    }
+
+    resetPaddle() {
+        this.paddle.y = (canvas.height - this.paddle.height) / 2;
+    }
+
+    updatePaddle(paddleData: PaddleData) {
         this.paddle.x = paddleData.x;
         this.paddle.y = paddleData.y;
     }
 
-    async movePaddleUp() {
-        this.paddle.y -= 7;
-    }
-
-    async movePaddleDown() {
-        this.paddle.y += 7;
+    updatePaddleY(y: number) {
+        this.paddle.y = y;
     }
 
     getPaddle() {
         return this.paddle;
     }
 
-    async render(ctx: CanvasRenderingContext2D) {
-        ctx.save();
-        ctx.beginPath();
-        ctx.rect(this.paddle.x, this.paddle.y, 10, 75);
-        ctx.fillStyle = "black";
-        ctx.fill();
-        ctx.closePath();
-        ctx.restore();
+    updateScore(score: Score) {
+        this.score = score;
     }
 }
 
+
+function Game(socket: WebSocket) {
+    let me: Player;
+    let opponent: Player;
+    let ball: Ball;
+    let data: Data;
+    let gameStarted = false;
+    let gameEnded = false;
+}
