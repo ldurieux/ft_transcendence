@@ -70,11 +70,7 @@ export class GameGateway {
     @UseGuards(SocketGuard)
     @SubscribeMessage('friendList')
     async requestFriendList(@ConnectedSocket() client: WebSocket, id: number) {
-        if (this.userService.getUser(id) === null || this.userService.getUser(id) === undefined)
-        {
-            client.send(JSON.stringify({type: 'Error', Error: "youNotExist"}));
-            return;
-        }
+        this.userService.getUser(id);
         if (client.readyState !== client.OPEN) return;
         const friendList = (await this.userService.getUser(id)).friends;
         client.send(JSON.stringify(friendList));
@@ -83,11 +79,7 @@ export class GameGateway {
     @UseGuards(SocketGuard)
     @SubscribeMessage('MatchMaking')
     async matchMaking(@ConnectedSocket() client: WebSocket, data: {id: number}) {
-        if (this.userService.getUser(data.id) === null || this.userService.getUser(data.id) === undefined)
-        {
-            client.send(JSON.stringify({type: 'Error', Error: "youNotExist"}));
-            return;
-        }
+        this.userService.getUser(data.id);
         if (this.clientWaitingStack.length() === 0)
         {
             this.clientWaitingStack.push({id: data.id, socket: client});
@@ -134,23 +126,15 @@ export class GameGateway {
         client.send(JSON.stringify({type: 'gameInvite', id: data.friendId, friendId: data.id}));
     }
 
-    async gameInviteResponse(@ConnectedSocket() client: WebSocket, @MessageBody( new ValidationPipe()) data: {id: number, friendId: number, response: boolean}) {
-        if (this.userService.getUser(data.id) === null || this.userService.getUser(data.id) === undefined)
-        {
-            client.send(JSON.stringify({type: 'Error', Error: 'YouNotExist'}));
-            return;
-        }
-        if (client.readyState !== client.OPEN) return;
+    async gameInviteResponse(data: {id: number, friendId: number, response: boolean}) {
         const friend = await this.userService.getUser(data.friendId);
-        if (!friend)
-        {
-            client.send(JSON.stringify({type: 'Error', Error: 'friendNotExists'}));
-            return;
-        }
         const friendSocket = this.socketServer.getSocket(friend.id);
-        if (!friendSocket) 
+        const clientSocket = this.socketServer.getSocket(data.id);  
+        if (clientSocket.readyState !== clientSocket.OPEN)
+            return;
+        if (friendSocket.readyState !== friendSocket.OPEN)
         {
-            client.send(JSON.stringify({type: 'Error', Error: 'friendNotOnline'}));
+            clientSocket.send(JSON.stringify({type: 'Error', Error: 'FriendNotOnline'}));
             return;
         }
         if (data.response == false)
@@ -266,5 +250,18 @@ export class GameGateway {
         await this.delay(3000);
         client1.send({type: "start"});
         client2.send({type: "start"});
+    }
+
+    @UseGuards(SocketGuard)
+    @SubscribeMessage('userStatus')
+    async takeUserStatus(client: WebSocket, id: number) {
+        if (this.InGame.has(id))
+        {
+            client.send(JSON.stringify({type: 'userStatus', status: 'InGame'}));
+        }
+        else
+        {
+            client.send(JSON.stringify({type: 'userStatus', status: 'Available'}));
+        }
     }
 }
