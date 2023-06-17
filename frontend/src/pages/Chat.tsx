@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React from "react";
 import "../components/Styles/ChatStyles.css";
 import ChatMain from "../components/Utils/chatComponents/ChatMain.tsx";
 
