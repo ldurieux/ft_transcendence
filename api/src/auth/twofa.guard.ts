@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
-export class AuthGuard implements CanActivate {
+export class TwoFaGuard implements CanActivate {
   constructor(private readonly jwtService: JwtService) {}
 
   canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
@@ -25,9 +25,6 @@ export class AuthGuard implements CanActivate {
       const { id, twoFaRequired } = payload;
 
       req['user'] = id;
-
-      if (twoFaRequired)
-        throw new UnauthorizedException();
     } catch (err) {
       console.log("[auth.guard.ts] " + err)
       throw new UnauthorizedException();
