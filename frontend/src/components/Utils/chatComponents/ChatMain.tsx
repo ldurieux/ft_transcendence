@@ -6,12 +6,10 @@ import ChannelList from "../list.tsx";
 function ChatMain({socket}) {
     const [channelList, setChannelList] = useState([]);
     const [selectedList, setSelectedList] = useState("ChatMain");
-    const [message, setMessage] = useState("");
     const [showPopup, setShowPopup] = useState(false);
     const [ChannelName, setChannelName] = useState("");
     const [channel, setChannel] = useState(null);
     const [chanSettings, setChanSettings] = useState(false);
-    const [showList, setShowList] = useState(false);
     const [chanParams, setChanParams] = useState({});
     const [user, setUser] = useState({});
     const [ChannelPassword, setChannelPassword] = useState("");
@@ -54,9 +52,9 @@ function ChatMain({socket}) {
 
     useEffect(() => {
         if (socket) {
-            console.log("socket is set")
             socket.onmessage = (e) => {
                 const data = JSON.parse(e.data);
+                console.log(data)
                 if (data.event === "leave" && data.user === user.id) {
                     const newChannelList = channelList.filter((item) => item.id !== channel.id);
                     setChannelList(newChannelList);
@@ -65,7 +63,7 @@ function ChatMain({socket}) {
                 }
             }
         }
-    }, [socket]);
+    }, [socket, channelList, channel, user]);
 
     // Function to handle button click and update the selected list
     function switchList(listType) {

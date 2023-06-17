@@ -50,7 +50,7 @@ const Authentication = () => {
         if (code) {
             sendRequest(code);
         }
-    }, [setUser]);
+    }, [setUser, navigate]);
 
     const logo = require("../components/Utils/42-logo.png");
 

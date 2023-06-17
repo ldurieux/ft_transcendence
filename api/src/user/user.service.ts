@@ -49,7 +49,10 @@ export class UserService {
         if (!self)
             delete user.twoFaSecret;
 
-        user["online"] = this.isOnline(user.id);
+        if (this.isOnline(user.id) == true)
+            user["status"] = "online";
+        else
+            user["status"] = "offline";
 
         return user;
     }

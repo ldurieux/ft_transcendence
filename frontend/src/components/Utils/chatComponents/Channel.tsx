@@ -1,5 +1,4 @@
 import React, {useContext, useEffect, useState, useRef} from "react";
-import { useNavigate } from 'react-router-dom';
 import "../../Styles/channelStyles.css";
 import { get, post } from "../Request.tsx";
 import {PopupContext} from "./PopupContext.tsx";
@@ -36,6 +35,7 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                         map[user.id] = user;
                         return map;
                     }, {});
+                    console.log(userMap)
                     setUsers(userMap);
                     if (message) {
                         setMessages(message);
@@ -58,7 +58,7 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                 return error;
             }
         })();
-    }, [channel.id]);
+    }, [channel.id, channel.users, channel.admins, channel.owner, currentUser.id]);
 
     useEffect(() => {
         if (socket) {
@@ -83,7 +83,7 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                 }
             };
         }
-    }, [socket, channel]);
+    }, [socket, channel, currentUser.id, closeChannel]);
 
     if (!channel) {
         return null;
@@ -229,6 +229,7 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                                 alt={selectedUser?.display_name}
                                 src={users[selectedUser?.id]?.profile_picture ?? defaultAvatar}/>
                             <p>{selectedUser?.display_name}</p>
+                            <p>{selectedUser?.status}</p>
                         </div>
                         <div className="FriendsOptions">
                             <ul>

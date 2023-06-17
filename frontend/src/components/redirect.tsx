@@ -13,9 +13,7 @@ const FrontRoutes = ({socket}) => {
     return (
         <Routes>
             <Route path="/login" element={<Authentication />} />
-            <Route path="/profile" element={
-                    <Profile />
-            } />
+            <Route path="/profile" element={<Profile socket={socket}/>} />
             <Route path="/game" element={<Game />} />
             <Route path="/leaderboard" element={<Leaderboard />} />
             <Route path="/chat" element={<Chat socket={socket}/>} />

@@ -19,7 +19,7 @@ function ProfileUser({children}) {
             setUser(result);
             console.log(result)
         })()
-    }, [])
+    }, [setUser])
 
    async function changeAvatar(e) {
         try {
