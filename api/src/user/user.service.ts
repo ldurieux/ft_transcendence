@@ -20,7 +20,7 @@ export class UserService {
         private readonly friendService: FriendRequestService,
     ) {}
 
-    async getUser(id: number, self: boolean = false): Promise<User> {
+    async getUser(id: number, self: boolean = false, withGames = false): Promise<User> {
         const user = await this.userRepository.findOne({
             where: {
                 id: id
@@ -31,10 +31,17 @@ export class UserService {
                 sentRequests: self,
                 receivedRequests: self,
                 blocked: self,
+                game: withGames,
             }
         })
         if (!user) {
             throw new HttpException("User does not exist", HttpStatus.NOT_FOUND);
+        }
+
+        if (self) 
+        {
+            for (let i = 0; i < user.friends.length; i++)
+                user.friends[i] = await this.getUser(user.friends[i].id, false, true);
         }
 
         if (!self)

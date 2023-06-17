@@ -41,6 +41,7 @@ export class User {
   points: number;
 
   @ManyToOne(() => Game)
+  @JoinTable()
   game: Game[];
 
   @Column({default: 0})

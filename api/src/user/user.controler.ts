@@ -30,7 +30,7 @@ export class UserController {
             throw new HttpException("", HttpStatus.BAD_REQUEST);
         }
 
-        const user: User = await this.userService.getUser(val);
+        const user: User = await this.userService.getUser(val, false, true);
         return user;
     }
 
@@ -39,7 +39,7 @@ export class UserController {
     async getSelf(@Request() req) {
         const id = req['user'];
 
-        const user: User = await this.userService.getUser(id, true);
+        const user: User = await this.userService.getUser(id, true, true);
         user.auths.forEach( (e) => {
             delete e.data;
         })
