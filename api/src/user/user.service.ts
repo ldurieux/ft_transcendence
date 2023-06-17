@@ -36,6 +36,10 @@ export class UserService {
         if (!user) {
             throw new HttpException("User does not exist", HttpStatus.NOT_FOUND);
         }
+
+        if (!self)
+            delete user.twoFaSecret;
+
         return user;
     }
 
@@ -167,7 +171,7 @@ export class UserService {
     {
         const user: User = await this.getUser(id);
 
-        if (user.twoFaSecret != "" || user.twoFaEnabled)
+        if (user.twoFaEnabled)
             throw new HttpException("2fa already enabled", HttpStatus.BAD_REQUEST);
 
         const { secret, url } = this.authService.generate2faSecret(user);
