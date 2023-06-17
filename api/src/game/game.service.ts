@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 
 import { GameGateway } from 'src/socket/game.gateway';
 
@@ -51,10 +51,10 @@ interface Data {
 @Injectable()
 export class GameService {
     constructor(
-        @InjectRepository(Game)
-        private gameRepository: Repository<Game>,
+        @Inject(forwardRef(() => GameGateway))
         private gameGateway: GameGateway,
-        private userService: UserService,
+        private readonly gameRepository: Repository<Game>,
+        private readonly userService: UserService,
     ) {}
 
     find(playerId: number): Data | undefined {
@@ -66,15 +66,6 @@ export class GameService {
         return undefined;
     }
 
-    createemptyGame(user: User): Game {
-        if (user.game) {
-            return user.game;
-        }
-        const game: Game = new Game();
-        this.gameRepository.save(game);
-        return (game);
-    }
-
     GameMap: Map<PlayerId, Data>;
     private screen: GameScreen = {width: 800, height: 600};
 
@@ -83,6 +74,8 @@ export class GameService {
         gameData.screen = this.screen;
         this.initBall(gameData);
         this.initPaddles(gameData);
+        gameData.playerId.player1Id = player1;
+        gameData.playerId.player2Id = player2;
 
         this.GameMap.set(gameData.playerId, gameData);
         await this.gameGateway.sendData(gameData);
@@ -154,48 +147,59 @@ export class GameService {
 
     private async updateScore(gameData: Data, playerId: number, player1Disconnect: boolean = false, player2Disconnect: boolean = false) {
         if (playerId === gameData.playerId.player1Id)
+        {
             gameData.score.player1Score++;
+            if (gameData.score.player1Score >= 10 || player2Disconnect)
+            {
+                let game1 = new Game();
+                game1.myEnemy = await this.userService.getUser(gameData.playerId.player2Id, true);
+                game1.myScore = gameData.score.player1Score;
+                game1.enemyScore = gameData.score.player2Score;
+                this.gameRepository.save(game1);
+                this.userService.getUser(gameData.playerId.player1Id, true).then((user) => {
+                    user.game.push(game1);
+                    user.games_won++;
+                    user.games_played++;
+                });
+                let game2 = new Game();
+                game2.myEnemy = await this.userService.getUser(gameData.playerId.player1Id, true);
+                game2.myScore = gameData.score.player2Score;
+                game2.enemyScore = gameData.score.player1Score;
+                this.gameRepository.save(game2);
+                this.userService.getUser(gameData.playerId.player2Id, true).then((user) => {
+                    user.game.push(game2);
+                    user.games_lost++;
+                    user.games_played++;
+                });
+            }
+        }
         if (playerId === gameData.playerId.player2Id)
+        {
             gameData.score.player2Score++;
-        const player1: User = await this.userService.getUser(gameData.playerId.player1Id);
-        const player2: User = await this.userService.getUser(gameData.playerId.player2Id);
-        if (gameData.score.player1Score >= 10 || player2Disconnect)
-        {
-            player1.game.games.push();
-            player2.game.games.push();
-            player1.game.games[player1.game.games.length - 1].score.myScore = gameData.score.player1Score;
-            player1.game.games[player1.game.games.length - 1].score.friendScore = gameData.score.player2Score;
-            player2.game.games[player2.game.games.length - 1].score.myScore = gameData.score.player2Score;
-            player2.game.games[player2.game.games.length - 1].score.friendScore = gameData.score.player1Score;
-            player1.game.games[player1.game.games.length - 1].win = true;
-            player2.game.games[player2.game.games.length - 1].win = false;
-            player1.game.games[player1.game.games.length - 1].friend = player2;
-            player2.game.games[player2.game.games.length - 1].friend = player1;
-            player1.game.Wins++;
-            player2.game.Losses++;
-            this.GameMap.delete(gameData.playerId);
-            this.gameGateway.endGame(player1.id, player2.id);
-            return;
+            if (gameData.score.player2Score >= 10 || player1Disconnect)
+            {
+                let game1 = new Game();
+                game1.myEnemy = await this.userService.getUser(gameData.playerId.player1Id, true);
+                game1.myScore = gameData.score.player2Score;
+                game1.enemyScore = gameData.score.player1Score;
+                this.gameRepository.save(game1);
+                this.userService.getUser(gameData.playerId.player2Id, true).then((user) => {
+                    user.game.push(game1);
+                    user.games_won++;
+                    user.games_played++;
+                });
+                let game2 = new Game();
+                game2.myEnemy = await this.userService.getUser(gameData.playerId.player2Id, true);
+                game2.myScore = gameData.score.player1Score;
+                game2.enemyScore = gameData.score.player2Score;
+                this.gameRepository.save(game2);
+                this.userService.getUser(gameData.playerId.player1Id, true).then((user) => {
+                    user.game.push(game2);
+                    user.games_lost++;
+                    user.games_played++;
+                });
+            }
         }
-        else if (gameData.score.player2Score >= 10 || player1Disconnect)
-        {
-            player1.game.games.push();
-            player2.game.games.push();
-            player1.game.games[player1.game.games.length - 1].score.myScore = gameData.score.player1Score;
-            player1.game.games[player1.game.games.length - 1].score.friendScore = gameData.score.player2Score;
-            player2.game.games[player2.game.games.length - 1].score.myScore = gameData.score.player2Score;
-            player2.game.games[player2.game.games.length - 1].score.friendScore = gameData.score.player1Score;
-            player1.game.games[player1.game.games.length - 1].win = false;
-            player2.game.games[player2.game.games.length - 1].win = true;
-            player1.game.games[player1.game.games.length - 1].friend = player2;
-            player2.game.games[player2.game.games.length - 1].friend = player1;
-            player1.game.Losses++;
-            player2.game.Wins++;
-            this.GameMap.delete(gameData.playerId);
-            this.gameGateway.endGame(player2.id, player1.id);
-            return;
-        }
-        this.gameGateway.sendScoreData(gameData);
     }
 
     async updatePadPosition(playerId: number, position: number)

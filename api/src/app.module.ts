@@ -17,7 +17,7 @@ import { ChannelModule } from './channel/channel.module';
 import { Message } from './message/message.entity';
 import { Action } from './action/action.entity';
 
-import { SocketServerModule } from 'src/socket/socketServer.module';
+// import { SocketServerModule } from 'src/socket/socketServer.module';
 
 import { GameModule } from './game/game.module';
 
@@ -37,7 +37,7 @@ import { GameModule } from './game/game.module';
       }),
       inject: [ConfigService],
     }),
-    UserModule, AuthModule, FriendRequestModule, ChannelModule, SocketServerModule, GameModule
+    UserModule, AuthModule, FriendRequestModule, ChannelModule, GameModule
   ],
   controllers: [AppController],
 })

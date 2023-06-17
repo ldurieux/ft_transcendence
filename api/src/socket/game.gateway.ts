@@ -1,5 +1,5 @@
 import { MessageBody, SubscribeMessage, WebSocketGateway, ConnectedSocket } from '@nestjs/websockets';
-import { Inject, UseGuards, Injectable, ValidationPipe } from '@nestjs/common';
+import { Inject, UseGuards, Injectable, ValidationPipe, forwardRef } from '@nestjs/common';
 
 import { SocketGuard } from 'src/auth/auth.guard';
 import { SocketServer } from './socket.server'; 
@@ -58,8 +58,9 @@ interface WaitingPlayer {
 @Injectable()
 export class GameGateway {
     constructor(
-        @Inject(SocketServer) private socketServer: SocketServer,
+        private socketServer: SocketServer,
         private userService: UserService,
+        @Inject(forwardRef(() => GameService))
         private gameService: GameService,
     ) {}
 

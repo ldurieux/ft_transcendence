@@ -34,6 +34,15 @@ export class User {
   @Column({default: 0})
   points: number;
 
-  @OneToOne(() => Game)
-  game: Game;
+  @ManyToOne(() => Game)
+  game: Game[];
+
+  @Column({default: 0})
+  games_played: number;
+
+  @Column({default: 0})
+  games_won: number;
+
+  @Column({default: 0})
+  games_lost: number;
 }

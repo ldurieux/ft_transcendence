@@ -1,5 +1,5 @@
 
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { JwtService } from '@nestjs/jwt';
@@ -16,18 +16,14 @@ import { FriendRequestModule } from 'src/friend-request/friend-request.module';
 import { AuthService } from 'src/auth/auth.service';
 import { FriendRequestService } from 'src/friend-request/friend-request.service';
 
-import { GameModule } from 'src/game/game.module';
-
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
     TypeOrmModule.forFeature([Auth]),
     TypeOrmModule.forFeature([FriendRequest]),
     TypeOrmModule.forFeature([Game]),
-    forwardRef(() => GameModule),
   ],
   providers: [UserService, AuthService, FriendRequestService, JwtService, AuthModule, FriendRequestModule],
   controllers: [UserController],
-  exports : [UserService]
 })
 export class UserModule {}

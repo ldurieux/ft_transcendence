@@ -7,12 +7,10 @@ import { Game } from './game.entity';
 
 import { AuthService } from '../auth/auth.service';
 import { FriendRequestService } from '../friend-request/friend-request.service';
-import { GameService } from './game.service';
 
 import { User } from 'src/user/user.entity';
 
-import { UserModule } from 'src/user/user.module';
-import { SocketServerModule } from 'src/socket/socketServer.module';
+import { GameGateway } from 'src/socket/game.gateway';
 
 @Module({
     imports: [
@@ -20,9 +18,7 @@ import { SocketServerModule } from 'src/socket/socketServer.module';
         TypeOrmModule.forFeature([Auth]),
         TypeOrmModule.forFeature([FriendRequest]),
         TypeOrmModule.forFeature([Game]),
-        forwardRef(() => UserModule),
     ],
-    providers: [AuthService, FriendRequestService, GameService],
-    exports: [GameService],
+    providers: [AuthService, FriendRequestService],
 })
 export class GameModule {}

@@ -18,11 +18,11 @@ import { Message } from 'src/message/message.entity';
 import { MessageService } from 'src/message/message.service';
 import { Action } from 'src/action/action.entity';
 import { ActionService } from 'src/action/action.service';
-import { GameService } from 'src/game/game.service';
+// import { GameService } from 'src/game/game.service';
 import { Game } from 'src/game/game.entity';
 
 import { ChatGateway } from 'src/socket/chat.gateway';
-// import { GameModule } from 'src/game/game.module';
+import { SocketServer } from 'src/socket/socket.server';
 
 @Module({
   imports: [
@@ -34,7 +34,7 @@ import { ChatGateway } from 'src/socket/chat.gateway';
     TypeOrmModule.forFeature([Action]),
     TypeOrmModule.forFeature([Game]),
   ],
-  providers: [UserService, AuthService, ChannelService, FriendRequestService, MessageService, ActionService, JwtService],
+  providers: [UserService, AuthService, ChannelService, FriendRequestService, MessageService, ActionService, ChatGateway, JwtService, SocketServer],
   controllers: [ChannelController],
 })
 export class ChannelModule {}

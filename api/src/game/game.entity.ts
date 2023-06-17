@@ -6,12 +6,15 @@ export class Game {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
-    games: {friend: User, score: {myScore: number, friendScore: number}, win: boolean}[];
+    @OneToOne(type => User)
+    myEnemy: User;
 
-    @Column()
-    Wins: number;
+    @Column({default: 0})
+    myScore: number;
 
-    @Column()
-    Losses: number;
+    @Column({default: 0})
+    enemyScore: number;
+
+    @Column({default: false})
+    Win: boolean;
 }

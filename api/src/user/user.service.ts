@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
@@ -7,16 +7,17 @@ import { Auth } from 'src/auth/auth.entity';
 import { AuthService } from 'src/auth/auth.service';
 import { FriendRequestService } from 'src/friend-request/friend-request.service';
 import { FriendRequest } from 'src/friend-request/friend-request.entity';
-import { GameService } from 'src/game/game.service';
+
+import { Game } from 'src/game/game.entity';
 
 @Injectable()
 export class UserService {
     constructor(
         @InjectRepository(User)
         private userRepository: Repository<User>,
+        @InjectRepository(Game)
         private readonly authService: AuthService,
         private readonly friendService: FriendRequestService,
-        private readonly gameService: GameService
     ) {}
 
     async getUser(id: number, self: boolean = false): Promise<User> {
@@ -119,7 +120,6 @@ export class UserService {
             }
         }
 
-        user.game = this.gameService.createemptyGame(user);
         await this.userRepository.save(user);
         return this.authService.getJwt(user);
     }

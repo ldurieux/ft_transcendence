@@ -10,7 +10,6 @@ import { User } from 'src/user/user.entity';
 import { UserService } from 'src/user/user.service';
 import { Message } from 'src/message/message.entity';
 import { MessageService } from 'src/message/message.service';
-import { Action } from 'src/action/action.entity';
 import { ActionService } from 'src/action/action.service';
 
 import { ChatGateway } from 'src/socket/chat.gateway';
