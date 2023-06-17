@@ -204,6 +204,15 @@ export class UserController {
     }
 
     @UseGuards(AuthGuard)
+    @Post('disable2fa')
+    async disable2fa(@Request() req)
+    {
+        const id: number = req['user'];
+
+        await this.userService.disable2fa(id);
+    }
+
+    @UseGuards(AuthGuard)
     @Post('generate2fa')
     async generate2fa(@Request() req)
     {

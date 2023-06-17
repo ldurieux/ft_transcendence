@@ -167,12 +167,24 @@ export class UserService {
     {
         const user: User = await this.getUser(id);
 
+        if (user.twoFaSecret != "" || user.twoFaEnabled)
+            throw new HttpException("2fa already enabled", HttpStatus.BAD_REQUEST);
+
         const { secret, url } = this.authService.generate2faSecret(user);
 
         user.twoFaSecret = secret;
         await this.userRepository.save(user);
 
         return await toDataURL(url);
+    }
+
+    async disable2fa(id: number)
+    {
+        const user: User = await this.getUser(id);
+
+        user.twoFaSecret = "";
+        user.twoFaEnabled = false;
+        this.userRepository.save(user);
     }
 
     private async loginOrRegister(method: string, data) : Promise<{ token: string, twoFaEnabled: boolean}> {
