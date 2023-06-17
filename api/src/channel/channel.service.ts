@@ -397,6 +397,27 @@ export class ChannelService {
         if (!channel) {
             throw new HttpException("ChatMain does not exist", HttpStatus.NOT_FOUND);
         }
+
+        if (withUsers)
+        {
+            for (let i = 0; i < channel.users.length; i++) {
+                if (this.websocket.isOnline(channel.users[i].id) == true)
+                    channel.users[i]["status"] = "online";
+                else
+                    channel.users[i]["status"] = "offline";
+            }
+            for (let i = 0; i < channel.admins.length; i++) {
+                if (this.websocket.isOnline(channel.admins[i].id) == true)
+                    channel.admins[i]["status"] = "online";
+                else
+                    channel.admins[i]["status"] = "offline";
+            }
+            if (this.websocket.isOnline(channel.owner.id) == true)
+                channel.owner["status"] = "online";
+            else
+                channel.owner["status"] = "offline";
+        }
+
         return channel;
     }
 
