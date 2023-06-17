@@ -1,5 +1,5 @@
 import React from 'react';
-import { get } from '../Request.tsx';
+import { get } from '../Request';
 
 export function friendList(socket, id: number) {
     const message = {action: "friendList", id: id};

@@ -1,7 +1,13 @@
 import React, { useEffect, useState, useRef } from "react";
-import "../Styles/ChatStyles.css";
-import * as GameRequest from "./gameRequest.tsx";
-import { websocketRef } from 'ws';
+import "../Styles/GameStyle.css";
+import * as request from "./gameRequest";
 
 export default function Game(socket) {
+    return (
+        <body>
+            <canvas id="gameCanvas" width="480" height="320"
+                style={{border: "1px solid #000000"}}>
+            </canvas>
+        </body>
+    );
 }

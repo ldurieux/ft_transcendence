@@ -5,7 +5,7 @@ import "../components/Styles/GameStyle.css";
 class Game extends Component {
     render() {
         return (
-            <div className="gameBody">
+            <div className="Game">
             </div>
         );
     }

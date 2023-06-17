@@ -120,7 +120,6 @@ export class AuthService {
         auth.user = user;
 
         await this.authRepository.save(auth);
-        console.log("AUTH" + JSON.stringify(auth));
         return auth;
     }
 

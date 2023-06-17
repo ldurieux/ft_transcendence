@@ -15,7 +15,6 @@ export class UserService {
     constructor(
         @InjectRepository(User)
         private userRepository: Repository<User>,
-        @InjectRepository(Game)
         private readonly authService: AuthService,
         private readonly friendService: FriendRequestService,
     ) {}
