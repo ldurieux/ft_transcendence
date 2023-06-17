@@ -104,28 +104,3 @@ export class Paddle {
     }
 }
 
-// export class Player {
-//     private paddle: Paddle;
-//     socket: WebSocket;
-
-//     constructor(paddleData: PaddleData, score: Score, socket: WebSocket) {
-//         this.paddle = new Paddle(paddleData);
-//         this.socket = socket;
-//     }
-
-//     async movePaddleUp() {
-//         this.paddle.movePaddleUp();
-//         this.socket.send(JSON.stringify({action: "paddlePosition", y: this.paddle.getPaddle().y}));
-//     }
-
-//     async movePaddleDown() {
-//         this.paddle.movePaddleDown();
-//         this.socket.send(JSON.stringify({action: "paddlePosition", y: this.paddle.getPaddle().y}));
-//     }
-
-//     async drawPaddle(ctx: CanvasRenderingContext2D) {
-//         this.paddle.drawPaddle(ctx);
-//     }
-// }
-
-
