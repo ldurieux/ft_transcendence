@@ -20,7 +20,6 @@ function Friendlist({socket}) {
         {
             socket.onmessage = (e) => {
                 const data = JSON.parse(e.data);
-                console.log(data.data)
                 if (data.event === "connect")
                 {
                     //if user connected is one of your friends

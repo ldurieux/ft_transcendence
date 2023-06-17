@@ -11,7 +11,7 @@ function ChatMain({socket}) {
     const [channel, setChannel] = useState(null);
     const [chanSettings, setChanSettings] = useState(false);
     const [chanParams, setChanParams] = useState({});
-    const [user, setUser] = useState({});
+    const [user, setUser] = useState([]);
     const [ChannelPassword, setChannelPassword] = useState("");
     const [popupSelectedList, setPopupSelectedList] = useState("Join");
     const [check, setCheck] = useState(false);
@@ -55,11 +55,8 @@ function ChatMain({socket}) {
             socket.onmessage = (e) => {
                 const data = JSON.parse(e.data);
                 console.log(data)
-                if (data.event === "leave" && data.user === user.id) {
-                    const newChannelList = channelList.filter((item) => item.id !== channel.id);
-                    setChannelList(newChannelList);
-                    setChanSettings(null);
-                    setChannel(null);
+                if (data.event === "join" && data.user.id === user.id) {
+
                 }
             }
         }
@@ -122,7 +119,6 @@ function ChatMain({socket}) {
                     result = await post("channel", {type: "public", name: chan, password: ChannelPassword});
                 else
                     result = await post("channel", {type: "public", name: chan});
-                console.log(result)
                 if (result.status >= 400 && result.status <= 500) {
                     return;
                 } else {
@@ -136,7 +132,6 @@ function ChatMain({socket}) {
                 if (chan === "")
                     return;
                 result = await post("channel", {type: "private", name: chan});
-                console.log(result)
                 if (result.status >= 400 && result.status <= 500) {
                     return;
                 } else {
@@ -152,13 +147,11 @@ function ChatMain({socket}) {
 
     async function joinChannel(chan, password = "") {
         try {
-            console.log(password)
             let result;
             if (password === "")
                 result = await post("channel/join", { id: chan.id });
             else
                 result = await post("channel/join", { id: chan.id, password: password });
-            console.log(result)
             if (!result) {
                 return true;
             }

@@ -17,7 +17,6 @@ function ProfileUser({children}) {
         (async () => {
             const result = await get('user/self');
             setUser(result);
-            console.log(result)
         })()
     }, [setUser])
 

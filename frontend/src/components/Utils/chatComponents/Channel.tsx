@@ -20,6 +20,8 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
     const [username, setUsername] = useState("");
     const defaultAvatar = require("./42-logo.png");
 
+    console.log(admins)
+
     useEffect(() => {
         if (bottomChat.current) {
             bottomChat.current?.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'start' });
@@ -35,8 +37,8 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                         map[user.id] = user;
                         return map;
                     }, {});
-                    console.log(userMap)
                     setUsers(userMap);
+                    console.log(userMap)
                     if (message) {
                         setMessages(message);
                     }
@@ -65,16 +67,22 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
             socket.onmessage = (event) => {
                 const ret = JSON.parse(event.data)
                 if (ret.event === "leave" && ret.data.channel === channel.id) {
-                    //remove the user who lived from users list
-                    setUsers((prev) => {
-                        return prev.filter((user) => user.id !== ret.data.user);
+                    //remove the user who left from the channel
+                    setUsers(prev => {
+                        const updatedUsers = { ...prev };
+                        delete updatedUsers[ret.data.user];
+                        return updatedUsers;
                     });
                     if (ret.data.user === currentUser.id)
                         closeChannel();
                 }
                 if (ret.event === "join" && ret.data.channel === channel.id) {
                     //add the user who joined to the channel
-                    setUsers((prev) => [...prev, ret.data.user]);
+                    setUsers(prev => {
+                        const updatedUsers = { ...prev };
+                        updatedUsers[ret.data.user.id] = ret.data.user;
+                        return updatedUsers;
+                    });
                 }
                 else if (ret.event === "message") {
                     //add the message to the messages list
@@ -110,11 +118,14 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                 const result = await post(`channel/kick`, { userId: userId, channelId: channel.id });
                 if (result) {
                     // Update the users list
-                    const updatedUsers = users.filter(user => user.id !== userId);
-                    setUsers(updatedUsers);
+                    setUsers(prev => {
+                        const updatedUsers = { ...prev };
+                        delete updatedUsers[userId];
+                        return updatedUsers;
+                    });
 
                     // Update the channel list in the parent component
-                    updateChannelUsers(channel, updatedUsers);
+                    updateChannelUsers(channel, users);
                 }
                 return result;
             }
@@ -129,8 +140,10 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
             const ret = await post(`channel/ban`, { userId: userId, channelId: channel.id, duration: 60 });
             if (ret) {
                 //update the users list
-                setUsers((prev) => {
-                    return prev.filter((user) => user.id !== userId);
+                setUsers(prev => {
+                    const updatedUsers = { ...prev };
+                    delete updatedUsers[userId];
+                    return updatedUsers;
                 });
             }
         }
@@ -151,7 +164,6 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
     async function blockUser() {
         try {
             let ret;
-            console.log(currentUser.id, selectedUser.id)
             if (currentUser.id !== selectedUser.id) {
                 ret = await get(`user/block?id=` + selectedUser.id);
                 if (ret) {
@@ -260,7 +272,6 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                 {messages &&
                     messages.length > 0 &&
                     messages.map((item, key) => {
-                        console.log(item)
                     return (
                         <div key={key} className="message">
                             {/*<img*/}
@@ -338,7 +349,9 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                                                 return (
                                                     <li key={key}>
                                                         {item?.display_name}
-                                                        {currentUser.id === Owner.id &&
+                                                        {
+                                                            (currentUser.id === channel.owner.id) &&
+                                                            currentUser.id !== item.id &&
                                                             <button onClick={() => demoteUser(channel, item)}>Demote</button>
                                                         }
                                                     </li>
@@ -349,33 +362,31 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                                     </ul>
                                     <li style={{ fontWeight: "700" }}>Users:</li>
                                     <ul>
-                                        {users &&
-                                            users.length > 0 &&
-                                            users.map((item, key) => {
-                                                return (
-                                                    <li key={key}>
-                                                        {item.display_name}
-                                                        {/*add or condition if user is in list admin*/}
-                                                        {(currentUser.id === channel.owner.id || isAdmin) &&
-                                                            currentUser.id !== item.id && item.id !== channel.owner.id &&
-                                                            <button onClick={() => kickUser(channel, item.id)}>Kick</button>
-                                                        }
-                                                        {(currentUser.id === channel.owner.id || isAdmin) &&
-                                                            currentUser.id !== item.id && item.id !== channel.owner.id &&
-                                                            <button onClick={() => banUser(channel, item.id)}>Ban</button>
-                                                        }
-                                                        {(currentUser.id === channel.owner.id || isAdmin) &&
-                                                            currentUser.id !== item.id && item.id !== channel.owner.id &&
-                                                            <button onClick={() => muteUser(channel, item.id)}>Mute</button>
-                                                        }
-                                                        {(currentUser.id === channel.owner.id || isAdmin) &&
-                                                            currentUser.id !== item.id && item.id !== channel.owner.id &&
-                                                            <button onClick={() => promoteUser(channel, item)}>Promote</button>
-                                                        }
-                                                    </li>
-                                                );
-                                            })
-                                        }
+                                        {Object.values(users).map((user) => (
+                                            <div key={user.id}>
+                                                <p>{user.display_name}</p>
+                                                {currentUser.id === channel.owner.id &&
+                                                    currentUser.id !== user.id &&
+                                                    <div>
+                                                        <button onClick={() => promoteUser(channel, user)}>Promote</button>
+                                                        <button onClick={() => kickUser(channel, user.id)}>Kick</button>
+                                                        <button onClick={() => banUser(channel, user.id)}>Ban</button>
+                                                        <button onClick={() => muteUser(channel, user.id)}>Mute</button>
+                                                    </div>
+                                                }
+                                                {
+                                                    currentUser.id !== user.id &&
+                                                    isAdmin && !admins.includes(user.id) &&
+                                                    <div>
+                                                        <button onClick={() => promoteUser(channel, user)}>Promote</button>
+                                                        <button onClick={() => kickUser(channel, user.id)}>Kick</button>
+                                                        <button onClick={() => banUser(channel, user.id)}>Ban</button>
+                                                        <button onClick={() => muteUser(channel, user.id)}>Mute</button>
+                                                    </div>
+                                                }
+                                                {/* Display other user information */}
+                                            </div>
+                                        ))}
                                     </ul>
                                     {(currentUser.id === channel.owner.id || isAdmin) &&
                                         channel.type === "private" &&
