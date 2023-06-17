@@ -11,7 +11,9 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
     constructor(
         private jwtService: JwtService
     ) {}
+
     @WebSocketServer() server: WebSocket;
+    static serverRef;
 
     afterInit(server: WebSocket) {
         // console.log('Init');
@@ -24,6 +26,8 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
     
     @SubscribeMessage('auth')
     async handleAuth(@ConnectedSocket() client: WebSocket, @MessageBody('data') authHeader: any) {
+        SocketServer.serverRef = this.server;
+
         if (!authHeader || !authHeader.startsWith('Bearer ')) {
             client.terminate();
             console.log("Bearer")
@@ -72,10 +76,13 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
         }
     }
 
-
     handleDisconnect(client: WebSocket) {
         this.broadcast(client.data.user, { event: "disconnect", data: { user: client.data.user } })
         console.log('Client disconnected');
+    }
+
+    static instance() {
+        return this.serverRef;
     }
 
     getServer() {

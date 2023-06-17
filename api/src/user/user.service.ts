@@ -11,6 +11,8 @@ import { FriendRequest } from 'src/friend-request/friend-request.entity';
 import { toDataURL } from 'qrcode';
 import { Game } from 'src/game/game.entity';
 
+import { SocketServer } from 'src/socket/socket.server';
+
 @Injectable()
 export class UserService {
     constructor(
@@ -47,7 +49,23 @@ export class UserService {
         if (!self)
             delete user.twoFaSecret;
 
+        user["online"] = this.isOnline(user.id);
+
         return user;
+    }
+
+    isOnline(userId: number): boolean
+    {
+        const websocket = SocketServer.instance();
+
+        if (websocket == null || websocket == undefined)
+            return false;
+
+        for (const client of websocket.clients) {
+            if (client.data.user == userId)
+                return true;
+        }
+        return false;
     }
 
     async getUserByUsername(username: string, blocked: boolean = false): Promise<User> {
