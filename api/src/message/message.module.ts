@@ -13,5 +13,6 @@ import { UserModule } from 'src/user/user.module';
         forwardRef(() => UserModule)
     ],
     providers: [MessageService],
+    exports: [MessageService]
 })
 export class FriendRequestModule {}

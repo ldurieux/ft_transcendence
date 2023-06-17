@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
@@ -9,6 +9,7 @@ import { FriendRequestService } from 'src/friend-request/friend-request.service'
 import { FriendRequest } from 'src/friend-request/friend-request.entity';
 
 import { toDataURL } from 'qrcode';
+import { Game } from 'src/game/game.entity';
 
 @Injectable()
 export class UserService {

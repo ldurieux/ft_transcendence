@@ -10,10 +10,9 @@ import { User } from 'src/user/user.entity';
 import { UserService } from 'src/user/user.service';
 import { Message } from 'src/message/message.entity';
 import { MessageService } from 'src/message/message.service';
-import { Action } from 'src/action/action.entity';
 import { ActionService } from 'src/action/action.service';
 
-import { EventsGateway } from 'src/socket_server/socket.gateway';
+import { ChatGateway } from 'src/socket/chat.gateway';
 
 @Injectable()
 export class ChannelService {
@@ -23,7 +22,7 @@ export class ChannelService {
         private readonly userService: UserService,
         private readonly messageService: MessageService,
         private readonly actionService: ActionService,
-        private readonly websocket: EventsGateway
+        private readonly websocket: ChatGateway
     ) {}
 
     async listPublic() {
@@ -434,6 +433,7 @@ export class ChannelService {
 
         if (channel.users.some(e => e.id == user.id)) {
             for (const to of channel.users) {
+                console.log("TEXT" + text);
                 this.websocket.sendTo(to.id, { event: "message", data: { channel: channel.id, owner: user, text: text } })
             }
 

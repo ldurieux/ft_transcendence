@@ -7,6 +7,7 @@ import { JwtService } from '@nestjs/jwt';
 import { User } from './user.entity';
 import { UserService } from './user.service';
 import { UserController } from './user.controler';
+import { Game } from 'src/game/game.entity';
 
 import { FriendRequest } from 'src/friend-request/friend-request.entity';
 import { Auth } from 'src/auth/auth.entity';
@@ -19,9 +20,10 @@ import { FriendRequestService } from 'src/friend-request/friend-request.service'
   imports: [
     TypeOrmModule.forFeature([User]),
     TypeOrmModule.forFeature([Auth]),
-    TypeOrmModule.forFeature([FriendRequest])
+    TypeOrmModule.forFeature([FriendRequest]),
+    TypeOrmModule.forFeature([Game]),
   ],
-  providers: [UserService, AuthService, FriendRequestService, JwtService],
+  providers: [UserService, AuthService, FriendRequestService, JwtService, AuthModule, FriendRequestModule],
   controllers: [UserController],
 })
 export class UserModule {}
