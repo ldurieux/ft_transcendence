@@ -16,6 +16,12 @@ export class User {
   @OneToMany(() => Auth, (auth) => auth.user)
   auths: Auth[];
 
+  @Column({default: false})
+  twoFaEnabled: boolean;
+
+  @Column({default: ""})
+  twoFaSecret: string;
+
   @ManyToMany(() => User, user => user.friends)
   @JoinTable()
   friends: User[];

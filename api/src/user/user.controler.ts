@@ -5,6 +5,7 @@ import { UserService } from './user.service';
 import { User } from './user.entity';
 
 import { AuthGuard } from 'src/auth/auth.guard';
+import { TwoFaGuard } from 'src/auth/twofa.guard';
 import { View } from 'typeorm/schema-builder/view/View';
 
 @Controller('user')
@@ -158,7 +159,7 @@ export class UserController {
             throw new HttpException("", HttpStatus.BAD_REQUEST)
         }
 
-        const token: string = await this.userService.register(method, data)
+        const { token } = await this.userService.register(method, data)
         return { access_token: token };
     }
 
@@ -170,8 +171,45 @@ export class UserController {
             throw new HttpException("", HttpStatus.BAD_REQUEST)
         }
 
-        const token: string = await this.userService.login(method, data);
+        const { token, twoFaEnabled } = await this.userService.login(method, data);
+        return { access_token: token, twoFaEnabled: twoFaEnabled };
+    }
+
+    @UseGuards(TwoFaGuard)
+    @Post('login2fa')
+    async login2fa(@Request() req) {
+        const { code } = req.body;
+        const id: number = req['user'];
+
+        if (typeof code !== 'string') {
+            throw new HttpException("", HttpStatus.BAD_REQUEST)
+        }
+
+        const token = await this.userService.login2fa(id, code);
         return { access_token: token };
+    }
+
+    @UseGuards(AuthGuard)
+    @Post('enable2fa')
+    async enable2fa(@Request() req)
+    {
+        const { code } = req.body;
+        const id: number = req['user'];
+
+        if (typeof code !== 'string') {
+            throw new HttpException("", HttpStatus.BAD_REQUEST)
+        }
+
+        await this.userService.login2fa(id, code, true);
+    }
+
+    @UseGuards(AuthGuard)
+    @Post('generate2fa')
+    async generate2fa(@Request() req)
+    {
+        const id: number = req['user'];
+
+        return { qrcode: await this.userService.generate2fa(id) };
     }
 
     @UseGuards(AuthGuard)

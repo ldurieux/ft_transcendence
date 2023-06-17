@@ -9,12 +9,34 @@ import * as jwt from 'jsonwebtoken';
 import { Auth } from './auth.entity';
 import { User } from '../user/user.entity';
 
+import { authenticator } from 'otplib';
+
 @Injectable()
 export class AuthService {
     constructor(
         @InjectRepository(Auth)
         private authRepository: Repository<Auth>
     ) {}
+
+    is2faCodeValid(user: User, code: string): boolean {
+        return authenticator.verify({
+            token: code,
+            secret: user.twoFaSecret,
+        });
+    }
+
+    generate2faSecret(user: User)
+    {
+        const secret = authenticator.generateSecret();
+
+        const otpAuthUrl = authenticator.keyuri(
+          "" + user.id,
+          'ft_transcendance',
+          secret,
+        );
+
+        return { secret: secret, url: otpAuthUrl };
+    }
 
     async getUsername(method: string, data) : Promise<string> {
         switch(method) {
@@ -122,8 +144,13 @@ export class AuthService {
         return auth;
     }
 
-    getJwt(user: User) {
-        return jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+    getJwt(user: User, with2Fa: boolean = false) {
+        let twoFaRequired: boolean = false;
+
+        if (user.twoFaEnabled && !with2Fa)
+            twoFaRequired = true;
+
+        return jwt.sign({ id: user.id, twoFaRequired: twoFaRequired }, process.env.JWT_SECRET, { expiresIn: '1d' });
     }
 
     private async getUsername42(code: string): Promise<string> {

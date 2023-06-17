@@ -8,6 +8,8 @@ import { AuthService } from 'src/auth/auth.service';
 import { FriendRequestService } from 'src/friend-request/friend-request.service';
 import { FriendRequest } from 'src/friend-request/friend-request.entity';
 
+import { toDataURL } from 'qrcode';
+
 @Injectable()
 export class UserService {
     constructor(
@@ -85,7 +87,7 @@ export class UserService {
         return users;
     }
 
-    async register(method: string, data): Promise<string> {
+    async register(method: string, data): Promise<{ token: string, twoFaEnabled: boolean}> {
         const { username } = data;
         if (typeof username !== 'string') {
             throw new HttpException("", HttpStatus.BAD_REQUEST);
@@ -118,10 +120,10 @@ export class UserService {
         }
 
         await this.userRepository.save(user);
-        return this.authService.getJwt(user);
+        return { token: this.authService.getJwt(user), twoFaEnabled: user.twoFaEnabled };
     }
 
-    async login(method: string, data) : Promise<string> {
+    async login(method: string, data) : Promise<{ token: string, twoFaEnabled: boolean}> {
         let user: User;
 
         switch (method) {
@@ -135,10 +137,44 @@ export class UserService {
             }
         }
 
-        return this.authService.getJwt(user);
+        return { token: this.authService.getJwt(user), twoFaEnabled: user.twoFaEnabled };
     }
 
-    private async loginOrRegister(method: string, data) : Promise<string> {
+    async login2fa(id: number, code: string, withEnable: boolean = false) : Promise<string>
+    {
+        const user: User = await this.getUser(id);
+
+        if (!user.twoFaEnabled && !withEnable)
+            throw new HttpException("2fa not enabled", HttpStatus.BAD_REQUEST);
+
+        if (user.twoFaSecret == "")
+            throw new HttpException("2fa not enabled", HttpStatus.BAD_REQUEST);
+
+        if (!this.authService.is2faCodeValid(user, code))
+            throw new HttpException("Invalid code", HttpStatus.UNAUTHORIZED);
+
+        if (!user.twoFaEnabled)
+        {
+            user.twoFaEnabled = true;
+            await this.userRepository.save(user);
+        }
+
+        return this.authService.getJwt(user, true);
+    }
+
+    async generate2fa(id: number)
+    {
+        const user: User = await this.getUser(id);
+
+        const { secret, url } = this.authService.generate2faSecret(user);
+
+        user.twoFaSecret = secret;
+        await this.userRepository.save(user);
+
+        return await toDataURL(url);
+    }
+
+    private async loginOrRegister(method: string, data) : Promise<{ token: string, twoFaEnabled: boolean}> {
         let username: string = await this.authService.getUsername(method, data);
 
         data.username = username;
@@ -158,7 +194,7 @@ export class UserService {
             }
         }
 
-        return this.authService.getJwt(user);
+        return { token: this.authService.getJwt(user), twoFaEnabled: user.twoFaEnabled };
     }
 
     async getFriendRequestUser(user: User, requestId: number) : Promise<Object>
