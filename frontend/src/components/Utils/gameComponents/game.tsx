@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import "../../Styles/GameStyle.css";
 import * as request from "./gameRequest.tsx";
-import { gameCanvas } from "./gameCanvas.tsx";
 import { WebSocket } from "ws";
+import Canvas from "./canvas.tsx";
 
 interface BallData {
     x: number;
@@ -80,54 +80,58 @@ function GameComponent({ socket }) {
     const [isInviting, setIsInviting] = useState(false);
     const [isInvitingMe, setIsInvitingMe] = useState(false);
 
-    useEffect(() => {
-            const user = request.getMyself();
-            user.then((result) => {
-                setId(result.id);
-            });
-            socket.onmessage = (event) => {
-                const message = JSON.parse(event.data);
-                console.log(message);
-                if (message.action === "MatchMaking") {
-                    setIsMatchMaking(true);
-                }
-                if (message.action === "gameInvit") {
-                    setIsInvitingMe(true);
-                    setOpponentId(message.id);
-                }
-                if (message.action === "gameInvitAccepted") {
-                    setIsInvited(true);
-                    setOpponentId(message.id);
-                }
-                if (message.action === "gameInvitRefused") {
-                    setIsInviting(false);
-                }
-                if (message.action === "gameInvitCanceled") {
-                    setIsInvited(false);
-                }
-                if (message.action === "gameStart") {
-                    setIsInviting(false);
-                    setIsInvited(false);
-                    setIsInvitingMe(false);
-                    setData(message.data);
-                }
-                if (message.action === "padPosition") {
-                    if (message.id !== id) {
-                        setData(message.data);
-                    }
-                }
-                if (message.action === "ballPosition") {
-                    setData(message.data);
-                }
-                if (message.action === "score") {
-                    setData(message.data);
-                }
-            };
-    }, []);
+    // useEffect(() => {
+    //         const user = request.getMyself();
+    //         user.then((result) => {
+    //             setId(result.id);
+    //         });
+    //         socket.onmessage = (event) => {
+    //             const message = JSON.parse(event.data);
+    //             console.log(message);
+    //             if (message.action === "MatchMaking") {
+    //                 setIsMatchMaking(true);
+    //             }
+    //             if (message.action === "gameInvit") {
+    //                 setIsInvitingMe(true);
+    //                 setOpponentId(message.id);
+    //             }
+    //             if (message.action === "gameInvitAccepted") {
+    //                 setIsInvited(true);
+    //                 setOpponentId(message.id);
+    //             }
+    //             if (message.action === "gameInvitRefused") {
+    //                 setIsInviting(false);
+    //             }
+    //             if (message.action === "gameInvitCanceled") {
+    //                 setIsInvited(false);
+    //             }
+    //             if (message.action === "gameStart") {
+    //                 setIsInviting(false);
+    //                 setIsInvited(false);
+    //                 setIsInvitingMe(false);
+    //                 setData(message.data);
+    //             }
+    //             if (message.action === "padPosition") {
+    //                 if (message.id !== id) {
+    //                     setData(message.data);
+    //                 }
+    //             }
+    //             if (message.action === "ballPosition") {
+    //                 setData(message.data);
+    //             }
+    //             if (message.action === "score") {
+    //                 setData(message.data);
+    //             }
+    //         };
+    // }, []);
 
     return (
-        <div id="canvas-container">
-            <canvas id="gameCanvas"></canvas>
+        <div className="game">
+
+            <div className="canvas-game">
+                <Canvas width={window.innerWidth} height={window.innerHeight}
+                />
+            </div>
         </div>
     );
 } 

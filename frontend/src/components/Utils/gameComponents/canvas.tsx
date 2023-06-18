@@ -1,26 +1,41 @@
-import React from "react";
-import GameComponent from "./game";
+import React, { useRef, useEffect } from 'react'
 
-let canvas = document.getElementById("gameCanvas");
-let ctx = canvas.getContext("2d");
+type CanvasProps = React.DetailedHTMLProps<React.CanvasHTMLAttributes<HTMLCanvasElement>, HTMLCanvasElement>
 
-function drawBall(ctx) {
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2);
-    ctx.fillStyle = "white";
-    ctx.fill();
-    ctx.closePath();
+function drawBackground(ctx: CanvasRenderingContext2D) {
+    if (!ctx) return
+    ctx.fillStyle = 'black'
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height / 2)
 }
 
-function drawBoard(ctx) {
-    ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+function drawPaddle(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number) {
+    if (!ctx) return
+    ctx.fillStyle = 'white'
+    ctx.fillRect(x, y, width, height)
 }
 
-function draw() {
-    drawBoard(ctx);
-    drawBall(ctx);
-    requestAnimationFrame(draw);
+const Canvas: React.FC<CanvasProps> = ({ ...props }, BallData) => {
+
+    const canvasRef = useRef<HTMLCanvasElement>(null)
+    const ctx = canvasRef.current?.getContext('2d') as CanvasRenderingContext2D
+
+    drawBackground(ctx);
+    drawPaddle(ctx, 10, 34, 32, 32);
+
+    return <canvas 
+      width={props.width} 
+      height={props.height} 
+      // style={canvasStyle}
+      ref={canvasRef}
+    />
 }
 
-requestAnimationFrame(draw);
+const canvasStyle = {
+    width: '100%',
+    position: 'fixed',
+    top: '50%',
+    left: '50%',
+    border: '1px solid #11111'
+}
+
+export default Canvas
