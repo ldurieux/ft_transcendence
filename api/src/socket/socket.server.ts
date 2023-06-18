@@ -11,7 +11,9 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
     constructor(
         private jwtService: JwtService
     ) {}
+
     @WebSocketServer() server: WebSocket;
+    static serverRef;
 
     afterInit(server: WebSocket) {
         // console.log('Init');
@@ -24,6 +26,8 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
     
     @SubscribeMessage('auth')
     async handleAuth(@ConnectedSocket() client: WebSocket, @MessageBody('data') authHeader: any) {
+        SocketServer.serverRef = this.server;
+
         if (!authHeader || !authHeader.startsWith('Bearer ')) {
             client.terminate();
             console.log("Bearer")
@@ -51,6 +55,9 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
         this.broadcast(client.data.user, { event: "connect", data: { user: client.data.user } })
 
         for (const other of this.server.clients) {
+            if (other.data.user == null || other.data.user == undefined)
+                continue;
+
             const raw = JSON.stringify({ event: "connect", data: { user: other.data.user } })
             if (other.data.user != client.data.user)
                 client.send(raw)
@@ -61,15 +68,22 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
         const raw = JSON.stringify(data)
 
         for (const client of this.server.clients) {
+            if (client.data.user == null || client.data.user == undefined)
+                continue;
+
             if (client.data.user != from)
                 client.send(raw)
         }
     }
 
-
     handleDisconnect(client: WebSocket) {
-        this.broadcast(client.data.user, { event: "disconnect", data: { user: client.data.user } })
+        if (client.data.user != null && client.data.user != undefined)
+            this.broadcast(client.data.user, { event: "disconnect", data: { user: client.data.user } })
         console.log('Client disconnected');
+    }
+
+    static instance() {
+        return this.serverRef;
     }
 
     getServer() {

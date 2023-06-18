@@ -1,13 +1,9 @@
-import React, { Component } from "react";
+import React  from "react";
 import "../components/Styles/ProfileStyles.css";
 import { ProfileUser } from "../components/Utils/ProfileInfo.tsx";
-import UserContext from "../components/Utils/context.tsx";
 import Friendlist from "../components/Utils/friendlist.tsx";
 
-class Profile extends Component {
-    static contextType = UserContext;
-
-    render() {
+function Profile({socket}) {
 
     return (
         <div className="Profile">
@@ -19,12 +15,11 @@ class Profile extends Component {
                   <ProfileUser/>
               </div>
               <div className="Right">
-                  <Friendlist />
+                  <Friendlist socket={socket} />
               </div>
           </div>
         </div>
     );
-  }
 }
 
 export default Profile;

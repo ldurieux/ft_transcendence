@@ -1,14 +1,13 @@
-import React, {useEffect, useContext, useRef, useState} from 'react';
+import React, {useEffect} from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { PopupProvider } from "./components/Utils/chatComponents/PopupContext.tsx";
-import { SocketProvider, SocketContext } from "./components/Utils/context.tsx";
 
 const Header = React.lazy(() => import('./components/Header/index.tsx'));
 const FrontRoute = React.lazy(() => import('./components/redirect.tsx'));
 
 function App() {
     const url = `ws://${process.env.REACT_APP_WEB_HOST}:3001`;
-    const {setSocket} = useContext(SocketContext);
+    // const {setSocket} = useContext(SocketContext);
     const socket = new WebSocket(url);
 
     useEffect(() => {
@@ -16,30 +15,29 @@ function App() {
             const baguette = { event: 'auth', data: { data: `Bearer ${localStorage.getItem('token')}` } };
             socket.send(JSON.stringify(baguette));
             console.log('Connected to server');
-            setSocket(socket);
+            // setSocket(socket);
         };
 
         socket.onclose = () => {
             console.log('Disconnected from server');
         };
-
         // Clean up function
         return () => {
             socket.close();
         };
-    }, [setSocket, url]);
+    }, [url, socket]);
 
     return (
         <div className="App-header">
             <PopupProvider>
-                <SocketProvider>
+                {/*<SocketProvider>*/}
                     <div className="App">
                         <BrowserRouter>
                             <Header />
                             <FrontRoute socket={socket}/>
                         </BrowserRouter>
                     </div>
-                </SocketProvider>
+                {/*</SocketProvider>*/}
             </PopupProvider>
         </div>
     );

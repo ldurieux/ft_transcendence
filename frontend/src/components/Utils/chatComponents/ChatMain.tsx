@@ -6,14 +6,12 @@ import ChannelList from "../list.tsx";
 function ChatMain({socket}) {
     const [channelList, setChannelList] = useState([]);
     const [selectedList, setSelectedList] = useState("ChatMain");
-    const [message, setMessage] = useState("");
     const [showPopup, setShowPopup] = useState(false);
     const [ChannelName, setChannelName] = useState("");
     const [channel, setChannel] = useState(null);
     const [chanSettings, setChanSettings] = useState(false);
-    const [showList, setShowList] = useState(false);
     const [chanParams, setChanParams] = useState({});
-    const [user, setUser] = useState({});
+    const [user, setUser] = useState([]);
     const [ChannelPassword, setChannelPassword] = useState("");
     const [popupSelectedList, setPopupSelectedList] = useState("Join");
     const [check, setCheck] = useState(false);
@@ -50,22 +48,18 @@ function ChatMain({socket}) {
             catch (error) {
             }
         })();
-    }, []);
-
-    useEffect(() => {
-        if (socket) {
-            console.log("socket is set")
+        if (socket && !channel) {
             socket.onmessage = (e) => {
                 const data = JSON.parse(e.data);
-                if (data.event === "leave" && data.user === user.id) {
-                    const newChannelList = channelList.filter((item) => item.id !== channel.id);
-                    setChannelList(newChannelList);
-                    setChanSettings(null);
-                    setChannel(null);
+                if (data.event === "join" && data.data.user.id === user.id) {
+                    setChannelList([...channelList, data.data.channel]);
+                }
+                else if (data.event === "leave" && data.data.user.id === user.id) {
+                    setChannelList(channelList.filter((item) => item.id !== data.data.channel.id));
                 }
             }
         }
-    }, [socket]);
+    }, [socket, channelList]);
 
     // Function to handle button click and update the selected list
     function switchList(listType) {
@@ -124,7 +118,6 @@ function ChatMain({socket}) {
                     result = await post("channel", {type: "public", name: chan, password: ChannelPassword});
                 else
                     result = await post("channel", {type: "public", name: chan});
-                console.log(result)
                 if (result.status >= 400 && result.status <= 500) {
                     return;
                 } else {
@@ -138,7 +131,6 @@ function ChatMain({socket}) {
                 if (chan === "")
                     return;
                 result = await post("channel", {type: "private", name: chan});
-                console.log(result)
                 if (result.status >= 400 && result.status <= 500) {
                     return;
                 } else {
@@ -154,13 +146,11 @@ function ChatMain({socket}) {
 
     async function joinChannel(chan, password = "") {
         try {
-            console.log(password)
             let result;
             if (password === "")
                 result = await post("channel/join", { id: chan.id });
             else
                 result = await post("channel/join", { id: chan.id, password: password });
-            console.log(result)
             if (!result) {
                 return true;
             }

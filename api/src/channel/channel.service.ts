@@ -142,7 +142,16 @@ export class ChannelService {
         channel.users.push(user);
 
         for (const to of channel.users) {
-            this.websocket.sendTo(to.id, { event: "join", data: { channel: channel.id, user: user } })
+            this.websocket.sendTo(to.id, {
+                event: "join", data: {
+                    channel: {
+                        id: channel.id,
+                        type: channel.type,
+                        display_name: channel.display_name,
+                    },
+                    user: user
+                }
+            })
         }
 
         await this.channelRepository.save(channel);
@@ -397,6 +406,29 @@ export class ChannelService {
         if (!channel) {
             throw new HttpException("ChatMain does not exist", HttpStatus.NOT_FOUND);
         }
+
+        if (withUsers)
+        {
+            for (let i = 0; i < channel.users.length; i++) {
+                if (this.websocket.isOnline(channel.users[i].id) == true)
+                    channel.users[i]["status"] = "online";
+                else
+                    channel.users[i]["status"] = "offline";
+            }
+            for (let i = 0; i < channel.admins.length; i++) {
+                if (this.websocket.isOnline(channel.admins[i].id) == true)
+                    channel.admins[i]["status"] = "online";
+                else
+                    channel.admins[i]["status"] = "offline";
+            }
+            if (channel.owner) {
+                if (this.websocket.isOnline(channel.owner.id) == true)
+                    channel.owner["status"] = "online";
+                else
+                    channel.owner["status"] = "offline";
+            }
+        }
+
         return channel;
     }
 

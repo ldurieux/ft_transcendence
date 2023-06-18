@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { get, post } from "./Request.tsx";
 import Popup from "./popup.tsx";
 
-function Friendlist() {
+function Friendlist({socket}) {
     const [list, setList] = useState([]);
     const [friend, setFriend] = useState("");
     const [request, setRequest] = useState([]);
@@ -14,6 +14,30 @@ function Friendlist() {
     const popupCloseHandler = (e) => {
         setShow(e);
     };
+
+    useEffect(() => {
+        if (socket)
+        {
+            socket.onmessage = (e) => {
+                const data = JSON.parse(e.data);
+                if (data.event === "connect")
+                {
+                    //if user connected is one of your friends
+                    //set his status to online in list
+                    if (list.some((item) => item.id === data.data.user))
+                    {
+                        setList(list.map((item) => {
+                            if (item.id === data.data.user)
+                            {
+                                item.status = "online";
+                            }
+                            return item;
+                        }));
+                    }
+                }
+            }
+        }
+    }, [list, socket])
 
     async function RemoveFriend(selectedFriend) {
         try {
@@ -125,22 +149,23 @@ function Friendlist() {
             setRequest(result.receivedRequests);
             setBlocked(result.blocked);
         })();
-    }, []);
+    }, [list]);
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            (async () => {
-                const result = await get("user/self");
-                setList(result.friends);
-                setRequest(result.receivedRequests);
-            })();
-        }, 3000);
-        return () => clearInterval(interval);
-    }, []);
+    // useEffect(() => {
+    //     const interval = setInterval(() => {
+    //         (async () => {
+    //             const result = await get("user/self");
+    //             setList(result.friends);
+    //             setRequest(result.receivedRequests);
+    //         })();
+    //     }, 3000);
+    //     return () => clearInterval(interval);
+    // }, []);
 
     return (
         <div>
             <Popup
+
                 title={list[selectedFriendIndex]?.display_name}
                 show={selectedFriendIndex !== null}
                 onClose={popupCloseHandler}
@@ -152,6 +177,7 @@ function Friendlist() {
                                 alt={list[selectedFriendIndex]?.display_name}
                                 src={list[selectedFriendIndex]?.profile_picture ?? defaultAvatar}/>
                             <p>{list[selectedFriendIndex]?.display_name}</p>
+                            <p>{list[selectedFriendIndex].status}</p>
                         </div>
                         <div className="FriendsOptions">
                         <ul>

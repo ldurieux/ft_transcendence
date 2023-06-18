@@ -33,3 +33,161 @@
     padding-left: 10px;
     padding-right: 10px;
 }
+
+.TwoFA {
+    background-color: #1e2122;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+ .EnableTwoFA {
+    background-color: limegreen;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+ .EnableTwoFA button {
+    background-color: #00babc;
+    border: none;
+
+    display: block;
+    line-height: 1.6em;
+    font-size: 1.8em;
+    border-radius: .32em;
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+    text-transform: uppercase;
+
+    text-decoration: none;
+    font-family: "Futura PT", "Futura", "Helvetica";
+
+    width: 400px;
+}
+
+    .EnableTwoFA:hover {
+        cursor: pointer;
+        opacity: 0.5;
+        transition: 0.3s ease;
+    }
+
+ .DisableTwoFA {
+    background-color: #1e2122;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+ .DisableTwoFA button {
+    background-color: red;
+    border: none;
+     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    display: block;
+    line-height: 1.6em;
+    font-size: 1.8em;
+    border-radius: .32em;
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+    text-transform: uppercase;
+
+    text-decoration: none;
+    font-family: "Futura PT", "Futura", "Helvetica";
+
+    width: 400px;
+}
+
+ .DisableTwoFA button:hover {
+    cursor: pointer;
+    opacity: 0.5;
+    transition: 0.3s ease;
+}
+
+.Popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh!important;
+    width: 100vw!important;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.Popup .Popup-inner {
+    background: #1e2122;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.Popup .Popup-inner .Popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    color: white;
+}
+
+.Popup .Popup-inner .Popup-header .Popup-close {
+    background-color: #00babc;
+    border: none;
+
+    display: block;
+    line-height: 1.6em;
+    font-size: 1.8em;
+    border-radius: .32em;
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+    text-transform: uppercase;
+
+    text-decoration: none;
+    font-family: "Futura PT", "Futura", "Helvetica";
+
+    width: 100px;
+}
+
+.Popup .Popup-inner .Popup-header .Popup-close:hover {
+    cursor: pointer;
+    opacity: 0.5;
+    transition: 0.3s ease;
+}
+
+.Popup .Popup-inner .Popup-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    color: white;
+}
+
+.Popup .Popup-inner .Popup-body input {
+    background-color: #1e2122;
+    border: none;
+    border-bottom: 1px solid white;
+    color: white;
+    font-size: 1.2em;
+    padding: 10px;
+    margin-bottom: 20px;
+    width: 100%;
+}

@@ -53,6 +53,8 @@
     padding: 0;
     margin: 0;
     text-align: center;
+    overflow: scroll;
+    max-height: 300px;
 }
 
 .popup-settings .popup-settings-inner .popup-settings-content ul li {
