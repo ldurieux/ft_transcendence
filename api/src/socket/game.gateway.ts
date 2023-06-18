@@ -146,20 +146,23 @@ export class GameGateway {
     }
 
     @UseGuards(SocketGuard)
-    @SubscribeMessage('padPosition')
-    async receivePadPosition(@ConnectedSocket() client: WebSocket, @MessageBody( new ValidationPipe()) data: {paddleY: number}) {
-        const user = await this.userService.getUser(this.socketServer.getId(client));
-        this.gameService.updatePadPosition(user.id, data.paddleY);
+    @SubscribeMessage('movePad')
+    async receivePadPosition(@ConnectedSocket() client: WebSocket, @MessageBody( new ValidationPipe()) data: {id: number, paddleAction: string}) {
+        console.log(data);
+        const user: User = await this.userService.getUser(data.id);
+        this.gameService.updatePadPosition(user.id, data.paddleAction);
     }
 
-    async sendPadPosition(id: number, paddleY: number, screen: GameScreen) {
-        const client = this.socketServer.getSocket(id);
+    async sendPadPosition(myId: number, idFriend: number, paddleY: number, screen: GameScreen) {
+        const myClient = this.socketServer.getSocket(myId);
+        const client = this.socketServer.getSocket(idFriend);
         if (client.readyState !== client.OPEN)
         {
-            this.gameService.playerDisconnect(id);
+            this.gameService.playerDisconnect(idFriend);
             return;
         }
-        client.send(JSON.stringify({type: 'padPosition', position: paddleY, screen: screen}));
+        myClient.send(JSON.stringify({type: 'movePad', position: paddleY, screen: screen}));
+        client.send(JSON.stringify({type: 'movePad', position: paddleY, screen: screen}));
     }
 
     async sendBallData(gameData: GameData) {

@@ -67,7 +67,7 @@ export class GameService {
     }
 
     GameMap: Map<PlayerId, Data>;
-    private screen: GameScreen = {width: 800, height: 600};
+    private screen: GameScreen = {width: 1000, height: 1000};
 
     async PongGame(player1: number, player2: number) {
         let gameData: Data
@@ -202,18 +202,24 @@ export class GameService {
         }
     }
 
-    async updatePadPosition(playerId: number, position: number)
+    async updatePadPosition(playerId: number, paddleAction: string)
     {
         let gameData: Data = this.find(playerId);
         if (gameData.playerId.player1Id === playerId)
         {
-            gameData.paddle1.y = position;
-            this.gameGateway.sendPadPosition(gameData.playerId.player2Id, position, gameData.screen);
+            if (paddleAction === "up")
+                gameData.paddle1.y += 5;
+            else
+                gameData.paddle1.y -= 5;
+            this.gameGateway.sendPadPosition(gameData.playerId.player2Id, gameData.playerId.player1Id ,gameData.paddle1.y ,gameData.screen);
         }
         else
         {
-            gameData.paddle2.y = position;
-            this.gameGateway.sendPadPosition(gameData.playerId.player1Id, position, gameData.screen);
+            if (paddleAction === "up")
+                gameData.paddle2.y += 5;
+            else
+                gameData.paddle2.y -= 5;
+            this.gameGateway.sendPadPosition(gameData.playerId.player1Id, gameData.playerId.player2Id,gameData.paddle2.y ,gameData.screen);
         }
     }
 

@@ -38,8 +38,10 @@ interface Data {
     originalScreen: Screen;
 }
 
+let paddlePosition: number = 0;
+
 function GameComponent({ socket }) {
-    const [data, setData] = useState<Data>({
+    const [gameData, setData] = useState<Data>({
         ball: {
             x: 0,
             y: 0,
@@ -73,12 +75,14 @@ function GameComponent({ socket }) {
         },
     });
 
+
     const [id, setId] = useState(0);
     const [opponentId, setOpponentId] = useState(0);
     const [isMatchMaking, setIsMatchMaking] = useState(false);
     const [isInvited, setIsInvited] = useState(false);
     const [isInviting, setIsInviting] = useState(false);
     const [isInvitingMe, setIsInvitingMe] = useState(false);
+    const [yaxe, setYaxe] = useState(0);
 
     // useEffect(() => {
     //         const user = request.getMyself();
@@ -125,11 +129,46 @@ function GameComponent({ socket }) {
     //         };
     // }, []);
 
+
+    const movePad = (event) => {
+        if (event.key === "ArrowUp") {
+            // socket.emit(
+            //     'movePad',
+            //     {id: id, direction: "up"}
+            // );
+        }
+        if (event.key === "ArrowDown") {
+            const data = {id: id, paddleAction: "down"};
+            const json = JSON.stringify(data);
+            socket.send(JSON.stringify(
+                {
+                    event: "movePad",
+                    data: json,
+                }
+            )
+            );
+        }
+    };
+
+
+    useEffect(() => {
+        if (socket) {
+            document.addEventListener("keydown", movePad);
+            document.addEventListener("keyup", movePad);
+            socket.onmessage = (event) => {
+                const message = JSON.parse(event.data);
+                console.log(message);
+            }
+        }
+    }, [socket]);
+
+    console.log(paddlePosition);
+    
     return (
         <div className="game">
 
             <div className="canvas-game">
-                <Canvas />
+                <Canvas paddle={paddlePosition} />
             </div>
         </div>
     );
