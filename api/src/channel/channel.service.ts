@@ -421,10 +421,12 @@ export class ChannelService {
                 else
                     channel.admins[i]["status"] = "offline";
             }
-            if (this.websocket.isOnline(channel.owner.id) == true)
-                channel.owner["status"] = "online";
-            else
-                channel.owner["status"] = "offline";
+            if (channel.owner) {
+                if (this.websocket.isOnline(channel.owner.id) == true)
+                    channel.owner["status"] = "online";
+                else
+                    channel.owner["status"] = "offline";
+            }
         }
 
         return channel;

@@ -77,7 +77,8 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
     }
 
     handleDisconnect(client: WebSocket) {
-        this.broadcast(client.data.user, { event: "disconnect", data: { user: client.data.user } })
+        if (client.data.user != null && client.data.user != undefined)
+            this.broadcast(client.data.user, { event: "disconnect", data: { user: client.data.user } })
         console.log('Client disconnected');
     }
 
