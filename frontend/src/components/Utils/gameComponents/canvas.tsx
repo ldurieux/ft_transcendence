@@ -14,28 +14,31 @@ function drawPaddle(ctx: CanvasRenderingContext2D, x: number, y: number, width: 
     ctx.fillRect(x, y, width, height)
 }
 
-const Canvas: React.FC<CanvasProps> = ({ ...props }, BallData) => {
+function Canvas() {
+  const canvasRef = useRef<HTMLCanvasElement>(null)
 
-    const canvasRef = useRef<HTMLCanvasElement>(null)
-    const ctx = canvasRef.current?.getContext('2d') as CanvasRenderingContext2D
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
 
-    drawBackground(ctx);
-    drawPaddle(ctx, 10, 34, 32, 32);
-
-    return <canvas 
-      width={props.width} 
-      height={props.height} 
-      // style={canvasStyle}
-      ref={canvasRef}
-    />
+    
+    if (ctx) {
+      ctx.fillStyle = 'black';
+      //rectangle width must be 100% of the canvas width
+      ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+      drawPaddle(ctx, 0, 50, 5, 40);
+      drawPaddle(ctx, ctx.canvas.width - 5, 50, 5, 40);
+    }
+  }, [])
+return <canvas ref={canvasRef} style={canvasStyle}></canvas>
 }
 
 const canvasStyle = {
     width: '100%',
-    position: 'fixed',
-    top: '50%',
-    left: '50%',
-    border: '1px solid #11111'
+    height: '50%',
+    position: 'absolute',
+    top: '25%',
+    border: '1px solid white'
 }
 
 export default Canvas

@@ -129,8 +129,7 @@ function GameComponent({ socket }) {
         <div className="game">
 
             <div className="canvas-game">
-                <Canvas width={window.innerWidth} height={window.innerHeight}
-                />
+                <Canvas />
             </div>
         </div>
     );

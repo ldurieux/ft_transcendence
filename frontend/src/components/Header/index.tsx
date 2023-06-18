@@ -39,6 +39,9 @@ const Header = () => {
 
 
   return (
+    // if we are on /Game, we don't want to display the header
+    
+    window.location.pathname === "/Game" ? null :
       <div>
           <div className={`sidebar ${isSidebarOpen ? "close" : ""}`}>
           <div className="logo-details">
@@ -105,6 +108,7 @@ const Header = () => {
                 </div>
           </section>
       </div>
+    
 
   );
 };
