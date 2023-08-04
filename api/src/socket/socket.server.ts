@@ -3,14 +3,20 @@ import { OnGatewayConnection, OnGatewayDisconnect, MessageBody, OnGatewayInit ,S
 import { JwtService } from '@nestjs/jwt';
 import { Injectable } from '@nestjs/common';
 
+import { GameReply } from './game.reply';
+
+import { Deque } from 'double-ended-queue';
+
 @Injectable()
 @WebSocketGateway({ 
     transports: ['websocket']
 })
 export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
     constructor(
-        private jwtService: JwtService
+        private jwtService: JwtService,
+        private gameReply: GameReply,
     ) {}
+
 
     @WebSocketServer() server: WebSocket;
     static serverRef;

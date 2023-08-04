@@ -10,7 +10,8 @@ import { FriendRequestService } from '../friend-request/friend-request.service';
 
 import { User } from 'src/user/user.entity';
 
-import { GameGateway } from 'src/socket/game.gateway';
+import { GameControler } from './game.controler';
+import { GameReply } from 'src/socket/game.reply';
 
 @Module({
     imports: [
@@ -19,6 +20,6 @@ import { GameGateway } from 'src/socket/game.gateway';
         TypeOrmModule.forFeature([FriendRequest]),
         TypeOrmModule.forFeature([Game]),
     ],
-    providers: [AuthService, FriendRequestService],
+    providers: [AuthService, FriendRequestService, GameControler, GameReply],
 })
 export class GameModule {}

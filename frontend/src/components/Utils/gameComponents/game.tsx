@@ -3,6 +3,7 @@ import "../../Styles/GameStyle.css";
 import * as request from "./gameRequest.tsx";
 import { WebSocket } from "ws";
 import Canvas from "./canvas.tsx";
+import { log } from "console";
 
 interface BallData {
     x: number;
@@ -138,15 +139,9 @@ function GameComponent({ socket }) {
             // );
         }
         if (event.key === "ArrowDown") {
-            const data = {id: id, paddleAction: "down"};
-            const json = JSON.stringify(data);
-            socket.send(JSON.stringify(
-                {
-                    event: "movePad",
-                    data: json,
-                }
-            )
-            );
+            console.log("down");
+            const data = {event: 'movePad', data: {id: id, paddleAction: "down"}};
+            socket.send(JSON.stringify(data));
         }
     };
 

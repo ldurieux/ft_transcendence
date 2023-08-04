@@ -15,6 +15,7 @@ import { AuthModule } from 'src/auth/auth.module';
 import { FriendRequestModule } from 'src/friend-request/friend-request.module';
 import { AuthService } from 'src/auth/auth.service';
 import { FriendRequestService } from 'src/friend-request/friend-request.service';
+import { SocketServer } from 'src/socket/socket.server';
 
 @Module({
   imports: [
