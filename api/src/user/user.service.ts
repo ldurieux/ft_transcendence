@@ -57,6 +57,28 @@ export class UserService {
         return user;
     }
 
+    async getFriendUser(id: number, self: boolean = false): Promise<User[]> {
+        const user = await this.userRepository.findOne({
+            where: {
+                id: id
+            },
+            relations: {
+                friends: self,
+            }
+        })
+        if (!user) {
+            throw new HttpException("User does not exist", HttpStatus.NOT_FOUND);
+        }
+
+        if (self) 
+        {
+            for (let i = 0; i < user.friends.length; i++)
+                user.friends[i] = await this.getUser(user.friends[i].id, false, true);
+        }
+
+        return user.friends;
+    }
+
     isOnline(userId: number): boolean
     {
         const websocket = SocketServer.instance();

@@ -7,10 +7,8 @@ import { JwtService } from '@nestjs/jwt';
 
 import { UserService } from 'src/user/user.service';
 
-import { GameService } from 'src/game/game.service';
-
 @Module({
-    providers: [ChatGateway, SocketServer, SocketGuard, JwtService, UserService, GameService],
+    providers: [ChatGateway, SocketServer, SocketGuard, JwtService, UserService],
   })
 
   export class SocketServerModule {}

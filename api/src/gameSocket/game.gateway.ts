@@ -7,29 +7,35 @@ import { WebSocket } from 'ws';
 
 import { JwtService } from '@nestjs/jwt';
 
+import { GameService } from '../game/game.service';
+
 @Injectable()
 @WebSocketGateway({
-    transports: ['websocket']
+    transports: ['websocket'],
+    port: 3002
 })
 export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
+    private gameInstance: Set<number>;
     constructor(
         private jwtService: JwtService,
-    ) {}
+        private readonly gameService: GameService,
+    ) {
+        this.gameInstance = new Set<number>();
+    }
 
     @WebSocketServer() server: WebSocket;
     static serverRef;
 
     afterInit(server: WebSocket) {
-        // console.log('Init');
     }
 
     handleConnection(client: WebSocket) {
         client.data = {}
-        console.log('Client isConnected');
+        console.log('Client isConnected to game');
     }
     
     handleDisconnect(client: WebSocket) {
-        console.log('Client disconnected');
+        console.log('Client disconnected to game');
     }
 
     getSocket(id: number): WebSocket {
@@ -44,6 +50,30 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     getClientId(client: WebSocket): number {
         return client.data.user;
     }
+
+    paddleMove(client: WebSocket, data: {direction: number, gameId: number}) {
+        this.gameService.movePadle(client.data.id, data.direction, data.gameId);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     // private clientWaitingStack: Deque<number>;
 
@@ -114,123 +144,122 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     //     this.gameStart(data.id, data.friendId);
     // }
 
-    @UseGuards(SocketGuard)
-    @SubscribeMessage('padPosition')
-    async receivePadPosition(@ConnectedSocket() client: WebSocket, @MessageBody( new ValidationPipe()) data: {paddleY: number}) {
-        const user = await this.userService.getUser(this.socketServer.getId(client));
-        this.gameService.updatePadPosition(user.id, data.paddleY);
-    }
+    // @UseGuards(SocketGuard)
+    // @SubscribeMessage('padPosition')
+    // async receivePadPosition(@ConnectedSocket() client: WebSocket, @MessageBody( new ValidationPipe()) data: {paddleY: number}) {
+    //     const user = await this.userService.getUser(this.socketServer.getId(client));
+    //     this.gameService.updatePadPosition(user.id, data.paddleY);
+    // }
 
-    async sendPadPosition(id: number, paddleY: number, screen: GameScreen) {
-        const client = this.socketServer.getSocket(id);
-        if (client.readyState !== client.OPEN)
-        {
-            this.gameService.playerDisconnect(id);
-            return;
-        }
-        client.send(JSON.stringify({type: 'padPosition', position: paddleY, screen: screen}));
-    }
+    // async sendPadPosition(id: number, paddleY: number, screen: GameScreen) {
+    //     const client = this.socketServer.getSocket(id);
+    //     if (client.readyState !== client.OPEN)
+    //     {
+    //         this.gameService.playerDisconnect(id);
+    //         return;
+    //     }
+    //     client.send(JSON.stringify({type: 'padPosition', position: paddleY, screen: screen}));
+    // }
 
-    async sendBallData(gameData: GameData) {
+    // async sendBallData(gameData: GameData) {
 
-        const client1 = this.socketServer.getSocket(gameData.playerId.player1Id);
-        const client2 = this.socketServer.getSocket(gameData.playerId.player2Id);
-        if (client1.readyState !== client1.OPEN)
-        {
-            this.gameService.playerDisconnect(gameData.playerId.player1Id);
-            return;
-        }
-        if (client2.readyState !== client2.OPEN)
-        {
-            this.gameService.playerDisconnect(gameData.playerId.player2Id);
-            return;
-        }
-        client1.send(JSON.stringify({type: 'ballData', ball: gameData.ball, screen: gameData.screen}));
-        client2.send(JSON.stringify({type: 'ballData', ball: gameData.ball, screen: gameData.screen}));
-    }
+    //     const client1 = this.socketServer.getSocket(gameData.playerId.player1Id);
+    //     const client2 = this.socketServer.getSocket(gameData.playerId.player2Id);
+    //     if (client1.readyState !== client1.OPEN)
+    //     {
+    //         this.gameService.playerDisconnect(gameData.playerId.player1Id);
+    //         return;
+    //     }
+    //     if (client2.readyState !== client2.OPEN)
+    //     {
+    //         this.gameService.playerDisconnect(gameData.playerId.player2Id);
+    //         return;
+    //     }
+    //     client1.send(JSON.stringify({type: 'ballData', ball: gameData.ball, screen: gameData.screen}));
+    //     client2.send(JSON.stringify({type: 'ballData', ball: gameData.ball, screen: gameData.screen}));
+    // }
 
-    async sendScoreData(gameData: GameData) {
-        const client1 = this.socketServer.getSocket(gameData.playerId.player1Id);
-        const client2 = this.socketServer.getSocket(gameData.playerId.player2Id);
-        if (client1.readyState !== client1.OPEN)
-        {
-            this.gameService.playerDisconnect(gameData.playerId.player1Id);
-            return;
-        }
-        if (client2.readyState !== client2.OPEN)
-        {
-            this.gameService.playerDisconnect(gameData.playerId.player2Id);
-            return;
-        }
-        client1.send(JSON.stringify({type: 'scoreData', score: gameData.score}));
-        client2.send(JSON.stringify({type: 'scoreData', score: gameData.score}));
-    }
+    // async sendScoreData(gameData: GameData) {
+    //     const client1 = this.socketServer.getSocket(gameData.playerId.player1Id);
+    //     const client2 = this.socketServer.getSocket(gameData.playerId.player2Id);
+    //     if (client1.readyState !== client1.OPEN)
+    //     {
+    //         this.gameService.playerDisconnect(gameData.playerId.player1Id);
+    //         return;
+    //     }
+    //     if (client2.readyState !== client2.OPEN)
+    //     {
+    //         this.gameService.playerDisconnect(gameData.playerId.player2Id);
+    //         return;
+    //     }
+    //     client1.send(JSON.stringify({type: 'scoreData', score: gameData.score}));
+    //     client2.send(JSON.stringify({type: 'scoreData', score: gameData.score}));
+    // }
 
-    async gameStart(id: number, friendId: number) {
-        this.InGame.add(id);
-        this.InGame.add(friendId);
-        this.gameService.PongGame(id, friendId);
-    }
+    // async gameStart(id: number, friendId: number) {
+    //     this.InGame.add(id);
+    //     this.InGame.add(friendId);
+    //     this.gameService.PongGame(id, friendId);
+    // }
 
-    async endGame(winner: number, loser: number, disconnect: boolean = false) {
-        this.InGame.delete(winner);
-        this.InGame.delete(loser);
-        const winnerSocket = this.socketServer.getSocket(winner);
-        const loserSocket = this.socketServer.getSocket(loser);
-        if (disconnect)
-        {
-            if (winnerSocket.readyState === winnerSocket.OPEN)
-                winnerSocket.send(JSON.stringify({type: 'gameEnd', win: true, disconnect: true}));
-        }
-        else
-        {
-            if (winnerSocket.readyState === winnerSocket.OPEN)
-                winnerSocket.send(JSON.stringify({type: 'gameEnd', win: true, disconnect: false}));
-            if (loserSocket.readyState === loserSocket.OPEN)
-                loserSocket.send(JSON.stringify({type: 'gameEnd', win: false, disconnect: false}));
-        }
-    }
+    // async endGame(winner: number, loser: number, disconnect: boolean = false) {
+    //     this.InGame.delete(winner);
+    //     this.InGame.delete(loser);
+    //     const winnerSocket = this.socketServer.getSocket(winner);
+    //     const loserSocket = this.socketServer.getSocket(loser);
+    //     if (disconnect)
+    //     {
+    //         if (winnerSocket.readyState === winnerSocket.OPEN)
+    //             winnerSocket.send(JSON.stringify({type: 'gameEnd', win: true, disconnect: true}));
+    //     }
+    //     else
+    //     {
+    //         if (winnerSocket.readyState === winnerSocket.OPEN)
+    //             winnerSocket.send(JSON.stringify({type: 'gameEnd', win: true, disconnect: false}));
+    //         if (loserSocket.readyState === loserSocket.OPEN)
+    //             loserSocket.send(JSON.stringify({type: 'gameEnd', win: false, disconnect: false}));
+    //     }
+    // }
 
-    async sendData(GameData: GameData) {
-        const socket1 = this.socketServer.getSocket(GameData.playerId.player1Id);
-        const socket2 = this.socketServer.getSocket(GameData.playerId.player2Id);
-        if (socket1.readyState !== socket1.OPEN)
-        {
-            this.gameService.playerDisconnect(GameData.playerId.player1Id);
-            return;
-        }
-        if (socket2.readyState !== socket2.OPEN)
-        {
-            this.gameService.playerDisconnect(GameData.playerId.player2Id);
-            return;
-        }
-        socket1.send(JSON.stringify({type: 'gameData', data: GameData}));
-        socket2.send(JSON.stringify({type: 'gameData', data: GameData}));
-    }
+    // async sendData(GameData: GameData) {
+    //     const socket1 = this.socketServer.getSocket(GameData.playerId.player1Id);
+    //     const socket2 = this.socketServer.getSocket(GameData.playerId.player2Id);
+    //     if (socket1.readyState !== socket1.OPEN)
+    //     {
+    //         this.gameService.playerDisconnect(GameData.playerId.player1Id);
+    //         return;
+    //     }
+    //     if (socket2.readyState !== socket2.OPEN)
+    //     {
+    //         this.gameService.playerDisconnect(GameData.playerId.player2Id);
+    //         return;
+    //     }
+    //     socket1.send(JSON.stringify({type: 'gameData', data: GameData}));
+    //     socket2.send(JSON.stringify({type: 'gameData', data: GameData}));
+    // }
 
-    async delay(ms: number) {
-        return new Promise( resolve => setTimeout(resolve, ms) );
-    }
+    // async delay(ms: number) {
+    //     return new Promise( resolve => setTimeout(resolve, ms) );
+    // }
 
-    async synchronizePlayer(gameData: GameData)
-    {
-        const client1 = this.socketServer.getSocket(gameData.playerId.player1Id);
-        const client2 = this.socketServer.getSocket(gameData.playerId.player2Id);
-        await this.delay(3000);
-        client1.send({type: "start"});
-        client2.send({type: "start"});
-    }
+    // async synchronizePlayer(gameData: GameData)
+    // {
+    //     const client1 = this.socketServer.getSocket(gameData.playerId.player1Id);
+    //     const client2 = this.socketServer.getSocket(gameData.playerId.player2Id);
+    //     await this.delay(3000);
+    //     client1.send({type: "start"});
+    //     client2.send({type: "start"});
+    // }
 
-    @UseGuards(SocketGuard)
-    @SubscribeMessage('userStatus')
-    async takeUserStatus(client: WebSocket, id: number) {
-        if (this.InGame.has(id))
-        {
-            client.send(JSON.stringify({type: 'userStatus', status: 'InGame'}));
-        }
-        else
-        {
-            client.send(JSON.stringify({type: 'userStatus', status: 'Available'}));
-        }
-    }
-}
+    // @UseGuards(SocketGuard)
+    // @SubscribeMessage('userStatus')
+    // async takeUserStatus(client: WebSocket, id: number) {
+    //     if (this.InGame.has(id))
+    //     {
+    //         client.send(JSON.stringify({type: 'userStatus', status: 'InGame'}));
+    //     }
+    //     else
+    //     {
+    //         client.send(JSON.stringify({type: 'userStatus', status: 'Available'}));
+    //     }
+    // }

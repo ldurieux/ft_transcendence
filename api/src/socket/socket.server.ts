@@ -3,7 +3,7 @@ import { OnGatewayConnection, OnGatewayDisconnect, MessageBody, OnGatewayInit ,S
 import { JwtService } from '@nestjs/jwt';
 import { Injectable } from '@nestjs/common';
 
-import { GameReply } from './game.reply';
+// import { GameReply } from './game.reply';
 
 import { Deque } from 'double-ended-queue';
 
@@ -14,18 +14,18 @@ import { Deque } from 'double-ended-queue';
 export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
     constructor(
         private jwtService: JwtService,
-        private gameReply: GameReply,
+        // private gameReply: GameReply,
     ) {}
 
 
     @WebSocketServer() server: WebSocket;
     static serverRef;
 
-    afterInit(server: WebSocket) {
+    async afterInit(server: WebSocket) {
         // console.log('Init');
     }
 
-    handleConnection(client: WebSocket) {
+    async handleConnection(client: WebSocket) {
         client.data = {}
         console.log('Client isConnected');
     }
@@ -82,7 +82,7 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
         }
     }
 
-    handleDisconnect(client: WebSocket) {
+    async handleDisconnect(client: WebSocket) {
         if (client.data.user != null && client.data.user != undefined)
             this.broadcast(client.data.user, { event: "disconnect", data: { user: client.data.user } })
         console.log('Client disconnected');

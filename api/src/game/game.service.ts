@@ -6,61 +6,34 @@ import { Game } from './game.entity';
 
 import { UserService } from 'src/user/user.service';
 
-import { SocketServer } from 'src/socket/socket.server';
+import { GameReply } from 'src/socket/game.reply';
 
 import * as gameInterface from './gameInterface';
 
-import { Deque } from 'double-ended-queue';
-
-import { GameReply } from 'src/socket/game.reply';
-
-
-
 @Injectable()
 export class GameService {
+
+    private gameInstance: Map<number, gameInterface.Game>;
+
     constructor(
         private readonly gameRepository: Repository<Game>,
         private readonly userService: UserService,
     ) {}
 
-    // private waitingStack: Deque<gameInterface.WaitingPlayer>;
+    async createGame(player1: number, player2: number, typeOfGame: number) {
+        const game = new gameInterface.Game();
+        game.gameInit(typeOfGame, player1, player2);
+        const gameId: number = Math.floor(Math.random() * 1000000000);
+        this.gameInstance.set(gameId, game);
+    }
 
-    // async addWaitingPlayer(game: gameInterface.WaitingPlayer)
-    // {
-    //     this.waitingStack.push(game);
-    // }
-
-    // async deleteWaitingPlayer(game: gameInterface.WaitingPlayer)
-    // {
-    //     this.waitingStack.removeOne(game);
-    // }
-
-    // async getWaitingPlayer(id: number): Promise<gameInterface.WaitingPlayer | undefined>
-    // {
-    //     for (const game of this.waitingStack)
-    //     {
-    //         if (game.player1Id === id || game.player2Id === id)
-    //             return game;
-    //     }
-    //     return undefined;
-    // }
+    async movePadle(playerId: number, direction: number, gameId: number) {
+        const game = this.gameInstance.get(gameId);
+        game.movePaddle(playerId, direction);
+    }
 }
 
-//     find(playerId: number): Data | undefined {
-//         for (const [key, value] of this.GameMap) {
-//             if (key.player1Id === playerId || key.player2Id === playerId) {
-//                 return value;
-//             }
-//         }
-//         return undefined;
-//     }
-
-//     GameMap: Map<PlayerId, Data>;
-//     private screen: GameScreen = {width: 1000, height: 1000};
-
-//     async PongGame(player1: number, player2: number) {
-//         let gameData: Data
-//         gameData.screen = this.screen;
+//     async PongGame(gameInstance: gameInterface.GameInstance) {
 //         this.initBall(gameData);
 //         this.initPaddles(gameData);
 //         gameData.playerId.player1Id = player1;
@@ -103,6 +76,7 @@ export class GameService {
 //         }
 //     }
 
+
 //     private async resetBoard(gameData: Data) {
 //         this.initBall(gameData);
 //         this.initPaddles(gameData);
@@ -123,6 +97,7 @@ export class GameService {
 //             gameData.ball.vectorRadians = rad;
 //     }
 
+
 //     private async initPaddles(gameData: Data) {
 //         gameData.paddle1.y = this.screen.height / 2;
 //         gameData.paddle1.x = this.screen.width - 20;
@@ -134,62 +109,6 @@ export class GameService {
 //         gameData.paddle2.height = 100;
 //     }
 
-//     private async updateScore(gameData: Data, playerId: number, player1Disconnect: boolean = false, player2Disconnect: boolean = false) {
-//         if (playerId === gameData.playerId.player1Id)
-//         {
-//             gameData.score.player1Score++;
-//             if (gameData.score.player1Score >= 10 || player2Disconnect)
-//             {
-//                 let game1 = new Game();
-//                 game1.myEnemy = await this.userService.getUser(gameData.playerId.player2Id, true);
-//                 game1.myScore = gameData.score.player1Score;
-//                 game1.enemyScore = gameData.score.player2Score;
-//                 this.gameRepository.save(game1);
-//                 this.userService.getUser(gameData.playerId.player1Id, true).then((user) => {
-//                     user.game.push(game1);
-//                     user.games_won++;
-//                     user.games_played++;
-//                 });
-//                 let game2 = new Game();
-//                 game2.myEnemy = await this.userService.getUser(gameData.playerId.player1Id, true);
-//                 game2.myScore = gameData.score.player2Score;
-//                 game2.enemyScore = gameData.score.player1Score;
-//                 this.gameRepository.save(game2);
-//                 this.userService.getUser(gameData.playerId.player2Id, true).then((user) => {
-//                     user.game.push(game2);
-//                     user.games_lost++;
-//                     user.games_played++;
-//                 });
-//             }
-//         }
-//         if (playerId === gameData.playerId.player2Id)
-//         {
-//             gameData.score.player2Score++;
-//             if (gameData.score.player2Score >= 10 || player1Disconnect)
-//             {
-//                 let game1 = new Game();
-//                 game1.myEnemy = await this.userService.getUser(gameData.playerId.player1Id, true);
-//                 game1.myScore = gameData.score.player2Score;
-//                 game1.enemyScore = gameData.score.player1Score;
-//                 this.gameRepository.save(game1);
-//                 this.userService.getUser(gameData.playerId.player2Id, true).then((user) => {
-//                     user.game.push(game1);
-//                     user.games_won++;
-//                     user.games_played++;
-//                 });
-//                 let game2 = new Game();
-//                 game2.myEnemy = await this.userService.getUser(gameData.playerId.player2Id, true);
-//                 game2.myScore = gameData.score.player1Score;
-//                 game2.enemyScore = gameData.score.player2Score;
-//                 this.gameRepository.save(game2);
-//                 this.userService.getUser(gameData.playerId.player1Id, true).then((user) => {
-//                     user.game.push(game2);
-//                     user.games_lost++;
-//                     user.games_played++;
-//                 });
-//             }
-//         }
-//     }
 
 //     async updatePadPosition(playerId: number, paddleAction: string)
 //     {

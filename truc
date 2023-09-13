@@ -1,0 +1,1505 @@
+diff --git a/api/Dockerfile b/api/Dockerfile
+index 090b730d..800cd863 100644
+--- a/api/Dockerfile
++++ b/api/Dockerfile
+@@ -5,4 +5,4 @@ COPY package*.json ./
+ RUN npm install
+ COPY . .
+ 
+-CMD ["npm", "run", "start:debug"]
+\ No newline at end of file
++CMD ["npm", "run", "start:debug"]
+diff --git a/api/src/game/game.controler.ts b/api/src/game/game.controler.ts
+new file mode 100644
+index 00000000..086bcd49
+--- /dev/null
++++ b/api/src/game/game.controler.ts
+@@ -0,0 +1,95 @@
++import { UserService } from "src/user/user.service";
++import { AuthGuard } from "src/auth/auth.guard";
++import { HttpException, HttpStatus, Controller, Get, Post, Body, Request, UseGuards, UploadedFile, UseInterceptors, ParseFilePipe, FileTypeValidator, MaxFileSizeValidator } from '@nestjs/common';
++
++import { GameReply } from "src/socket/game.reply";
++
++import { GameService } from "./game.service";
++
++import { playersWithReady } from "./gameInterface";
++
++@Controller('game')
++export class GameControler
++{
++    constructor(
++        private readonly userService: UserService,
++        private readonly gameService: GameService,
++        private readonly gameReply: GameReply,
++    ){}
++
++    @UseGuards(AuthGuard)
++    @Post('invite')
++    async gameInvite(@Request() req)
++    {
++        const { id} = req.Body;
++
++        if (typeof id !== 'number')
++            throw new HttpException("", HttpStatus.BAD_REQUEST);
++        const friend = await this.userService.getUser(id);
++        this.gameReply.invite('invite', id, friend);
++    }
++
++    @UseGuards(AuthGuard)
++    @Post('inviteResponse')
++    async gameInviteResponse(@Request() req)
++    {
++        const {myId, id, response } = req.Body;
++        
++        if (typeof myId !== 'number')
++            throw new HttpException("", HttpStatus.BAD_REQUEST);
++        if (typeof id !== 'number')
++            throw new HttpException("", HttpStatus.BAD_REQUEST);
++        if (typeof response !== 'boolean')
++            throw new HttpException("", HttpStatus.BAD_REQUEST);
++        if (response === true)
++        {
++            this.gameReply.gameStart(myId, id);
++        }
++        else
++        {
++            this.gameReply.inviteRefused(myId, id);
++        }
++    }
++
++    @UseGuards(AuthGuard)
++    @Post('matchMakingResponse')
++    async gameMatchMakingResponse(@Request() req)
++    {
++        const { id, response } = req.Body;
++        if (id !== 'number')
++            throw new HttpException("", HttpStatus.BAD_REQUEST);
++        if (response !== 'boolean')
++            throw new HttpException("", HttpStatus.BAD_REQUEST);
++        const playerData: playersWithReady = await this.gameReply.getPlayerMapValue(id);
++        if (response === true)
++        {
++            if (id === playerData.Players.player1Id)
++                playerData.Ready.player1Ready = true;
++            else
++                playerData.Ready.player2Ready = true;
++        }
++        else
++        {
++            this.gameReply.matchMakingInviteRefused(playerData.Players.player1Id, playerData.Players.player2Id);
++        }
++        if (playerData.Ready.player1Ready === true && playerData.Ready.player2Ready === true)
++        {
++            this.gameReply.gameStart(playerData.Players.player1Id, playerData.Players.player2Id);
++        }
++    }
++
++    @UseGuards(AuthGuard)
++    @Post('MatchMaking')
++    async gameMatchMaking(@Request() req)
++    {
++        const { id } = req.Body;
++
++        if (typeof id !== 'number')
++            throw new HttpException("", HttpStatus.BAD_REQUEST);
++        const waitingsPlayer = await this.gameReply.MatchMaking(id);
++        if (waitingsPlayer === null)
++            return;
++        this.gameReply.MatchMaking(id);
++    }
++
++}
+\ No newline at end of file
+diff --git a/api/src/game/game.module.ts b/api/src/game/game.module.ts
+index b77f836e..9f729ba2 100644
+--- a/api/src/game/game.module.ts
++++ b/api/src/game/game.module.ts
+@@ -10,7 +10,8 @@ import { FriendRequestService } from '../friend-request/friend-request.service';
+ 
+ import { User } from 'src/user/user.entity';
+ 
+-import { GameGateway } from 'src/socket/game.gateway';
++import { GameControler } from './game.controler';
++import { GameReply } from 'src/socket/game.reply';
+ 
+ @Module({
+     imports: [
+@@ -19,6 +20,6 @@ import { GameGateway } from 'src/socket/game.gateway';
+         TypeOrmModule.forFeature([FriendRequest]),
+         TypeOrmModule.forFeature([Game]),
+     ],
+-    providers: [AuthService, FriendRequestService],
++    providers: [AuthService, FriendRequestService, GameControler, GameReply],
+ })
+ export class GameModule {}
+\ No newline at end of file
+diff --git a/api/src/game/game.service.ts b/api/src/game/game.service.ts
+index 731f0766..8ed17459 100644
+--- a/api/src/game/game.service.ts
++++ b/api/src/game/game.service.ts
+@@ -2,241 +2,230 @@ import { Injectable, Inject, forwardRef } from '@nestjs/common';
+ import { InjectRepository } from '@nestjs/typeorm';
+ import { In, Repository } from 'typeorm';
+ 
+-import { GameGateway } from 'src/socket/game.gateway';
+-
+ import { Game } from './game.entity';
+-import { User } from 'src/user/user.entity';
+ 
+ import { UserService } from 'src/user/user.service';
+ 
+-interface GameScreen {
+-    width: number;
+-    height: number;
+-}
++import { SocketServer } from 'src/socket/socket.server';
+ 
+-interface Ball {
+-    x: number;
+-    y: number;
+-    radius: number;
+-    speed: number;
+-    vectorRadians: number;
+-}
++import * as gameInterface from './gameInterface';
+ 
+-interface Paddle {
+-    x: number;
+-    y: number;
+-    width: number;
+-    height: number;
+-}
++import { Deque } from 'double-ended-queue';
+ 
+-interface Score {
+-    player1Score: number;
+-    player2Score: number;
+-}
++import { GameReply } from 'src/socket/game.reply';
+ 
+-interface PlayerId {
+-    player1Id: number;
+-    player2Id: number;
+-}
+ 
+-interface Data {
+-    playerId: PlayerId;
+-    ball: Ball;
+-    paddle1: Paddle;
+-    paddle2: Paddle;
+-    score: Score;
+-    screen: GameScreen;
+-}
+ 
+ @Injectable()
+ export class GameService {
+     constructor(
+-        @Inject(forwardRef(() => GameGateway))
+-        private gameGateway: GameGateway,
+         private readonly gameRepository: Repository<Game>,
+         private readonly userService: UserService,
+     ) {}
+ 
+-    find(playerId: number): Data | undefined {
+-        for (const [key, value] of this.GameMap) {
+-            if (key.player1Id === playerId || key.player2Id === playerId) {
+-                return value;
+-            }
+-        }
+-        return undefined;
+-    }
+-
+-    GameMap: Map<PlayerId, Data>;
+-    private screen: GameScreen = {width: 1000, height: 1000};
+-
+-    async PongGame(player1: number, player2: number) {
+-        let gameData: Data
+-        gameData.screen = this.screen;
+-        this.initBall(gameData);
+-        this.initPaddles(gameData);
+-        gameData.playerId.player1Id = player1;
+-        gameData.playerId.player2Id = player2;
+-
+-        this.GameMap.set(gameData.playerId, gameData);
+-        await this.gameGateway.sendData(gameData);
+-        await this.gameGateway.synchronizePlayer(gameData);
+-        while (1)
+-        {
+-            gameData.ball.x = gameData.ball.x + Math.cos(gameData.ball.vectorRadians) * gameData.ball.speed;
+-            gameData.ball.y = gameData.ball.y + Math.sin(gameData.ball.vectorRadians) * gameData.ball.speed;
+-            if (gameData.ball.x - gameData.ball.radius < 0)
+-            {
+-                this.updateScore(gameData, gameData.playerId.player2Id);
+-                this.resetBoard(gameData);
+-            }
+-            else if (gameData.ball.x + gameData.ball.radius > this.screen.width)
+-            {
+-                this.updateScore(gameData, gameData.playerId.player1Id);
+-                this.resetBoard(gameData);
+-            }
+-            else if (gameData.ball.y - gameData.ball.radius <= 0 || gameData.ball.y + gameData.ball.radius >= this.screen.height)
+-            {
+-                gameData.ball.vectorRadians = Math.PI * 2 - gameData.ball.vectorRadians + 180;
+-                this.gameGateway.sendBallData(gameData);
+-            }
+-            else if (gameData.ball.x - gameData.ball.radius <= gameData.paddle2.x + gameData.paddle2.width / 2 && gameData.ball.y > gameData.paddle2.y - gameData.paddle2.height / 2 && gameData.ball.y < gameData.paddle2.y + gameData.paddle2.height / 2)
+-            {
+-                gameData.ball.vectorRadians = Math.PI * 2 - gameData.ball.vectorRadians + 180;
+-                gameData.ball.speed = gameData.ball.speed * 1.1;
+-                this.gameGateway.sendBallData(gameData);
+-            }
+-            else if (gameData.ball.x + gameData.ball.radius >= gameData.paddle1.x - gameData.paddle1.width / 2 && gameData.ball.y > gameData.paddle1.y - gameData.paddle1.height / 2 && gameData.ball.y < gameData.paddle1.y + gameData.paddle1.height / 2)
+-            {
+-                gameData.ball.vectorRadians = Math.PI * 2 - gameData.ball.vectorRadians + 180;
+-                gameData.ball.speed = gameData.ball.speed * 1.1;
+-                this.gameGateway.sendBallData(gameData);
+-            }
+-        }
+-    }
+-
+-    private async resetBoard(gameData: Data) {
+-        this.initBall(gameData);
+-        this.initPaddles(gameData);
+-        this.gameGateway.sendData(gameData);
+-    }
+-
+-    private async initBall(gameData: Data) {
+-        gameData.ball.x = screen.width / 2;
+-        gameData.ball.y = screen.height / 2;
+-        gameData.ball.radius = 10;
+-        gameData.ball.speed = 5;
+-        const rad = Math.random() * Math.PI * 2;
+-        if (rad > Math.PI / 4 && rad < Math.PI * 3 / 4)
+-           gameData.ball.vectorRadians = rad + Math.PI / 2;
+-        else if (rad > Math.PI * 5 / 4 && rad < Math.PI * 7 / 4)
+-            gameData.ball.vectorRadians = rad + Math.PI / 2;
+-        else
+-            gameData.ball.vectorRadians = rad;
+-    }
+-
+-    private async initPaddles(gameData: Data) {
+-        gameData.paddle1.y = this.screen.height / 2;
+-        gameData.paddle1.x = this.screen.width - 20;
+-        gameData.paddle1.width = 20;
+-        gameData.paddle1.height = 100;
+-        gameData.paddle2.y = this.screen.height / 2;
+-        gameData.paddle2.x = 20;
+-        gameData.paddle2.width = 20;
+-        gameData.paddle2.height = 100;
+-    }
+-
+-    private async updateScore(gameData: Data, playerId: number, player1Disconnect: boolean = false, player2Disconnect: boolean = false) {
+-        if (playerId === gameData.playerId.player1Id)
+-        {
+-            gameData.score.player1Score++;
+-            if (gameData.score.player1Score >= 10 || player2Disconnect)
+-            {
+-                let game1 = new Game();
+-                game1.myEnemy = await this.userService.getUser(gameData.playerId.player2Id, true);
+-                game1.myScore = gameData.score.player1Score;
+-                game1.enemyScore = gameData.score.player2Score;
+-                this.gameRepository.save(game1);
+-                this.userService.getUser(gameData.playerId.player1Id, true).then((user) => {
+-                    user.game.push(game1);
+-                    user.games_won++;
+-                    user.games_played++;
+-                });
+-                let game2 = new Game();
+-                game2.myEnemy = await this.userService.getUser(gameData.playerId.player1Id, true);
+-                game2.myScore = gameData.score.player2Score;
+-                game2.enemyScore = gameData.score.player1Score;
+-                this.gameRepository.save(game2);
+-                this.userService.getUser(gameData.playerId.player2Id, true).then((user) => {
+-                    user.game.push(game2);
+-                    user.games_lost++;
+-                    user.games_played++;
+-                });
+-            }
+-        }
+-        if (playerId === gameData.playerId.player2Id)
+-        {
+-            gameData.score.player2Score++;
+-            if (gameData.score.player2Score >= 10 || player1Disconnect)
+-            {
+-                let game1 = new Game();
+-                game1.myEnemy = await this.userService.getUser(gameData.playerId.player1Id, true);
+-                game1.myScore = gameData.score.player2Score;
+-                game1.enemyScore = gameData.score.player1Score;
+-                this.gameRepository.save(game1);
+-                this.userService.getUser(gameData.playerId.player2Id, true).then((user) => {
+-                    user.game.push(game1);
+-                    user.games_won++;
+-                    user.games_played++;
+-                });
+-                let game2 = new Game();
+-                game2.myEnemy = await this.userService.getUser(gameData.playerId.player2Id, true);
+-                game2.myScore = gameData.score.player1Score;
+-                game2.enemyScore = gameData.score.player2Score;
+-                this.gameRepository.save(game2);
+-                this.userService.getUser(gameData.playerId.player1Id, true).then((user) => {
+-                    user.game.push(game2);
+-                    user.games_lost++;
+-                    user.games_played++;
+-                });
+-            }
+-        }
+-    }
+-
+-    async updatePadPosition(playerId: number, paddleAction: string)
+-    {
+-        let gameData: Data = this.find(playerId);
+-        if (gameData.playerId.player1Id === playerId)
+-        {
+-            if (paddleAction === "up")
+-                gameData.paddle1.y += 5;
+-            else
+-                gameData.paddle1.y -= 5;
+-            this.gameGateway.sendPadPosition(gameData.playerId.player2Id, gameData.playerId.player1Id ,gameData.paddle1.y ,gameData.screen);
+-        }
+-        else
+-        {
+-            if (paddleAction === "up")
+-                gameData.paddle2.y += 5;
+-            else
+-                gameData.paddle2.y -= 5;
+-            this.gameGateway.sendPadPosition(gameData.playerId.player1Id, gameData.playerId.player2Id,gameData.paddle2.y ,gameData.screen);
+-        }
+-    }
+-
+-    async playerDisconnect(playerId: number)
+-    {
+-        let gameData: Data = this.find(playerId);
+-        if (gameData.playerId.player1Id === playerId)
+-        {
+-            this.updateScore(gameData, playerId, true);
+-            this.gameGateway.endGame(gameData.playerId.player2Id, playerId, true);
+-        }
+-        else
+-        {
+-            this.updateScore(gameData, playerId, false, true);
+-            this.gameGateway.endGame(gameData.playerId.player2Id, playerId, true);
+-        }
+-        this.GameMap.delete(gameData.playerId);
+-
+-    }
+-}
+\ No newline at end of file
++    // private waitingStack: Deque<gameInterface.WaitingPlayer>;
++
++    // async addWaitingPlayer(game: gameInterface.WaitingPlayer)
++    // {
++    //     this.waitingStack.push(game);
++    // }
++
++    // async deleteWaitingPlayer(game: gameInterface.WaitingPlayer)
++    // {
++    //     this.waitingStack.removeOne(game);
++    // }
++
++    // async getWaitingPlayer(id: number): Promise<gameInterface.WaitingPlayer | undefined>
++    // {
++    //     for (const game of this.waitingStack)
++    //     {
++    //         if (game.player1Id === id || game.player2Id === id)
++    //             return game;
++    //     }
++    //     return undefined;
++    // }
++}
++
++//     find(playerId: number): Data | undefined {
++//         for (const [key, value] of this.GameMap) {
++//             if (key.player1Id === playerId || key.player2Id === playerId) {
++//                 return value;
++//             }
++//         }
++//         return undefined;
++//     }
++
++//     GameMap: Map<PlayerId, Data>;
++//     private screen: GameScreen = {width: 1000, height: 1000};
++
++//     async PongGame(player1: number, player2: number) {
++//         let gameData: Data
++//         gameData.screen = this.screen;
++//         this.initBall(gameData);
++//         this.initPaddles(gameData);
++//         gameData.playerId.player1Id = player1;
++//         gameData.playerId.player2Id = player2;
++
++//         this.GameMap.set(gameData.playerId, gameData);
++//         await this.socketServer.sendData(gameData);
++//         await this.socketServer.synchronizePlayer(gameData);
++//         while (1)
++//         {
++//             gameData.ball.x = gameData.ball.x + Math.cos(gameData.ball.vectorRadians) * gameData.ball.speed;
++//             gameData.ball.y = gameData.ball.y + Math.sin(gameData.ball.vectorRadians) * gameData.ball.speed;
++//             if (gameData.ball.x - gameData.ball.radius < 0)
++//             {
++//                 this.updateScore(gameData, gameData.playerId.player2Id);
++//                 this.resetBoard(gameData);
++//             }
++//             else if (gameData.ball.x + gameData.ball.radius > this.screen.width)
++//             {
++//                 this.updateScore(gameData, gameData.playerId.player1Id);
++//                 this.resetBoard(gameData);
++//             }
++//             else if (gameData.ball.y - gameData.ball.radius <= 0 || gameData.ball.y + gameData.ball.radius >= this.screen.height)
++//             {
++//                 gameData.ball.vectorRadians = Math.PI * 2 - gameData.ball.vectorRadians + 180;
++//                 this.socketServer.sendBallData(gameData);
++//             }
++//             else if (gameData.ball.x - gameData.ball.radius <= gameData.paddle2.x + gameData.paddle2.width / 2 && gameData.ball.y > gameData.paddle2.y - gameData.paddle2.height / 2 && gameData.ball.y < gameData.paddle2.y + gameData.paddle2.height / 2)
++//             {
++//                 gameData.ball.vectorRadians = Math.PI * 2 - gameData.ball.vectorRadians + 180;
++//                 gameData.ball.speed = gameData.ball.speed * 1.1;
++//                 this.socketServer.sendBallData(gameData);
++//             }
++//             else if (gameData.ball.x + gameData.ball.radius >= gameData.paddle1.x - gameData.paddle1.width / 2 && gameData.ball.y > gameData.paddle1.y - gameData.paddle1.height / 2 && gameData.ball.y < gameData.paddle1.y + gameData.paddle1.height / 2)
++//             {
++//                 gameData.ball.vectorRadians = Math.PI * 2 - gameData.ball.vectorRadians + 180;
++//                 gameData.ball.speed = gameData.ball.speed * 1.1;
++//                 this.socketServer.sendBallData(gameData);
++//             }
++//         }
++//     }
++
++//     private async resetBoard(gameData: Data) {
++//         this.initBall(gameData);
++//         this.initPaddles(gameData);
++//         this.socketServer.sendData(gameData);
++//     }
++
++//     private async initBall(gameData: Data) {
++//         gameData.ball.x = screen.width / 2;
++//         gameData.ball.y = screen.height / 2;
++//         gameData.ball.radius = 10;
++//         gameData.ball.speed = 5;
++//         const rad = Math.random() * Math.PI * 2;
++//         if (rad > Math.PI / 4 && rad < Math.PI * 3 / 4)
++//            gameData.ball.vectorRadians = rad + Math.PI / 2;
++//         else if (rad > Math.PI * 5 / 4 && rad < Math.PI * 7 / 4)
++//             gameData.ball.vectorRadians = rad + Math.PI / 2;
++//         else
++//             gameData.ball.vectorRadians = rad;
++//     }
++
++//     private async initPaddles(gameData: Data) {
++//         gameData.paddle1.y = this.screen.height / 2;
++//         gameData.paddle1.x = this.screen.width - 20;
++//         gameData.paddle1.width = 20;
++//         gameData.paddle1.height = 100;
++//         gameData.paddle2.y = this.screen.height / 2;
++//         gameData.paddle2.x = 20;
++//         gameData.paddle2.width = 20;
++//         gameData.paddle2.height = 100;
++//     }
++
++//     private async updateScore(gameData: Data, playerId: number, player1Disconnect: boolean = false, player2Disconnect: boolean = false) {
++//         if (playerId === gameData.playerId.player1Id)
++//         {
++//             gameData.score.player1Score++;
++//             if (gameData.score.player1Score >= 10 || player2Disconnect)
++//             {
++//                 let game1 = new Game();
++//                 game1.myEnemy = await this.userService.getUser(gameData.playerId.player2Id, true);
++//                 game1.myScore = gameData.score.player1Score;
++//                 game1.enemyScore = gameData.score.player2Score;
++//                 this.gameRepository.save(game1);
++//                 this.userService.getUser(gameData.playerId.player1Id, true).then((user) => {
++//                     user.game.push(game1);
++//                     user.games_won++;
++//                     user.games_played++;
++//                 });
++//                 let game2 = new Game();
++//                 game2.myEnemy = await this.userService.getUser(gameData.playerId.player1Id, true);
++//                 game2.myScore = gameData.score.player2Score;
++//                 game2.enemyScore = gameData.score.player1Score;
++//                 this.gameRepository.save(game2);
++//                 this.userService.getUser(gameData.playerId.player2Id, true).then((user) => {
++//                     user.game.push(game2);
++//                     user.games_lost++;
++//                     user.games_played++;
++//                 });
++//             }
++//         }
++//         if (playerId === gameData.playerId.player2Id)
++//         {
++//             gameData.score.player2Score++;
++//             if (gameData.score.player2Score >= 10 || player1Disconnect)
++//             {
++//                 let game1 = new Game();
++//                 game1.myEnemy = await this.userService.getUser(gameData.playerId.player1Id, true);
++//                 game1.myScore = gameData.score.player2Score;
++//                 game1.enemyScore = gameData.score.player1Score;
++//                 this.gameRepository.save(game1);
++//                 this.userService.getUser(gameData.playerId.player2Id, true).then((user) => {
++//                     user.game.push(game1);
++//                     user.games_won++;
++//                     user.games_played++;
++//                 });
++//                 let game2 = new Game();
++//                 game2.myEnemy = await this.userService.getUser(gameData.playerId.player2Id, true);
++//                 game2.myScore = gameData.score.player1Score;
++//                 game2.enemyScore = gameData.score.player2Score;
++//                 this.gameRepository.save(game2);
++//                 this.userService.getUser(gameData.playerId.player1Id, true).then((user) => {
++//                     user.game.push(game2);
++//                     user.games_lost++;
++//                     user.games_played++;
++//                 });
++//             }
++//         }
++//     }
++
++//     async updatePadPosition(playerId: number, paddleAction: string)
++//     {
++//         let gameData: Data = this.find(playerId);
++//         if (gameData.playerId.player1Id === playerId)
++//         {
++//             if (paddleAction === "up")
++//                 gameData.paddle1.y += 5;
++//             else
++//                 gameData.paddle1.y -= 5;
++//             this.socketServer.sendPadPosition(gameData.playerId.player2Id, gameData.playerId.player1Id ,gameData.paddle1.y ,gameData.screen);
++//         }
++//         else
++//         {
++//             if (paddleAction === "up")
++//                 gameData.paddle2.y += 5;
++//             else
++//                 gameData.paddle2.y -= 5;
++//             this.socketServer.sendPadPosition(gameData.playerId.player1Id, gameData.playerId.player2Id,gameData.paddle2.y ,gameData.screen);
++//         }
++//     }
++
++//     async playerDisconnect(playerId: number)
++//     {
++//         let gameData: Data = this.find(playerId);
++//         if (gameData.playerId.player1Id === playerId)
++//         {
++//             this.updateScore(gameData, playerId, true);
++//             this.socketServer.endGame(gameData.playerId.player2Id, playerId, true);
++//         }
++//         else
++//         {
++//             this.updateScore(gameData, playerId, false, true);
++//             this.socketServer.endGame(gameData.playerId.player2Id, playerId, true);
++//         }
++//         this.GameMap.delete(gameData.playerId);
++
++//     }
++// }
+\ No newline at end of file
+diff --git a/api/src/game/gameInterface.ts b/api/src/game/gameInterface.ts
+new file mode 100644
+index 00000000..32d8dcb0
+--- /dev/null
++++ b/api/src/game/gameInterface.ts
+@@ -0,0 +1,47 @@
++interface GameScreen {
++    width: number;
++    height: number;
++}
++
++interface Ball {
++    x: number;
++    y: number;
++    radius: number;
++    speed: number;
++    vectorRadians: number;
++}
++
++interface Paddle {
++    y: number;
++    width: number;
++    height: number;
++}
++
++interface Score {
++    player1Score: number;
++    player2Score: number;
++}
++
++export interface PlayerId {
++    player1Id: number;
++    player2Id: number;
++}
++
++export interface PlayerReady {
++    player1Ready: boolean;
++    player2Ready: boolean;
++}
++
++export interface GameData {
++    playerId: PlayerId;
++    ball: Ball;
++    paddle1: Paddle;
++    paddle2: Paddle;
++    score: Score;
++    screen: GameScreen;
++}
++
++export interface playersWithReady {
++    Players: PlayerId;
++    Ready: PlayerReady;
++}
+\ No newline at end of file
+diff --git a/api/src/gameSocket/game.gateway.ts b/api/src/gameSocket/game.gateway.ts
+new file mode 100644
+index 00000000..1936f572
+--- /dev/null
++++ b/api/src/gameSocket/game.gateway.ts
+@@ -0,0 +1,236 @@
++import { Inject, UseGuards, Injectable, ValidationPipe, forwardRef } from '@nestjs/common';
++
++import { OnGatewayConnection, OnGatewayDisconnect, MessageBody, OnGatewayInit ,SubscribeMessage, WebSocketGateway, ConnectedSocket, WebSocketServer } from '@nestjs/websockets';
++
++import { SocketGuard } from 'src/auth/auth.guard';
++import { WebSocket } from 'ws';
++
++import { JwtService } from '@nestjs/jwt';
++
++@Injectable()
++@WebSocketGateway({
++    transports: ['websocket']
++})
++export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
++    constructor(
++        private jwtService: JwtService,
++    ) {}
++
++    @WebSocketServer() server: WebSocket;
++    static serverRef;
++
++    afterInit(server: WebSocket) {
++        // console.log('Init');
++    }
++
++    handleConnection(client: WebSocket) {
++        client.data = {}
++        console.log('Client isConnected');
++    }
++    
++    handleDisconnect(client: WebSocket) {
++        console.log('Client disconnected');
++    }
++
++    getSocket(id: number): WebSocket {
++        for (const client of this.server.clients) {
++            if (client.data.user === id) {
++                return client;
++            }
++        }
++        return null;
++    }
++
++    getClientId(client: WebSocket): number {
++        return client.data.user;
++    }
++
++    // private clientWaitingStack: Deque<number>;
++
++    // async matchMaking(@ConnectedSocket() client: WebSocket, data: {id: number}) {
++    //     this.userService.getUser(data.id);
++    //     if (this.clientWaitingStack.length() === 0)
++    //     {
++    //         this.clientWaitingStack.push({id: data.id, socket: client});
++    //         return;
++    //     }
++    //     const friend: WaitingPlayer = this.clientWaitingStack.pop();
++    //     if (friend.socket.readyState !== friend.socket.OPEN)
++    //     {
++    //         this.clientWaitingStack.push({id: data.id, socket: client});
++    //         return;
++    //     }
++    //     friend.socket.send(JSON.stringify({type: 'MatchMaking', id: data.id}));
++    //     client.send(JSON.stringify({type: 'MatchMaking', id: friend.id}));
++    //     this.gameStart(friend.id, data.id);
++    // }
++
++    // @UseGuards(SocketGuard)
++    // @SubscribeMessage('gameInvite')
++    // async gameInvite(@ConnectedSocket() client: WebSocket, @MessageBody( new ValidationPipe()) data: {id: number, friendId: number}) {
++    //     const user: User = await this.userService.getUser(data.id);
++    //     if (user === null || user === undefined)
++    //     {
++    //         client.send(JSON.stringify({type: 'Error', Error: 'YouNotExist'}));
++    //         return;
++    //     }
++    //     const friend = await this.userService.getUser(data.friendId);
++    //     if (!friend)
++    //     {
++    //         client.send(JSON.stringify({type: 'Error', Error: 'FriendNotExists'}));
++    //         return;
++    //     }
++    //     const friendSocket = this.socketServer.getSocket(friend.id);
++    //     if (!friendSocket) 
++    //     {
++    //         client.send(JSON.stringify({type: 'Error', Error: 'FriendNotOnline'}));
++    //         return;
++    //     }
++    //     if (this.InGame.has(data.friendId))
++    //     {
++    //         client.send(JSON.stringify({type: 'Error', Error: 'FriendInGame'}));
++    //         return;
++    //     }
++    //     friendSocket.send(JSON.stringify({type: 'gameInvite', id: data.id, friendId: data.friendId, whoInvit: user}));
++    //     client.send(JSON.stringify({type: 'gameInvite', id: data.friendId, friendId: data.id}));
++    // }
++
++    // async gameInviteResponse(data: {id: number, friendId: number, response: boolean}) {
++    //     const friend = await this.userService.getUser(data.friendId);
++    //     const friendSocket = this.socketServer.getSocket(friend.id);
++    //     const clientSocket = this.socketServer.getSocket(data.id);  
++    //     if (clientSocket.readyState !== clientSocket.OPEN)
++    //         return;
++    //     if (friendSocket.readyState !== friendSocket.OPEN)
++    //     {
++    //         clientSocket.send(JSON.stringify({type: 'Error', Error: 'FriendNotOnline'}));
++    //         return;
++    //     }
++    //     if (data.response == false)
++    //     {
++    //         friendSocket.send(JSON.stringify({type: 'gameInviteResponse', response: false}));
++    //         return;
++    //     }
++    //     this.gameStart(data.id, data.friendId);
++    // }
++
++    @UseGuards(SocketGuard)
++    @SubscribeMessage('padPosition')
++    async receivePadPosition(@ConnectedSocket() client: WebSocket, @MessageBody( new ValidationPipe()) data: {paddleY: number}) {
++        const user = await this.userService.getUser(this.socketServer.getId(client));
++        this.gameService.updatePadPosition(user.id, data.paddleY);
++    }
++
++    async sendPadPosition(id: number, paddleY: number, screen: GameScreen) {
++        const client = this.socketServer.getSocket(id);
++        if (client.readyState !== client.OPEN)
++        {
++            this.gameService.playerDisconnect(id);
++            return;
++        }
++        client.send(JSON.stringify({type: 'padPosition', position: paddleY, screen: screen}));
++    }
++
++    async sendBallData(gameData: GameData) {
++
++        const client1 = this.socketServer.getSocket(gameData.playerId.player1Id);
++        const client2 = this.socketServer.getSocket(gameData.playerId.player2Id);
++        if (client1.readyState !== client1.OPEN)
++        {
++            this.gameService.playerDisconnect(gameData.playerId.player1Id);
++            return;
++        }
++        if (client2.readyState !== client2.OPEN)
++        {
++            this.gameService.playerDisconnect(gameData.playerId.player2Id);
++            return;
++        }
++        client1.send(JSON.stringify({type: 'ballData', ball: gameData.ball, screen: gameData.screen}));
++        client2.send(JSON.stringify({type: 'ballData', ball: gameData.ball, screen: gameData.screen}));
++    }
++
++    async sendScoreData(gameData: GameData) {
++        const client1 = this.socketServer.getSocket(gameData.playerId.player1Id);
++        const client2 = this.socketServer.getSocket(gameData.playerId.player2Id);
++        if (client1.readyState !== client1.OPEN)
++        {
++            this.gameService.playerDisconnect(gameData.playerId.player1Id);
++            return;
++        }
++        if (client2.readyState !== client2.OPEN)
++        {
++            this.gameService.playerDisconnect(gameData.playerId.player2Id);
++            return;
++        }
++        client1.send(JSON.stringify({type: 'scoreData', score: gameData.score}));
++        client2.send(JSON.stringify({type: 'scoreData', score: gameData.score}));
++    }
++
++    async gameStart(id: number, friendId: number) {
++        this.InGame.add(id);
++        this.InGame.add(friendId);
++        this.gameService.PongGame(id, friendId);
++    }
++
++    async endGame(winner: number, loser: number, disconnect: boolean = false) {
++        this.InGame.delete(winner);
++        this.InGame.delete(loser);
++        const winnerSocket = this.socketServer.getSocket(winner);
++        const loserSocket = this.socketServer.getSocket(loser);
++        if (disconnect)
++        {
++            if (winnerSocket.readyState === winnerSocket.OPEN)
++                winnerSocket.send(JSON.stringify({type: 'gameEnd', win: true, disconnect: true}));
++        }
++        else
++        {
++            if (winnerSocket.readyState === winnerSocket.OPEN)
++                winnerSocket.send(JSON.stringify({type: 'gameEnd', win: true, disconnect: false}));
++            if (loserSocket.readyState === loserSocket.OPEN)
++                loserSocket.send(JSON.stringify({type: 'gameEnd', win: false, disconnect: false}));
++        }
++    }
++
++    async sendData(GameData: GameData) {
++        const socket1 = this.socketServer.getSocket(GameData.playerId.player1Id);
++        const socket2 = this.socketServer.getSocket(GameData.playerId.player2Id);
++        if (socket1.readyState !== socket1.OPEN)
++        {
++            this.gameService.playerDisconnect(GameData.playerId.player1Id);
++            return;
++        }
++        if (socket2.readyState !== socket2.OPEN)
++        {
++            this.gameService.playerDisconnect(GameData.playerId.player2Id);
++            return;
++        }
++        socket1.send(JSON.stringify({type: 'gameData', data: GameData}));
++        socket2.send(JSON.stringify({type: 'gameData', data: GameData}));
++    }
++
++    async delay(ms: number) {
++        return new Promise( resolve => setTimeout(resolve, ms) );
++    }
++
++    async synchronizePlayer(gameData: GameData)
++    {
++        const client1 = this.socketServer.getSocket(gameData.playerId.player1Id);
++        const client2 = this.socketServer.getSocket(gameData.playerId.player2Id);
++        await this.delay(3000);
++        client1.send({type: "start"});
++        client2.send({type: "start"});
++    }
++
++    @UseGuards(SocketGuard)
++    @SubscribeMessage('userStatus')
++    async takeUserStatus(client: WebSocket, id: number) {
++        if (this.InGame.has(id))
++        {
++            client.send(JSON.stringify({type: 'userStatus', status: 'InGame'}));
++        }
++        else
++        {
++            client.send(JSON.stringify({type: 'userStatus', status: 'Available'}));
++        }
++    }
++}
+diff --git a/api/src/gameSocket/gameSocket.module.ts b/api/src/gameSocket/gameSocket.module.ts
+new file mode 100644
+index 00000000..67155c60
+--- /dev/null
++++ b/api/src/gameSocket/gameSocket.module.ts
+@@ -0,0 +1,8 @@
++import { Module } from "@nestjs/common";
++
++@Module({
++    imports: [],
++    providers: [],
++})
++
++export class GameSocketModule {}
+\ No newline at end of file
+diff --git a/api/src/gameSocket/gameSocketReply.ts b/api/src/gameSocket/gameSocketReply.ts
+new file mode 100644
+index 00000000..0ef51b0a
+--- /dev/null
++++ b/api/src/gameSocket/gameSocketReply.ts
+@@ -0,0 +1,12 @@
++import { GameGateway } from "./game.gateway";
++
++import { WebSocketGateway } from '@nestjs/websockets';
++import { Inject, Injectable } from '@nestjs/common';
++
++@Injectable()
++@WebSocketGateway()
++export class GameSocketReply {
++    constructor(
++        @Inject(GameGateway) private gameGateway: GameGateway,
++    ){}
++}
+\ No newline at end of file
+diff --git a/api/src/socket/game.gateway.ts b/api/src/socket/game.gateway.ts
+deleted file mode 100644
+index ac8a7096..00000000
+--- a/api/src/socket/game.gateway.ts
++++ /dev/null
+@@ -1,270 +0,0 @@
+-import { MessageBody, SubscribeMessage, WebSocketGateway, ConnectedSocket } from '@nestjs/websockets';
+-import { Inject, UseGuards, Injectable, ValidationPipe, forwardRef } from '@nestjs/common';
+-
+-import { SocketGuard } from 'src/auth/auth.guard';
+-import { SocketServer } from './socket.server'; 
+-import { WebSocket } from 'ws';
+-import { UserService } from 'src/user/user.service';
+-import { GameService } from 'src/game/game.service';
+-
+-import { User } from 'src/user/user.entity';
+-
+-import { Deque } from 'double-ended-queue';
+-
+-interface GameScreen {
+-    width: number;
+-    height: number;
+-}
+-
+-interface Ball {
+-    x: number;
+-    y: number;
+-    radius: number;
+-    speed: number;
+-    vectorRadians: number;
+-}
+-
+-interface Paddle {
+-    y: number;
+-    width: number;
+-    height: number;
+-}
+-
+-interface Score {
+-    player1Score: number;
+-    player2Score: number;
+-}
+-
+-interface PlayerId {
+-    player1Id: number;
+-    player2Id: number;
+-}
+-
+-interface GameData {
+-    playerId: PlayerId;
+-    ball: Ball;
+-    paddle1: Paddle;
+-    paddle2: Paddle;
+-    score: Score;
+-    screen: GameScreen;
+-}
+-
+-interface WaitingPlayer {
+-    id: number;
+-    socket: WebSocket;
+-}
+-
+-@WebSocketGateway()
+-@Injectable()
+-export class GameGateway {
+-    constructor(
+-        private socketServer: SocketServer,
+-        private userService: UserService,
+-        @Inject(forwardRef(() => GameService))
+-        private gameService: GameService,
+-    ) {}
+-
+-    InGame: Set<number>;
+-    clientWaitingStack: Deque<WaitingPlayer>;
+-
+-    @UseGuards(SocketGuard)
+-    @SubscribeMessage('friendList')
+-    async requestFriendList(@ConnectedSocket() client: WebSocket, id: number) {
+-        this.userService.getUser(id);
+-        if (client.readyState !== client.OPEN) return;
+-        const friendList = (await this.userService.getUser(id)).friends;
+-        client.send(JSON.stringify(friendList));
+-    }
+-
+-    @UseGuards(SocketGuard)
+-    @SubscribeMessage('MatchMaking')
+-    async matchMaking(@ConnectedSocket() client: WebSocket, data: {id: number}) {
+-        this.userService.getUser(data.id);
+-        if (this.clientWaitingStack.length() === 0)
+-        {
+-            this.clientWaitingStack.push({id: data.id, socket: client});
+-            return;
+-        }
+-        const friend: WaitingPlayer = this.clientWaitingStack.pop();
+-        if (friend.socket.readyState !== friend.socket.OPEN)
+-        {
+-            this.clientWaitingStack.push({id: data.id, socket: client});
+-            return;
+-        }
+-        friend.socket.send(JSON.stringify({type: 'MatchMaking', id: data.id}));
+-        client.send(JSON.stringify({type: 'MatchMaking', id: friend.id}));
+-        this.gameStart(friend.id, data.id);
+-    }
+-
+-    @UseGuards(SocketGuard)
+-    @SubscribeMessage('gameInvite')
+-    async gameInvite(@ConnectedSocket() client: WebSocket, @MessageBody( new ValidationPipe()) data: {id: number, friendId: number}) {
+-        const user: User = await this.userService.getUser(data.id);
+-        if (user === null || user === undefined)
+-        {
+-            client.send(JSON.stringify({type: 'Error', Error: 'YouNotExist'}));
+-            return;
+-        }
+-        const friend = await this.userService.getUser(data.friendId);
+-        if (!friend)
+-        {
+-            client.send(JSON.stringify({type: 'Error', Error: 'FriendNotExists'}));
+-            return;
+-        }
+-        const friendSocket = this.socketServer.getSocket(friend.id);
+-        if (!friendSocket) 
+-        {
+-            client.send(JSON.stringify({type: 'Error', Error: 'FriendNotOnline'}));
+-            return;
+-        }
+-        if (this.InGame.has(data.friendId))
+-        {
+-            client.send(JSON.stringify({type: 'Error', Error: 'FriendInGame'}));
+-            return;
+-        }
+-        friendSocket.send(JSON.stringify({type: 'gameInvite', id: data.id, friendId: data.friendId, whoInvit: user}));
+-        client.send(JSON.stringify({type: 'gameInvite', id: data.friendId, friendId: data.id}));
+-    }
+-
+-    async gameInviteResponse(data: {id: number, friendId: number, response: boolean}) {
+-        const friend = await this.userService.getUser(data.friendId);
+-        const friendSocket = this.socketServer.getSocket(friend.id);
+-        const clientSocket = this.socketServer.getSocket(data.id);  
+-        if (clientSocket.readyState !== clientSocket.OPEN)
+-            return;
+-        if (friendSocket.readyState !== friendSocket.OPEN)
+-        {
+-            clientSocket.send(JSON.stringify({type: 'Error', Error: 'FriendNotOnline'}));
+-            return;
+-        }
+-        if (data.response == false)
+-        {
+-            friendSocket.send(JSON.stringify({type: 'gameInviteResponse', response: false}));
+-            return;
+-        }
+-        this.gameStart(data.id, data.friendId);
+-    }
+-
+-    @UseGuards(SocketGuard)
+-    @SubscribeMessage('movePad')
+-    async receivePadPosition(@ConnectedSocket() client: WebSocket, @MessageBody( new ValidationPipe()) data: {id: number, paddleAction: string}) {
+-        console.log(data);
+-        const user: User = await this.userService.getUser(data.id);
+-        this.gameService.updatePadPosition(user.id, data.paddleAction);
+-    }
+-
+-    async sendPadPosition(myId: number, idFriend: number, paddleY: number, screen: GameScreen) {
+-        const myClient = this.socketServer.getSocket(myId);
+-        const client = this.socketServer.getSocket(idFriend);
+-        if (client.readyState !== client.OPEN)
+-        {
+-            this.gameService.playerDisconnect(idFriend);
+-            return;
+-        }
+-        myClient.send(JSON.stringify({type: 'movePad', position: paddleY, screen: screen}));
+-        client.send(JSON.stringify({type: 'movePad', position: paddleY, screen: screen}));
+-    }
+-
+-    async sendBallData(gameData: GameData) {
+-
+-        const client1 = this.socketServer.getSocket(gameData.playerId.player1Id);
+-        const client2 = this.socketServer.getSocket(gameData.playerId.player2Id);
+-        if (client1.readyState !== client1.OPEN)
+-        {
+-            this.gameService.playerDisconnect(gameData.playerId.player1Id);
+-            return;
+-        }
+-        if (client2.readyState !== client2.OPEN)
+-        {
+-            this.gameService.playerDisconnect(gameData.playerId.player2Id);
+-            return;
+-        }
+-        client1.send(JSON.stringify({type: 'ballData', ball: gameData.ball, screen: gameData.screen}));
+-        client2.send(JSON.stringify({type: 'ballData', ball: gameData.ball, screen: gameData.screen}));
+-    }
+-
+-    async sendScoreData(gameData: GameData) {
+-        const client1 = this.socketServer.getSocket(gameData.playerId.player1Id);
+-        const client2 = this.socketServer.getSocket(gameData.playerId.player2Id);
+-        if (client1.readyState !== client1.OPEN)
+-        {
+-            this.gameService.playerDisconnect(gameData.playerId.player1Id);
+-            return;
+-        }
+-        if (client2.readyState !== client2.OPEN)
+-        {
+-            this.gameService.playerDisconnect(gameData.playerId.player2Id);
+-            return;
+-        }
+-        client1.send(JSON.stringify({type: 'scoreData', score: gameData.score}));
+-        client2.send(JSON.stringify({type: 'scoreData', score: gameData.score}));
+-    }
+-
+-    async gameStart(id: number, friendId: number) {
+-        this.InGame.add(id);
+-        this.InGame.add(friendId);
+-        this.gameService.PongGame(id, friendId);
+-    }
+-
+-    async endGame(winner: number, loser: number, disconnect: boolean = false) {
+-        this.InGame.delete(winner);
+-        this.InGame.delete(loser);
+-        const winnerSocket = this.socketServer.getSocket(winner);
+-        const loserSocket = this.socketServer.getSocket(loser);
+-        if (disconnect)
+-        {
+-            if (winnerSocket.readyState === winnerSocket.OPEN)
+-                winnerSocket.send(JSON.stringify({type: 'gameEnd', win: true, disconnect: true}));
+-        }
+-        else
+-        {
+-            if (winnerSocket.readyState === winnerSocket.OPEN)
+-                winnerSocket.send(JSON.stringify({type: 'gameEnd', win: true, disconnect: false}));
+-            if (loserSocket.readyState === loserSocket.OPEN)
+-                loserSocket.send(JSON.stringify({type: 'gameEnd', win: false, disconnect: false}));
+-        }
+-    }
+-
+-    async sendData(GameData: GameData) {
+-        const socket1 = this.socketServer.getSocket(GameData.playerId.player1Id);
+-        const socket2 = this.socketServer.getSocket(GameData.playerId.player2Id);
+-        if (socket1.readyState !== socket1.OPEN)
+-        {
+-            this.gameService.playerDisconnect(GameData.playerId.player1Id);
+-            return;
+-        }
+-        if (socket2.readyState !== socket2.OPEN)
+-        {
+-            this.gameService.playerDisconnect(GameData.playerId.player2Id);
+-            return;
+-        }
+-        socket1.send(JSON.stringify({type: 'gameData', data: GameData}));
+-        socket2.send(JSON.stringify({type: 'gameData', data: GameData}));
+-    }
+-
+-    async delay(ms: number) {
+-        return new Promise( resolve => setTimeout(resolve, ms) );
+-    }
+-
+-    async synchronizePlayer(gameData: GameData)
+-    {
+-        const client1 = this.socketServer.getSocket(gameData.playerId.player1Id);
+-        const client2 = this.socketServer.getSocket(gameData.playerId.player2Id);
+-        await this.delay(3000);
+-        client1.send({type: "start"});
+-        client2.send({type: "start"});
+-    }
+-
+-    @UseGuards(SocketGuard)
+-    @SubscribeMessage('userStatus')
+-    async takeUserStatus(client: WebSocket, id: number) {
+-        if (this.InGame.has(id))
+-        {
+-            client.send(JSON.stringify({type: 'userStatus', status: 'InGame'}));
+-        }
+-        else
+-        {
+-            client.send(JSON.stringify({type: 'userStatus', status: 'Available'}));
+-        }
+-    }
+-}
+\ No newline at end of file
+diff --git a/api/src/socket/game.reply.ts b/api/src/socket/game.reply.ts
+new file mode 100644
+index 00000000..b55c6060
+--- /dev/null
++++ b/api/src/socket/game.reply.ts
+@@ -0,0 +1,153 @@
++import { SocketServer } from "./socket.server";
++import { WebSocketGateway } from '@nestjs/websockets';
++import { Inject, Injectable } from '@nestjs/common';
++
++import { User } from "src/user/user.entity";
++
++import { Deque } from 'double-ended-queue';
++
++import { UserService } from "src/user/user.service";
++
++import * as gameInterface from "src/game/gameInterface";
++
++@WebSocketGateway()
++@Injectable()
++export class GameReply {
++    constructor(
++        private readonly userService: UserService,
++        private socketServer: SocketServer,
++    ){}
++
++    private matchMakingStack: Deque<number>;
++    private InGame: Set<number>;
++    private WaitingPlayerMap: Map<gameInterface.PlayerId, gameInterface.playersWithReady>;
++    private waitingMatchMakingResponse: Map<number, number>;
++
++    async invite(type: string, id: number, user: User)
++    {
++        const socket: WebSocket = this.socketServer.getSocket(id);
++        if (!socket)
++            return;
++        if (this.InGame.has(id))
++        {
++            this.sendInGame(id);
++            return;
++        }
++        socket.send(JSON.stringify(user));
++    }
++
++    async sendInGame(id: number)
++    {
++        const socket = await this.socketServer.getSocket(id);
++        socket.send(JSON.stringify({type: 'InGame'}));
++    }
++
++    async MatchMaking(id: number)
++    {
++        if (this.matchMakingStack.length() === 0)
++        {
++            this.matchMakingStack.push({id});
++        }
++        else
++        {
++            const friend: number = this.matchMakingStack.pop();
++            if (this.InGame.has(friend))
++            {   
++                this.matchMakingStack.push({id});
++                return;
++            }
++            if (this.socketServer.getSocket(friend) === null)
++            {
++                this.matchMakingStack.push({id});
++                return;
++            }
++            const type: string = 'matchMakingInvite';
++            this.invite(type, friend, await this.userService.getUser(id));
++            this.invite(type, id, await this.userService.getUser(friend));
++            const players: gameInterface.PlayerId = {player1Id: id, player2Id: friend};
++            const playerData: gameInterface.playersWithReady = {Players: players, Ready: {player1Ready: false, player2Ready: false}};
++            this.WaitingPlayerMap.set(players, playerData);
++        }
++    }
++
++    async inviteRefused(id: number, friendId: number) {
++        const friendSocket: WebSocket = this.socketServer.getSocket(friendId);
++        const socket: WebSocket = this.socketServer.getSocket(id);
++        if (friendSocket)
++            friendSocket.send(JSON.stringify({type: 'inviteRefused', user : this.userService.getUser(id)}));
++        if (socket)
++            socket.send(JSON.stringify({type: 'inviteRefused', user : this.userService.getUser(friendId)}));
++    }
++
++    async matchMakingInviteRefused(id: number, friendId: number) {
++        const friendSocket: WebSocket = this.socketServer.getSocket(friendId);
++        const socket: WebSocket = this.socketServer.getSocket(id);
++        if (friendSocket)
++        {
++            friendSocket.send(JSON.stringify({type: 'matchMakingInviteRefused', user : this.userService.getUser(id)}));
++            this.matchMakingStack.push({friendId});
++        }
++        if (socket)
++        {
++            socket.send(JSON.stringify({type: 'matchMakingInviteRefused', user : this.userService.getUser(friendId)}));
++            this.matchMakingStack.push({id});
++        }
++    }
++
++    async gameStart(friendId: number, id: number)
++    {
++        this.InGame.add(friendId);
++        this.InGame.add(id);
++        const friendSocket: WebSocket = this.socketServer.getSocket(friendId);
++        const socket: WebSocket = this.socketServer.getSocket(id);
++        friendSocket.send(JSON.stringify({type: 'gameStart', user : this.userService.getUser(id)}));
++        socket.send(JSON.stringify({type: 'gameStart', user : this.userService.getUser(friendId)}));
++    }
++
++    async removeIdInGame(id: number)
++    {
++        this.InGame.delete(id);
++    }
++
++    async getPlayerMapValue(id: number): Promise<gameInterface.playersWithReady | null> {
++        for (const [key, value] of this.WaitingPlayerMap.entries()) {
++            if (key.player1Id === id)
++            {
++                return (value);
++            }
++            else if (key.player2Id === id)
++            {
++                return (value);
++            }
++        }
++        return (null);
++    }
++
++    async removePlayerMapValue(id: number)
++    {
++        for (const [key] of this.WaitingPlayerMap.entries()) {
++            if (key.player1Id === id)
++            {
++                this.WaitingPlayerMap.delete(key);
++                return;
++            }
++            else if (key.player2Id === id)
++            {
++                this.WaitingPlayerMap.delete(key);
++                return;
++            }
++        }
++    }
++
++    async removeMatchMakingStack(id: number)
++    {
++        for (let i = 0; i < this.matchMakingStack.length; i++)
++        {
++            if (this.matchMakingStack.get(i).id === id)
++            {
++                this.matchMakingStack.remove(i);
++                return;
++            }
++        }
++    }
++}
+\ No newline at end of file
+diff --git a/api/src/socket/socket.server.ts b/api/src/socket/socket.server.ts
+index 0e7f2334..4fb3702b 100644
+--- a/api/src/socket/socket.server.ts
++++ b/api/src/socket/socket.server.ts
+@@ -3,15 +3,21 @@ import { OnGatewayConnection, OnGatewayDisconnect, MessageBody, OnGatewayInit ,S
+ import { JwtService } from '@nestjs/jwt';
+ import { Injectable } from '@nestjs/common';
+ 
++import { GameReply } from './game.reply';
++
++import { Deque } from 'double-ended-queue';
++
+ @Injectable()
+ @WebSocketGateway({ 
+     transports: ['websocket']
+ })
+ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
+     constructor(
+-        private jwtService: JwtService
++        private jwtService: JwtService,
++        private gameReply: GameReply,
+     ) {}
+ 
++
+     @WebSocketServer() server: WebSocket;
+     static serverRef;
+ 
+diff --git a/api/src/socket/socket.service.ts b/api/src/socket/socket.service.ts
+deleted file mode 100644
+index 625300bf..00000000
+--- a/api/src/socket/socket.service.ts
++++ /dev/null
+@@ -1,4 +0,0 @@
+-import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
+-import { WebSocketServer, WsException } from '@nestjs/websockets';
+-import { JwtService } from '@nestjs/jwt';
+-import { Observable } from 'rxjs';
+\ No newline at end of file
+diff --git a/api/src/socket/socketServer.module.ts b/api/src/socket/socketServer.module.ts
+index 444675b1..c5a06a13 100644
+--- a/api/src/socket/socketServer.module.ts
++++ b/api/src/socket/socketServer.module.ts
+@@ -1,17 +1,16 @@
+ import { Module, forwardRef } from '@nestjs/common';
+ import { SocketServer } from './socket.server';
+-import { GameGateway } from './game.gateway';
+ import { ChatGateway } from './chat.gateway';
+ 
+ import { SocketGuard } from 'src/auth/auth.guard';
+ import { JwtService } from '@nestjs/jwt';
+-import { GameService } from 'src/game/game.service';
+ 
+ import { UserService } from 'src/user/user.service';
+ 
++import { GameService } from 'src/game/game.service';
+ 
+ @Module({
+-    providers: [ChatGateway, SocketServer, SocketGuard, JwtService, UserService, GameService, GameGateway],
++    providers: [ChatGateway, SocketServer, SocketGuard, JwtService, UserService, GameService],
+   })
+ 
+   export class SocketServerModule {}
+\ No newline at end of file
+diff --git a/api/src/user/user.module.ts b/api/src/user/user.module.ts
+index d8ec5cea..ae11f9e6 100644
+--- a/api/src/user/user.module.ts
++++ b/api/src/user/user.module.ts
+@@ -15,6 +15,7 @@ import { AuthModule } from 'src/auth/auth.module';
+ import { FriendRequestModule } from 'src/friend-request/friend-request.module';
+ import { AuthService } from 'src/auth/auth.service';
+ import { FriendRequestService } from 'src/friend-request/friend-request.service';
++import { SocketServer } from 'src/socket/socket.server';
+ 
+ @Module({
+   imports: [
+diff --git a/frontend/Dockerfile b/frontend/Dockerfile
+index 5198bfba..7ecb71b7 100644
+--- a/frontend/Dockerfile
++++ b/frontend/Dockerfile
+@@ -1,8 +1,8 @@
+-FROM node:latest
++FROM node
+ 
+ WORKDIR /usr/src/app
+ COPY package*.json ./
+ RUN npm install
+ COPY . .
+ 
+-CMD ["npm", "run", "start"]
+\ No newline at end of file
++CMD ["npm", "run", "start"]
+diff --git a/frontend/src/components/Utils/gameComponents/game.tsx b/frontend/src/components/Utils/gameComponents/game.tsx
+index 076c8065..24f5d3a3 100644
+--- a/frontend/src/components/Utils/gameComponents/game.tsx
++++ b/frontend/src/components/Utils/gameComponents/game.tsx
+@@ -3,6 +3,7 @@ import "../../Styles/GameStyle.css";
+ import * as request from "./gameRequest.tsx";
+ import { WebSocket } from "ws";
+ import Canvas from "./canvas.tsx";
++import { log } from "console";
+ 
+ interface BallData {
+     x: number;
+@@ -138,15 +139,9 @@ function GameComponent({ socket }) {
+             // );
+         }
+         if (event.key === "ArrowDown") {
+-            const data = {id: id, paddleAction: "down"};
+-            const json = JSON.stringify(data);
+-            socket.send(JSON.stringify(
+-                {
+-                    event: "movePad",
+-                    data: json,
+-                }
+-            )
+-            );
++            console.log("down");
++            const data = {event: 'movePad', data: {id: id, paddleAction: "down"}};
++            socket.send(JSON.stringify(data));
+         }
+     };
+ 
+diff --git a/frontend/src/pages/Authentication.tsx b/frontend/src/pages/Authentication.tsx
+index c72c11b6..d8b4b1ae 100644
+--- a/frontend/src/pages/Authentication.tsx
++++ b/frontend/src/pages/Authentication.tsx
+@@ -115,7 +115,7 @@ const Authentication = () => {
+ 
+     return (
+         <div className="AuthBody">
+-            {show &&
++            {/* {show &&
+             <div className="Popup">
+ 
+                     <div className="Popup-inner">
+@@ -139,7 +139,7 @@ const Authentication = () => {
+                     </div>
+ 
+             </div>
+-            }
++            } */}
+             <div>
+                 {user.isLoggedIn === false &&
+                     <a

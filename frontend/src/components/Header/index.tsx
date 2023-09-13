@@ -58,9 +58,9 @@ const Header = () => {
             </li>
             <li>
                 <p onClick={() => startTransition(() => {
-                    window.location.href = "/Game";})}>
+                    window.location.href = "/lobby";})}>
                     <i className='bx bx-game'></i>
-                    <span className="links_name">Game</span>
+                    <span className="links_name">Lobby</span>
                 </p>
             </li>
             <li>

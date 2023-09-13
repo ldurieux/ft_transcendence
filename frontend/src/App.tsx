@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { PopupProvider } from "./components/Utils/chatComponents/PopupContext.tsx";
 
@@ -26,6 +26,14 @@ function App() {
             socket.close();
         };
     }, [url, socket]);
+
+    socket.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        if (event.data === 'gameStart') {
+            window.location.href = '/game';
+        }
+        console.log(data);
+    };
 
     return (
         <div className="App-header">

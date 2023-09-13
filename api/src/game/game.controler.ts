@@ -4,16 +4,13 @@ import { HttpException, HttpStatus, Controller, Get, Post, Body, Request, UseGua
 
 import { GameReply } from "src/socket/game.reply";
 
-import { GameService } from "./game.service";
-
-import { playersWithReady } from "./gameInterface";
+// import { GameService } from "./game.service";
 
 @Controller('game')
 export class GameControler
 {
     constructor(
         private readonly userService: UserService,
-        private readonly gameService: GameService,
         private readonly gameReply: GameReply,
     ){}
 
@@ -21,7 +18,7 @@ export class GameControler
     @Post('invite')
     async gameInvite(@Request() req)
     {
-        const { id} = req.Body;
+        const {id} = req.Body;
 
         if (typeof id !== 'number')
             throw new HttpException("", HttpStatus.BAD_REQUEST);
@@ -52,44 +49,13 @@ export class GameControler
     }
 
     @UseGuards(AuthGuard)
-    @Post('matchMakingResponse')
-    async gameMatchMakingResponse(@Request() req)
-    {
-        const { id, response } = req.Body;
-        if (id !== 'number')
-            throw new HttpException("", HttpStatus.BAD_REQUEST);
-        if (response !== 'boolean')
-            throw new HttpException("", HttpStatus.BAD_REQUEST);
-        const playerData: playersWithReady = await this.gameReply.getPlayerMapValue(id);
-        if (response === true)
-        {
-            if (id === playerData.Players.player1Id)
-                playerData.Ready.player1Ready = true;
-            else
-                playerData.Ready.player2Ready = true;
-        }
-        else
-        {
-            this.gameReply.matchMakingInviteRefused(playerData.Players.player1Id, playerData.Players.player2Id);
-        }
-        if (playerData.Ready.player1Ready === true && playerData.Ready.player2Ready === true)
-        {
-            this.gameReply.gameStart(playerData.Players.player1Id, playerData.Players.player2Id);
-        }
-    }
-
-    @UseGuards(AuthGuard)
     @Post('MatchMaking')
-    async gameMatchMaking(@Request() req)
-    {
-        const { id } = req.Body;
+    async gameMatchMaking(@Request() req) {
+        const id = req['user'];
+        const typeOfGame:number = req.body.typeOfGame;
 
-        if (typeof id !== 'number')
+        if (typeof typeOfGame !== 'number')
             throw new HttpException("", HttpStatus.BAD_REQUEST);
-        const waitingsPlayer = await this.gameReply.MatchMaking(id);
-        if (waitingsPlayer === null)
-            return;
-        this.gameReply.MatchMaking(id);
+        this.gameReply.MatchMaking(id, typeOfGame);
     }
-
 }
