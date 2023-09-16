@@ -2,7 +2,6 @@ import { Inject, UseGuards, Injectable, ValidationPipe, forwardRef } from '@nest
 
 import { OnGatewayConnection, OnGatewayDisconnect, MessageBody, OnGatewayInit ,SubscribeMessage, WebSocketGateway, ConnectedSocket, WebSocketServer } from '@nestjs/websockets';
 
-import { SocketGuard } from 'src/auth/auth.guard';
 import { WebSocket } from 'ws';
 
 import { JwtService } from '@nestjs/jwt';
@@ -12,16 +11,13 @@ import { GameService } from '../game/game.service';
 @Injectable()
 @WebSocketGateway({
     transports: ['websocket'],
-    port: 3002
+    path: '/game',
 })
 export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
-    private gameInstance: Set<number>;
     constructor(
         private jwtService: JwtService,
         private readonly gameService: GameService,
-    ) {
-        this.gameInstance = new Set<number>();
-    }
+    ) {}
 
     @WebSocketServer() server: WebSocket;
     static serverRef;
@@ -53,6 +49,16 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
     paddleMove(client: WebSocket, data: {direction: number, gameId: number}) {
         this.gameService.movePadle(client.data.id, data.direction, data.gameId);
+    }
+
+    async synchronizedPlayer(player1: number, player2: number, gameId: number)
+    {
+        const socket1 = this.getSocket(player1);
+        const socket2 = this.getSocket(player2);
+        if (!socket1 || !socket2)
+            return;
+        socket1.send(JSON.stringify({type: 'synchronized', gameId: gameId, player: 1}));
+        socket2.send(JSON.stringify({type: 'synchronized', gameId: gameId, player: 2}));
     }
 }
 

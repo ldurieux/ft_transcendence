@@ -14,7 +14,6 @@ import { Deque } from 'double-ended-queue';
 export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
     constructor(
         private jwtService: JwtService,
-        // private gameReply: GameReply,
     ) {}
 
 
@@ -98,8 +97,10 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
 
     getSocket(id: number) {
         for (const client of this.server.clients) {
-            if (client.data.user == id)
+            if (client.data.user == id) {
+                console.log(client);
                 return client;
+            }
         }
         return null;
     }

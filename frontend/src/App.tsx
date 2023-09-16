@@ -11,25 +11,34 @@ function App() {
     const socket = new WebSocket(url);
 
     useEffect(() => {
-        socket.onopen = () => {
-            const baguette = { event: 'auth', data: { data: `Bearer ${localStorage.getItem('token')}` } };
-            socket.send(JSON.stringify(baguette));
-            console.log('Connected to server');
-            // setSocket(socket);
+        if (document.visibilityState === 'visible') {
+            socket.onopen = () => {
+                const baguette = { event: 'auth', data: { data: `Bearer ${localStorage.getItem('token')}` } };
+                socket.send(JSON.stringify(baguette));
+                console.log('connected to server');
+            };
+        } else {
+            socket.onclose = () => {
+                console.log('disconnected from server');
+            };
+        }
+
+
+        return () => {
+            if (socket.readyState === WebSocket.OPEN)
+            {
+                console.log('closing socket');
+                socket.close();
+            }
         };
 
-        socket.onclose = () => {
-            console.log('Disconnected from server');
-        };
-        // Clean up function
-        return () => {
-            socket.close();
-        };
-    }, [url, socket]);
+    }, [url, socket, document.visibilityState]);
 
     socket.onmessage = (event) => {
+        console.log('message received');
         const data = JSON.parse(event.data);
-        if (event.data === 'gameStart') {
+        console.log(data.type);
+        if (data.type === 'gameStart') {
             window.location.href = '/game';
         }
         console.log(data);

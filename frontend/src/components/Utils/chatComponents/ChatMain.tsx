@@ -51,6 +51,9 @@ function ChatMain({socket}) {
         if (socket && !channel) {
             socket.onmessage = (e) => {
                 const data = JSON.parse(e.data);
+                if (data.type === "gameStart") {
+                    window.location.href = "/game";
+                }
                 if (data.event === "join" && data.data.user.id === user.id) {
                     setChannelList([...channelList, data.data.channel]);
                 }

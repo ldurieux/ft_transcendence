@@ -24,6 +24,7 @@ import { GameGateway } from 'src/gameSocket/game.gateway';
 import { GameService } from './game.service';
 
 import * as gameInterface from './gameInterface'
+import { GameSocketModule } from 'src/gameSocket/gameSocket.module';
 
 
 @Module({
@@ -32,8 +33,9 @@ import * as gameInterface from './gameInterface'
         TypeOrmModule.forFeature([Auth]),
         TypeOrmModule.forFeature([FriendRequest]),
         TypeOrmModule.forFeature([Game]),
+        forwardRef(() => GameSocketModule),
     ],
-    providers: [JwtService, Repository, GameService, SocketServer, GameGateway, GameReply, UserService, GameControler, AuthService, FriendRequestService],
+    providers: [JwtService, GameGateway, Repository, GameService, SocketServer, GameReply, UserService, GameControler, AuthService, FriendRequestService],
     controllers: [GameControler],
 })
 export class GameModule {}

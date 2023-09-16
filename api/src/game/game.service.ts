@@ -10,6 +10,9 @@ import { GameReply } from 'src/socket/game.reply';
 
 import * as gameInterface from './gameInterface';
 
+import { GameGateway } from 'src/gameSocket/game.gateway';
+
+
 @Injectable()
 export class GameService {
 
@@ -18,13 +21,25 @@ export class GameService {
     constructor(
         private readonly gameRepository: Repository<Game>,
         private readonly userService: UserService,
-    ) {}
+        private readonly gameGateway: GameGateway,
+    ) {
+        this.gameInstance = new Map<number, gameInterface.Game>();
+    }
+
+    async checkIfGameExist(gameId: number) {
+        const game = this.gameInstance.get(gameId);
+        if (!game)
+            return false;
+        return true;
+    }
 
     async createGame(player1: number, player2: number, typeOfGame: number) {
         const game = new gameInterface.Game();
         game.gameInit(typeOfGame, player1, player2);
         const gameId: number = Math.floor(Math.random() * 1000000000);
         this.gameInstance.set(gameId, game);
+        console.log('createGame');
+        this.gameGateway.synchronizedPlayer(player1, player2, gameId);
     }
 
     async movePadle(playerId: number, direction: number, gameId: number) {

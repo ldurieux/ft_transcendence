@@ -49,24 +49,31 @@ export class GameReply {
 
     async MatchMaking(id: number, typeOfGame: number)
     {
-        if (typeOfGame === 0)
+        console.log('MatchMaking');
+        if (typeOfGame === 1)
         {
-            this.ClassicMatchMaking.push(id);
             if (this.DeluxeMatchMaikng[0] === id)
                 this.DeluxeMatchMaikng.pop();
+            if (this.ClassicMatchMaking[0] === id)
+                this.ClassicMatchMaking.pop();
+            this.ClassicMatchMaking.push(id);
             if (this.ClassicMatchMaking.length === 2)
             {
+                console.log('gameStart');
                 this.gameStart(this.ClassicMatchMaking[0], this.ClassicMatchMaking[1]);
                 this.ClassicMatchMaking.splice(0, 2);
             }
         }
-        else if (typeOfGame === 1)
+        else if (typeOfGame === 2)
         {
-            this.DeluxeMatchMaikng.push(id);
             if (this.ClassicMatchMaking[0] === id)
                 this.ClassicMatchMaking.pop();
+            if (this.DeluxeMatchMaikng[0] === id)
+                this.DeluxeMatchMaikng.pop();
+            this.DeluxeMatchMaikng.push(id);
             if (this.DeluxeMatchMaikng.length === 2)
             {
+                console.log('gameStart');
                 this.gameStart(this.DeluxeMatchMaikng[0], this.DeluxeMatchMaikng[1]);
                 this.DeluxeMatchMaikng.splice(0, 2);
             }
@@ -85,10 +92,13 @@ export class GameReply {
     async gameStart(Id1: number, Id2: number)
     {
         console.log('gameStart');
-        this.InGame.add(Id1);
-        this.InGame.add(Id2);
         const friendSocket: WebSocket = this.socketServer.getSocket(Id1);
         const socket: WebSocket = this.socketServer.getSocket(Id2);
+        if (friendSocket == null || socket == null)
+            return;
+        console.log('gameStart');
+        this.InGame.add(Id1);
+        this.InGame.add(Id2);
         friendSocket.send(JSON.stringify({type: 'gameStart', user : this.userService.getUser(Id1)}));
         socket.send(JSON.stringify({type: 'gameStart', user : this.userService.getUser(Id2)}));
         this.gameService.createGame(Id1, Id2, 0);

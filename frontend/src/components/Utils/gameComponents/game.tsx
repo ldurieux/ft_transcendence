@@ -4,6 +4,7 @@ import * as request from "./gameRequest.tsx";
 import { WebSocket } from "ws";
 import Canvas from "./canvas.tsx";
 import { log } from "console";
+import { Route } from "react-router-dom";
 
 interface BallData {
     x: number;
@@ -41,7 +42,7 @@ interface Data {
 
 let paddlePosition: number = 0;
 
-function GameComponent({ socket }) {
+function GameComponent() {
 
     const button = document.getElementById("arrow");
 
@@ -55,25 +56,10 @@ function GameComponent({ socket }) {
         this.removeEventListener("ArrowDown", down);
     }
 
-    useEffect(() => {
-        if (socket) {
-            button?.addEventListener("ArrowUp", up);
-            button?.addEventListener("ArrowDown", down);
-            socket.onmessage = (event) => {
-                const message = JSON.parse(event.data);
-                console.log(message);
-            }
-        }
-    }, [socket]);
-
     console.log(paddlePosition);
     
     return (
-        <div className="game">
-
-            <div className="canvas-game">
-                <Canvas paddle={paddlePosition} />
-            </div>
+        <div>
         </div>
     );
 } 

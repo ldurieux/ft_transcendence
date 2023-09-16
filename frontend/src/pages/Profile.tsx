@@ -12,7 +12,7 @@ function Profile({socket}) {
             </div>
           <div className="ProfileBody">
               <div className="Left">
-                  <ProfileUser/>
+                  <ProfileUser />
               </div>
               <div className="Right">
                   <Friendlist socket={socket} />

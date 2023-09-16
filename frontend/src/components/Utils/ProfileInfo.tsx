@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { post, get } from "./Request.tsx";
 import {UserContext} from "./context.tsx";
 
-function ProfileUser({children}) {
+function ProfileUser() {
     const {user, setUser} = React.useContext(UserContext);
     const inputRef = useRef(null);
     const [error, setError] = useState(null);

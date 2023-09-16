@@ -20,6 +20,9 @@ function Friendlist({socket}) {
         {
             socket.onmessage = (e) => {
                 const data = JSON.parse(e.data);
+                if (data.type === "gameStart") {
+                    window.location.href = "/game";
+                }
                 if (data.event === "connect")
                 {
                     //if user connected is one of your friends
@@ -145,6 +148,8 @@ function Friendlist({socket}) {
     useEffect(() => {
         (async () => {
             const result = await get("user/self");
+            if (result === undefined)
+                return;
             setList(result.friends);
             setRequest(result.receivedRequests);
             setBlocked(result.blocked);
