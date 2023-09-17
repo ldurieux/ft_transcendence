@@ -44,6 +44,29 @@ let paddlePosition: number = 0;
 
 function GameComponent() {
 
+    const url = `ws://${process.env.REACT_APP_WEB_HOST}/game:3001`;
+    const gameSocket = new WebSocket(url);
+    useEffect(() => {
+        gameSocket.onopen = () => {
+            console.log("connected to game server");
+        };
+        gameSocket.onclose = () => {
+            console.log("disconnected from game server");
+        };
+        
+        return () => {
+            if (gameSocket.readyState === WebSocket.OPEN)
+            {
+                console.log("closing game socket");
+                gameSocket.close();
+            }
+        };
+    }, []);
+
+    gameSocket.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+    }
+
     const button = document.getElementById("arrow");
 
     function up() {

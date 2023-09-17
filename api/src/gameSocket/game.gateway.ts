@@ -6,7 +6,10 @@ import { WebSocket } from 'ws';
 
 import { JwtService } from '@nestjs/jwt';
 
-import { GameService } from '../game/game.service';
+
+import * as gameInterface from '../game/gameInterface';
+import { subscribe } from 'diagnostics_channel';
+import { connected } from 'process';
 
 @Injectable()
 @WebSocketGateway({
@@ -14,27 +17,29 @@ import { GameService } from '../game/game.service';
     path: '/game',
 })
 export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
+    private gameInstance: Map<number, gameInterface.Game>;
     constructor(
         private jwtService: JwtService,
-        private readonly gameService: GameService,
-    ) {}
+    ) {
+        this.gameInstance = new Map<number, gameInterface.Game>();
+    }
 
     @WebSocketServer() server: WebSocket;
     static serverRef;
 
-    afterInit(server: WebSocket) {
+    async afterInit(server: WebSocket) {
     }
 
-    handleConnection(client: WebSocket) {
+    async handleConnection(client: WebSocket) {
         client.data = {}
         console.log('Client isConnected to game');
     }
     
-    handleDisconnect(client: WebSocket) {
+    async handleDisconnect(client: WebSocket) {
         console.log('Client disconnected to game');
     }
 
-    getSocket(id: number): WebSocket {
+    async getSocket(id: number): WebSocket {
         for (const client of this.server.clients) {
             if (client.data.user === id) {
                 return client;
@@ -43,22 +48,119 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         return null;
     }
 
-    getClientId(client: WebSocket): number {
+    async getClientId(client: WebSocket): Promise<number> {
         return client.data.user;
     }
 
-    paddleMove(client: WebSocket, data: {direction: number, gameId: number}) {
-        this.gameService.movePadle(client.data.id, data.direction, data.gameId);
+    async wait(ms: number) {
+        return new Promise( resolve => setTimeout(resolve, ms) );
     }
 
     async synchronizedPlayer(player1: number, player2: number, gameId: number)
     {
-        const socket1 = this.getSocket(player1);
-        const socket2 = this.getSocket(player2);
-        if (!socket1 || !socket2)
-            return;
+        let nSync = 0;
+        let socket1: WebSocket;
+        let socket2: WebSocket;
+        while (nSync < 5)
+        {
+            socket1 = this.getSocket(player1);
+            socket2 = this.getSocket(player2);
+            if (!socket1 || !socket2)
+                this.wait(1000);
+            nSync++;
+        }
+        if (nSync === 5)
+        {
+            if (socket1)
+                socket1.send(JSON.stringify({type: 'Error', Error: 'PlayerNotConnected'}));
+            if (socket2)
+                socket2.send(JSON.stringify({type: 'Error', Error: 'PlayerNotConnected'}));
+        }
         socket1.send(JSON.stringify({type: 'synchronized', gameId: gameId, player: 1}));
         socket2.send(JSON.stringify({type: 'synchronized', gameId: gameId, player: 2}));
+        if (this.gameInstance.get(gameId).typeOfGame === 1)
+            this.classicGameRoutine(gameId, socket1, socket2);
+        else if (this.gameInstance.get(gameId).typeOfGame === 2)
+            this.deluxeGameRoutine(gameId, socket1, socket2);
+    }
+
+    @SubscribeMessage('movePaddle')
+    async movePaddle(@ConnectedSocket() client: WebSocket, @MessageBody('data') data: {gameId: number, player: number, direction: number})
+    {
+        const game = this.gameInstance.get(data.gameId);
+        const socket1 = this.getSocket(game.player1.getPlayerId());
+        const socket2 = this.getSocket(game.player2.getPlayerId());
+        game.movePaddle(data.player, data.direction, socket1, socket2);
+    }
+
+    @SubscribeMessage('stopPaddle')
+    async stopPaddle(@ConnectedSocket() client: WebSocket, @MessageBody('data') data: {gameId: number, player: number})
+    {
+        const game = this.gameInstance.get(data.gameId);
+        game.stopPaddle(data.player);
+        const socket1 = this.getSocket(game.player1.getPlayerId());
+        const socket2 = this.getSocket(game.player2.getPlayerId());
+        socket1.send(JSON.stringify({type: 'paddlePos', paddlePlayer: data.player, player: 1, position: game.player1.paddle.y}));
+        socket2.send(JSON.stringify({type: 'paddlePos', paddlePlayer: data.player, player: 2, position: game.player2.paddle.y}));
+    }
+
+    async checkIfGameExist(gameId: number) {
+        const game = this.gameInstance.get(gameId);
+        if (!game)
+            return false;
+        return true;
+    }
+
+    async createGame(player1: number, player2: number, typeOfGame: number) {
+        const game = new gameInterface.Game();
+        game.typeOfGame = typeOfGame;
+        const gameId: number = Math.floor(Math.random() * 1000000000);
+        if (gameId === 0 || this.gameInstance.has(gameId))
+            this.createGame(player1, player2, typeOfGame);
+        this.gameInstance.set(gameId, game);
+        console.log('createGame');
+        this.synchronizedPlayer(player1, player2, gameId);
+    }
+
+    async classicGameRoutine(gameId: number, socket1: WebSocket, socket2: WebSocket)
+    {
+        const game = this.gameInstance.get(gameId);
+        const player1 = game.player1.getPlayerId();
+        const player2 = game.player2.getPlayerId();
+        let gameContinue: boolean = true;
+
+        game.gameInit(player1, player2, socket1, socket2);
+        while (gameContinue)
+        {
+            await game.moveBall();
+            gameContinue = await game.checkCollision(socket1, socket2);
+            await game.sendBallPos(socket1, socket2);
+            this.wait(4);
+        }
+    }
+
+    async deluxeGameRoutine(gameId: number, socket1: WebSocket, socket2: WebSocket)
+    {
+        const game = this.gameInstance.get(gameId);
+        const player1 = game.player1.getPlayerId();
+        const player2 = game.player2.getPlayerId();
+        let gameContinue:boolean = true;
+        let activeGameEffect: boolean = false;
+        let gameEffect: number = 0
+
+        game.gameInit(player1, player2, socket1, socket2);
+        while (gameContinue)
+        {
+            await game.moveBall();
+            gameContinue = await game.checkCollision(socket1, socket2);
+            await game.sendBallPos(socket1, socket2);
+            if (gameEffect % 2000 === 0)
+                await game.gameEffect(activeGameEffect, socket1, socket2);
+            if (gameEffect % 500 === 0)
+                await game.releaseGameEffect(activeGameEffect, socket1, socket2);
+            this.wait(4);
+            gameEffect += 4;
+        }
     }
 }
 

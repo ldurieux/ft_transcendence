@@ -7,7 +7,7 @@ import { User } from "src/user/user.entity";
 
 import { UserService } from "src/user/user.service";
 
-import { GameService } from "src/game/game.service";
+import { GameGateway } from "src/gameSocket/game.gateway";
 
 @WebSocketGateway()
 @Injectable()
@@ -20,7 +20,7 @@ export class GameReply {
     constructor(
         private readonly userService: UserService,
         private socketServer: SocketServer,
-        private readonly gameService: GameService,
+        private readonly gameGateway: GameGateway,
     ){
         this.DeluxeMatchMaikng = new Array<number>();
         this.ClassicMatchMaking = new Array<number>();
@@ -101,7 +101,7 @@ export class GameReply {
         this.InGame.add(Id2);
         friendSocket.send(JSON.stringify({type: 'gameStart', user : this.userService.getUser(Id1)}));
         socket.send(JSON.stringify({type: 'gameStart', user : this.userService.getUser(Id2)}));
-        this.gameService.createGame(Id1, Id2, 0);
+        this.gameGateway.createGame(Id1, Id2, 0);
     }
 
     async removeIdInGame(id: number)

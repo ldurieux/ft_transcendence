@@ -3,7 +3,6 @@ import { Module, forwardRef } from "@nestjs/common";
 import { SocketGuard } from 'src/auth/auth.guard';
 import { JwtService } from '@nestjs/jwt';
 
-import { GameService } from '../game/game.service';
 
 import { GameModule } from "src/game/game.module";
 
@@ -32,7 +31,7 @@ import { FriendRequest } from "src/friend-request/friend-request.entity";
         TypeOrmModule.forFeature([FriendRequest]),
         forwardRef(() => GameModule)
     ],
-    providers: [Repository, AuthService, FriendRequestService, SocketGuard, JwtService, GameGateway, GameService, UserService],
+    providers: [Repository, AuthService, FriendRequestService, SocketGuard, JwtService, GameGateway, UserService],
 })
 
 export class GameSocketModule {}
