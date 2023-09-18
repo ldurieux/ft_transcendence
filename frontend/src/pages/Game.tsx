@@ -3,10 +3,10 @@ import React, { Component } from "react";
 // import "../components/Styles/GameStyle.css";
 import GameComponent from "../components/Utils/gameComponents/game.tsx";
 
-function Game({socket}) {
+function Game() {
     return (
             <div>
-                <GameComponent socket={socket}/>
+                <GameComponent />
             </div>
         );
 }

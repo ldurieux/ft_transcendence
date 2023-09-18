@@ -136,10 +136,12 @@ export class Player {
     private score: number;
     private playerId: number;
     public paddle: Paddle;
+    private winner: boolean;
 
     constructor() {
         this.score = 0;
         this.paddle = new Paddle();
+        this.winner = false;
     }
 
     getPlayerId() {
@@ -164,13 +166,13 @@ export class Player {
         this.score++;
     }
 
-    win(socket1: WebSocket, socket2: WebSocket) {
-        if (socket1)
-            socket1.send(JSON.stringify({type: 'win'}));
-        if (socket2)
-            socket2.send(JSON.stringify({type: 'lose'}));
+    getWinner() {
+        return (this.winner);
     }
 
+    setWinner(winner: boolean) {
+        this.winner = winner;
+    }
 }
 
 export class Game {
@@ -234,13 +236,7 @@ export class Game {
     async playerScore(player: Player, socket1: WebSocket, socket2: WebSocket): Promise<number> {
         player.updateScore();
         if (player.getScore() === 5)
-        {
-            if (player === this.player1)
-                player.win(socket1, socket2);
-            else
-                player.win(socket2, socket1);
             return (1);
-        }
         return (0);
     }
 
@@ -294,6 +290,36 @@ export class Game {
         socket1.send(JSON.stringify({type: 'releaseGameEffect'}));
         socket2.send(JSON.stringify({type: 'releaseGameEffect'}));
         activeGameEffect = false;
+    }
+
+    async setWinner(playerId: number) {
+        if (playerId === this.player1.getPlayerId())
+            this.player1.setWinner(true);
+        else if (playerId === this.player2.getPlayerId())
+            this.player2.setWinner(true);
+    }
+
+    async whoWin(): Promise<Player> {
+        if (this.player1.getWinner() === true)
+            return (this.player1);
+        else if (this.player2.getWinner() === true)
+            return (this.player2);
+        return (null);
+    }
+
+    async whoLose(): Promise<Player> {
+        if (this.player1.getWinner() === false)
+            return (this.player1);
+        else if (this.player2.getWinner() === false)
+            return (this.player2);
+        return (null);
+    }
+
+    async playerDisconnect(playerId: number) {
+        if (playerId === this.player1.getPlayerId())
+            this.player2.setWinner(true);
+        else if (playerId === this.player2.getPlayerId())
+            this.player1.setWinner(true);
     }
 }
 
