@@ -11,6 +11,8 @@ export default function GameComponent() {
 
     useEffect(() => {
         gameSocket.onopen = () => {
+            const baguette = { event: 'auth', data: { data: `Bearer ${localStorage.getItem('token')}` } };
+            gameSocket.send(JSON.stringify(baguette));
             console.log("connected to game server");
         };
         gameSocket.onclose = () => {
@@ -28,6 +30,7 @@ export default function GameComponent() {
 
     gameSocket.onmessage = (event) => {
         const data = JSON.parse(event.data);
+        console.log(data);
     }
 
     const button = document.getElementById("arrow");

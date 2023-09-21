@@ -255,13 +255,21 @@ export class Game {
         if (collision === 1)
         {
             if (await this.playerScore(this.player1, socket1, socket2) === 1)
+            {
+                this.player1.setWinner(true);
+                this.player2.setWinner(false);
                 return (false);
+            }
             this.boardReset(socket1, socket2);
         }
         else if (collision === 2)
         {
             if (await this.playerScore(this.player2, socket1, socket2) === 1)
+            {
+                this.player2.setWinner(true);
+                this.player1.setWinner(false);
                 return (false);
+            }
             this.boardReset(socket1, socket2);
         }
         else if (collision === 3)

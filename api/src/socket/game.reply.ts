@@ -101,7 +101,7 @@ export class GameReply {
         this.InGame.add(Id2);
         friendSocket.send(JSON.stringify({type: 'gameStart', user : this.userService.getUser(Id1)}));
         socket.send(JSON.stringify({type: 'gameStart', user : this.userService.getUser(Id2)}));
-        this.gameGateway.createGame(Id1, Id2, 0);
+        this.gameGateway.createGame(Id1, Id2, 1);
     }
 
     async removeIdInGame(id: number)
