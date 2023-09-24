@@ -27,6 +27,11 @@ export const Popup = props => {
     );
 }
 
+const getFriends = () => {
+    const friends = getFriendsList();
+    return friends;
+}
+
 export const matchMaking = (typeOfGame) => {
     matchMakingRequest(typeOfGame);
 }

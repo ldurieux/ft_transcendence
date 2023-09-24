@@ -15,7 +15,6 @@ export class GameReply {
 
     private DeluxeMatchMaikng: Array<number>;
     private ClassicMatchMaking: Array<number>;
-    private InGame: Set<number>;
 
     constructor(
         private readonly userService: UserService,
@@ -24,7 +23,6 @@ export class GameReply {
     ){
         this.DeluxeMatchMaikng = new Array<number>();
         this.ClassicMatchMaking = new Array<number>();
-        this.InGame = new Set<number>();
     }
 
 
@@ -33,7 +31,7 @@ export class GameReply {
         const socket: WebSocket = this.socketServer.getSocket(id);
         if (!socket)
             return;
-        if (this.InGame.has(id))
+        if (this.gameGateway.isInGame(id))
         {
             this.sendInGame(id);
             return;
@@ -60,7 +58,7 @@ export class GameReply {
             if (this.ClassicMatchMaking.length === 2)
             {
                 console.log('gameStart');
-                this.gameStart(this.ClassicMatchMaking[0], this.ClassicMatchMaking[1]);
+                this.gameStart(this.ClassicMatchMaking[0], this.ClassicMatchMaking[1], typeOfGame);
                 this.ClassicMatchMaking.splice(0, 2);
             }
         }
@@ -74,7 +72,7 @@ export class GameReply {
             if (this.DeluxeMatchMaikng.length === 2)
             {
                 console.log('gameStart');
-                this.gameStart(this.DeluxeMatchMaikng[0], this.DeluxeMatchMaikng[1]);
+                this.gameStart(this.DeluxeMatchMaikng[0], this.DeluxeMatchMaikng[1], typeOfGame);
                 this.DeluxeMatchMaikng.splice(0, 2);
             }
         }
@@ -89,7 +87,7 @@ export class GameReply {
             socket.send(JSON.stringify({type: 'inviteRefused', user : this.userService.getUser(friendId)}));
     }
 
-    async gameStart(Id1: number, Id2: number)
+    async gameStart(Id1: number, Id2: number, typeOfGame: number)
     {
         console.log('gameStart');
         const friendSocket: WebSocket = this.socketServer.getSocket(Id1);
@@ -97,15 +95,8 @@ export class GameReply {
         if (friendSocket == null || socket == null)
             return;
         console.log('gameStart');
-        this.InGame.add(Id1);
-        this.InGame.add(Id2);
         friendSocket.send(JSON.stringify({type: 'gameStart', user : this.userService.getUser(Id1)}));
         socket.send(JSON.stringify({type: 'gameStart', user : this.userService.getUser(Id2)}));
-        this.gameGateway.createGame(Id1, Id2, 1);
-    }
-
-    async removeIdInGame(id: number)
-    {
-        this.InGame.delete(id);
+        this.gameGateway.createGame(Id1, Id2, typeOfGame);
     }
 }

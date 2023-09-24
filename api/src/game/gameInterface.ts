@@ -21,7 +21,7 @@ export class Ball {
         this.x = screen.width / 2;
         this.y = screen.height / 2;
         this.radius = 10;
-        this.speed = 5;
+        this.speed = 2;
         const rad = Math.random() * Math.PI * 2;
         if (rad > Math.PI / 4 && rad < Math.PI * 3 / 4)
            this.vectorRadians = rad + Math.PI / 2;
@@ -33,8 +33,10 @@ export class Ball {
 
     getBallData() {
         return (
-            JSON.stringify({Ballx: this.x, Bally: this.y, rad: this.radius})
-        );
+            this.x,
+            this.y,
+            this.radius
+            );
     }
 
     checkCollision(screen: Screen, paddle1: Paddle, paddle2: Paddle) {
@@ -50,13 +52,13 @@ export class Ball {
         if (this.x - this.radius <= paddle2.x + paddle2.width / 2 && this.y > paddle2.y - paddle2.height / 2 && this.y < paddle2.y + paddle2.height / 2)
         {
             this.vectorRadians = Math.PI * 2 - this.vectorRadians + 180;
-            this.speed = this.speed * 1.1;
+            this.speed = this.speed + 1;
             return (3);
         }
         if (this.x + this.radius >= paddle1.x - paddle1.width / 2 && this.y > paddle1.y - paddle1.height / 2 && this.y < paddle1.y + paddle1.height / 2)
         {
             this.vectorRadians = Math.PI * 2 - this.vectorRadians + 180;
-            this.speed = this.speed * 1.1;
+            this.speed = this.speed + 1;
             return (3);
         }
         return (0);
@@ -92,9 +94,10 @@ export class Paddle {
     }
 
     getPaddleData() {
-        return (
-            JSON.stringify({Paddley: this.y, Paddlewidth: this.width, Paddleheight: this.height})
-        );
+        return (this.y,
+            this.x,
+            this.width,
+            this.height);
     }
 
 
@@ -108,8 +111,8 @@ export class Paddle {
                     this.y = this.height / 2;
                 else
                     this.y -= this.paddleSpeed;
-                socket1.send(JSON.stringify({type: 'paddlePos', data: {y: this.y, paddlePlayer: paddlePlayer}}))
-                socket2.send(JSON.stringify({type: 'paddlePos', data: {y: this.y, paddlePlayer: paddlePlayer}}))
+                socket1.send(JSON.stringify({type: 'paddlePos', data: {paddle: this.getPaddleData, paddlePlayer: paddlePlayer}}));
+                socket2.send(JSON.stringify({type: 'paddlePos', data: {paddle: this.getPaddleData, paddlePlayer: paddlePlayer}}));
                 wait(4);
             }
         }
@@ -121,8 +124,8 @@ export class Paddle {
                     this.y = screen.height - this.height / 2;
                 else
                     this.y += this.paddleSpeed;
-                socket1.send(JSON.stringify({type: 'paddlePos', data: {y: this.y, paddlePlayer: paddlePlayer}}))
-                socket2.send(JSON.stringify({type: 'paddlePos', data: {y: this.y, paddlePlayer: paddlePlayer}}))
+                socket1.send(JSON.stringify({type: 'paddlePos', data: {paddle: this.getPaddleData, paddlePlayer: paddlePlayer}}));
+                socket2.send(JSON.stringify({type: 'paddlePos', data: {paddle: this.getPaddleData, paddlePlayer: paddlePlayer}}));
                 wait(4);
             }
         }
@@ -142,6 +145,10 @@ export class Player {
         this.score = 0;
         this.paddle = new Paddle();
         this.winner = false;
+    }
+
+    destroyPlayer() {
+        delete this.paddle;
     }
 
     getPlayerId() {
@@ -192,14 +199,22 @@ export class Game {
         };
     }
 
+    destroyGame() {
+        this.player1.destroyPlayer();
+        this.player2.destroyPlayer();
+        delete this.player1;
+        delete this.player2;
+        delete this.ball;
+    }
+
     async gameInit(player1Id: number, player2Id: number, socket1: WebSocket, socket2: WebSocket) {
         this.player1.setPlayerId(player1Id);
         this.player2.setPlayerId(player2Id);
         this.player1.paddle.paddleInit(this.screen, 1);
         this.player2.paddle.paddleInit(this.screen, 2);
         this.ball.ballInit(this.screen);
-        socket1.send(JSON.stringify({type: 'gameStart', data: {player1: this.player1.getScoreData(), player2: this.player2.getScoreData(), ball: this.ball.getBallData(), screen: JSON.stringify(this.screen)}}));
-        socket2.send(JSON.stringify({type: 'gameStart', data: {player1: this.player2.getScoreData(), player2: this.player1.getScoreData(), ball: this.ball.getBallData(), screen: JSON.stringify(this.screen)}}));
+        socket1.send(JSON.stringify({type: 'gameStart', data: {myScore: this.player1.getScoreData(), oponentScore: this.player2.getScoreData(), ball: this.ball.getBallData(), screen: this.screen}}));
+        socket2.send(JSON.stringify({type: 'gameStart', data: {myScore: this.player2.getScoreData(), oponentScore: this.player1.getScoreData(), ball: this.ball.getBallData(), screen: this.screen}}));
     }
 
     async getTypeOfGame() {
@@ -272,16 +287,12 @@ export class Game {
             }
             this.boardReset(socket1, socket2);
         }
-        else if (collision === 3)
-        {
-            this.ball.moveBall();
-        }
         return (true);
     }
 
     async sendBallPos(socket1: WebSocket, socket2: WebSocket) {
-        socket1.send(JSON.stringify({type: 'ballPos', data: {ball: this.ball.getBallData()}}));
-        socket2.send(JSON.stringify({type: 'ballPos', data: {ball: this.ball.getBallData()}}));
+        socket1.send(JSON.stringify({type: 'ballPos', data: {ball: this.ball.getBallData(), screen: this.screen}}));
+        socket2.send(JSON.stringify({type: 'ballPos', data: {ball: this.ball.getBallData(), screen: this.screen}}));
     }
 
     async gameEffect(activeGameEffect: boolean, socket1: WebSocket, socket2: WebSocket)
@@ -325,9 +336,15 @@ export class Game {
 
     async playerDisconnect(playerId: number) {
         if (playerId === this.player1.getPlayerId())
+        {
             this.player2.setWinner(true);
+            this.player1.setWinner(false);
+        }
         else if (playerId === this.player2.getPlayerId())
+        {
             this.player1.setWinner(true);
+            this.player2.setWinner(false);
+        }
     }
 }
 

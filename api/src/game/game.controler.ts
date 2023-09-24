@@ -3,6 +3,7 @@ import { AuthGuard } from "src/auth/auth.guard";
 import { HttpException, HttpStatus, Controller, Get, Post, Body, Request, UseGuards, UploadedFile, UseInterceptors, ParseFilePipe, FileTypeValidator, MaxFileSizeValidator } from '@nestjs/common';
 
 import { GameReply } from "src/socket/game.reply";
+import { type } from "os";
 
 // import { GameService } from "./game.service";
 
@@ -30,8 +31,10 @@ export class GameControler
     @Post('inviteResponse')
     async gameInviteResponse(@Request() req)
     {
-        const {myId, id, response } = req.Body;
+        const {myId, id, response, typeOfGame } = req.Body;
         
+        if (typeof typeOfGame !== 'number')
+            throw new HttpException("", HttpStatus.BAD_REQUEST);
         if (typeof myId !== 'number')
             throw new HttpException("", HttpStatus.BAD_REQUEST);
         if (typeof id !== 'number')
@@ -40,7 +43,7 @@ export class GameControler
             throw new HttpException("", HttpStatus.BAD_REQUEST);
         if (response === true)
         {
-            this.gameReply.gameStart(myId, id);
+            this.gameReply.gameStart(myId, id, typeOfGame);
         }
         else
         {
