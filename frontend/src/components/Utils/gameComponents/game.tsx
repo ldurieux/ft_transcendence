@@ -1,16 +1,23 @@
 import React, { useEffect, useState, useRef } from "react";
-import  { Ball } from "./game/object/ball.tsx";
-import { Game } from "./game/object/game.tsx";
 import "../../Styles/GameStyle.css";
+import * as gameData from "./game/object/gameData.tsx"
 
 export default function GameComponent() {
     const url = `ws://${process.env.REACT_APP_WEB_HOST}:3001/game`;
     const gameSocket = new WebSocket(url);
-    const canvasRef = useRef(null);
-    const colorsRef = useRef(null);
-    const ballRef = new Ball();
-    const gameRef = new Game();
-
+    const [boardColor, setBoardColor] = useState<string>("black");
+    var gameId = 0;
+    var MyId = 0;
+    const ballData = new gameData.Ball();
+    const players = new Array<gameData.Player>(2);
+    const screen: gameData.Screen = {
+        width: 0,
+        height: 0
+    };
+    const [score, setScore] = useState({
+        score1: 0,
+        score2: 0
+    });
     useEffect(() => {
         gameSocket.onopen = () => {
             const baguette = { event: 'auth', data: { data: `Bearer ${localStorage.getItem('token')}` } };
@@ -31,112 +38,125 @@ export default function GameComponent() {
     }, []);
 
     useEffect(() => {
-        const canvas = canvasRef.current;
-        const ballColor = colorsRef.current;
-        const context = canvas.getContext("2d");
-        const socketRef = gameSocket;
         let alreadyPressed = {
             up: false,
             down: false
-        }
-
-        const colors = document.getElementsByClassName('color');
-        console.log(colors, 'the colors');
-        console.log(ballColor, 'the ball color');
-
-        const currentColor = {
-            color: 'black'
-        }
-        console.log(currentColor, 'the current color');
-
-        const onColorUpdate = (e) => {
-            currentColor.color = e.target.className.split(' ')[1];
         };
-
-        for (let i = 0; i < colors.length; i++) {
-            colors[i].addEventListener('click', onColorUpdate, false);
-        }
-    
-        const onResize = () => {
-            console.log(canvas.width, canvas.height);
-        }
-
-        window.addEventListener('resize', onResize, false);
-        onResize();
-
         const onKeydown = (e) => {
             if (e.key === 'ArrowDown' && !alreadyPressed.down && !alreadyPressed.up)
             {
-                gameSocket.send(JSON.stringify({ event: 'move', data: { direction: 'down' } }));
+                console.log(gameId, MyId);
+                const data = { gameId: gameId, player: MyId, direction: 'down'};
+                gameSocket.send(JSON.stringify({ event: 'movePaddle', data: data}));
                 alreadyPressed.down = true;
-                console.log('keyup', e.key);
+                console.log('keydown', e.key);
             }
             else if (e.key === 'ArrowUp' && !alreadyPressed.up && !alreadyPressed.down)
             {
-                gameSocket.send(JSON.stringify({ event: 'move', data: { direction: 'up' } }));
+                console.log(gameId, MyId);
+                const data = { gameId: gameId, player: MyId, direction: 'up'};
+                gameSocket.send(JSON.stringify({ event: 'movePaddle', data: {gameId: gameId, player: MyId, direction: 'up' } }));
                 alreadyPressed.up = true;
-                console.log('keyup', e.key);
+                console.log('keydown', e.key);
             }
         }
-
+    
         const onKeyup = (e) => {
             if (e.key === 'ArrowDown' && alreadyPressed.down && !alreadyPressed.up)
             {
-                gameSocket.send(JSON.stringify({ event: 'stop', data: { direction: 'down' } }));
+                console.log(gameId, MyId);
+                const data = { gameId: gameId, player: MyId};
+                gameSocket.send(JSON.stringify({ event: 'stopPaddle', data: data}));
                 alreadyPressed.down = false;
-                console.log('keydown', e.key);
+                console.log('keyup', e.key);
             }
             else if (e.key === 'ArrowUp' && alreadyPressed.up && !alreadyPressed.down)
             {
-                gameSocket.send(JSON.stringify({ event: 'stop', data: { direction: 'up' } }));
+                console.log(gameId, MyId);
+                const data = { gameId: gameId, player: MyId};
+                gameSocket.send(JSON.stringify({ event: 'stopPaddle', data: data}));
                 alreadyPressed.up = false;
-                console.log('keydown', e.key);
+                console.log('keyup', e.key);
             }
         }
-
+    
         window.addEventListener('keydown', onKeydown, false);
         window.addEventListener('keyup', onKeyup, false);
-
-        gameSocket.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            console.log(data);
-            if (data.type === 'synchronized')
-            {
-                gameRef.setGameId(data.gameId);
-                gameRef.setMyId(data.myId);
-            }
-            if (data.type === 'gameStart')
-            {
-                gameRef.setScores(data.data.myScore, data.data.oponentScore);
-                gameRef.setScreenRef(data.data.screen);
-                ballRef.setBallData(data.data.ball.x, data.data.ball.y, data.data.ball.radius);
-                ballRef.draw(context);
-            }
-            if (data.type === 'ballPos')
-            {
-                ballRef.setBallData(data.data.x, data.data.y, data.data.radius);
-                ballRef.draw(context);
-            }
-        }
     }, []);
+
+    useEffect(() => {
+        const cssElement = document.getElementById("game-board");
+        if (cssElement)
+            cssElement.style.backgroundColor = boardColor;
+    }, [boardColor]);
 
     gameSocket.onmessage = (event) => {
         const data = JSON.parse(event.data);
-        console.log(data);
+        if (data.type === 'synchronized')
+        {
+            console.log('synchronized');
+            console.log(data.gameId, data.myId);
+            gameId = data.gameId;
+            MyId = data.myId;
+            console.log(gameId, MyId);
+        }
+        else if (data.type === 'ballPos')
+        {
+            const ball = document.getElementById("ball");
+            const cssElement = document.getElementById("game-board");
+            ballData.setBall(
+                data.ball.x,
+                data.ball.y,
+                data.ball.radius
+            );
+            screen.width = data.screen.width;
+            screen.height = data.screen.height;
+            if (ball && cssElement)
+            {
+                console.log('truc');
+                const left = ballData.x * cssElement.offsetWidth / screen.width;
+                const top = ballData.y * cssElement.offsetHeight / screen.height;
+                ball.style.left = `${left}px`;
+                ball.style.top = `${top}px`;
+                ball.style.width = `${ballData.radius}px`;
+                ball.style.height = `${ballData.radius}px`;
+            }
+        }
+        else if (data.type === 'paddlePos')
+        {
+            const paddle1 = document.getElementById("paddle1");
+            const paddle2 = document.getElementById("paddle2");
+            const cssElement = document.getElementById("game-board");
+            console.log('paddle data = ', data.paddle);
+            console.log('truc = ', players[data.paddlePlayer - 1]);
+            players[data.paddlePlayer - 1].setPaddlePosition(
+                data.paddle.x,
+                data.paddle.y,
+                data.paddle.width,
+                data.paddle.height
+            );
+            screen.width = data.screen.width;
+            screen.height = data.screen.height;
+            if (paddle1 && paddle2 && cssElement)
+            {
+                players[data.paddlePlayer - 1].drawPaddle(paddle1, paddle2, cssElement, screen, data.paddlePlayer);
+            }
+        }
     }
 
-    const button = document.getElementById("arrow");
+    // const button = document.getElementById("arrow");
     
     return (
         <div>
-            <canvas ref={canvasRef} className="gameBoard">
-                <div ref={colorsRef} className="colors">
-                    <div className="color white"/>
-                    <div className="color red"/>
-                    <div className="color green"/>
-                    <div className="color blue"/>
+            <div id="game-board">
+                <div className="button-container">
+                    <button className="change-board-color" onClick={() => setBoardColor("darkred")}>Red</button>
+                    <button className="change-board-color" onClick={() => setBoardColor("black")}>black</button>
+                    <div id="ball"></div>
+                    <div id="paddle1"></div>
+                    <div id="paddle2"></div>
                 </div>
-            </canvas>
+            </div>
         </div>
     );
 } 

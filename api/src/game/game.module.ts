@@ -32,7 +32,6 @@ import { GameSocketModule } from 'src/gameSocket/gameSocket.module';
         TypeOrmModule.forFeature([Auth]),
         TypeOrmModule.forFeature([FriendRequest]),
         TypeOrmModule.forFeature([Game]),
-        forwardRef(() => GameSocketModule),
     ],
     providers: [JwtService, GameGateway, Repository, SocketServer, GameReply, UserService, GameControler, AuthService, FriendRequestService],
     controllers: [GameControler],

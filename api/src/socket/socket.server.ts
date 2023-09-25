@@ -95,7 +95,7 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
         return this.server;
     }
 
-    getSocket(id: number) {
+    async getSocket(id: number) {
         for (const client of this.server.clients) {
             if (client.data.user == id) {
                 return client;

@@ -23,13 +23,14 @@ import { Auth } from "src/auth/auth.entity";
 import { FriendRequestService } from "src/friend-request/friend-request.service";
 
 import { FriendRequest } from "src/friend-request/friend-request.entity";
+import { Game } from "src/game/game.entity";
 
 @Module({
     imports: [
         TypeOrmModule.forFeature([User]),
         TypeOrmModule.forFeature([Auth]),
         TypeOrmModule.forFeature([FriendRequest]),
-        forwardRef(() => GameModule)
+        TypeOrmModule.forFeature([Game]),
     ],
     providers: [Repository, AuthService, FriendRequestService, SocketGuard, JwtService, GameGateway, UserService],
 })

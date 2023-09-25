@@ -19,12 +19,15 @@ export class GameControler
     @Post('invite')
     async gameInvite(@Request() req)
     {
-        const {id} = req.Body;
+        const id = req['user'];
+        const typeOfGame:number = req.body.typeOfGame;
+        const friendId:number = req.body.id;
 
-        if (typeof id !== 'number')
+        if (typeof friendId !== 'number')
             throw new HttpException("", HttpStatus.BAD_REQUEST);
-        const friend = await this.userService.getUser(id);
-        this.gameReply.invite('invite', id, friend);
+        if (typeof typeOfGame !== 'number')
+            throw new HttpException("", HttpStatus.BAD_REQUEST);
+        this.gameReply.invite(id, friendId, typeOfGame);
     }
 
     @UseGuards(AuthGuard)

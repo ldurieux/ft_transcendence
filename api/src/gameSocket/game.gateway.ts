@@ -16,6 +16,7 @@ import { UserService } from 'src/user/user.service';
 import * as gameInterface from '../game/gameInterface';
 import { subscribe } from 'diagnostics_channel';
 import { connected } from 'process';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 @WebSocketGateway({
@@ -27,8 +28,9 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     private playerInGame: Set<number>;
 
     constructor(
-        private jwtService: JwtService,
+        @InjectRepository(Game)
         private gameRepository: Repository<Game>,
+        private jwtService: JwtService,
         private readonly userService: UserService,
     ) {
         this.gameInstance = new Map<number, gameInterface.Game>();
@@ -132,17 +134,18 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         socket1.send(JSON.stringify({type: 'synchronized', gameId: gameId, myId: 1}));
         socket2.send(JSON.stringify({type: 'synchronized', gameId: gameId, myId: 2}));
         if (this.gameInstance.get(gameId).typeOfGame === 1)
-            this.classicGameRoutine(gameId, socket1, socket2);
+            this.classicGameRoutine(player1, player2, gameId, socket1, socket2);
         else if (this.gameInstance.get(gameId).typeOfGame === 2)
-            this.deluxeGameRoutine(gameId, socket1, socket2);
+            this.deluxeGameRoutine(player1, player2, gameId, socket1, socket2);
     }
 
     @SubscribeMessage('movePaddle')
-    async movePaddle(@ConnectedSocket() client: WebSocket, @MessageBody('data') data: {gameId: number, player: number, direction: number})
+    async movePaddle(@ConnectedSocket() client: WebSocket, @MessageBody() data: {gameId: number, player: number, direction: number})
     {
+
+        console.log('movePaddle', data);
         if (await this.checkIfGameExist(data.gameId) === false)
             client.send(JSON.stringify({type: 'Error', Error: 'GameNotExist'}));
-        console.log('movePaddle');
         const game = this.gameInstance.get(data.gameId);
         const socket1 = await this.getSocket(game.player1.getPlayerId());
         const socket2 = await this.getSocket(game.player2.getPlayerId());
@@ -150,17 +153,17 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     }
 
     @SubscribeMessage('stopPaddle')
-    async stopPaddle(@ConnectedSocket() client: WebSocket, @MessageBody('data') data: {gameId: number, player: number})
+    async stopPaddle(@ConnectedSocket() client: WebSocket, @MessageBody() data: {gameId: number, player: number})
     {
+        console.log('stopPaddle = ', data);
         if (await this.checkIfGameExist(data.gameId) === false)
             client.send(JSON.stringify({type: 'Error', Error: 'GameNotExist'}));
-        console.log('stopPaddle');
         const game = this.gameInstance.get(data.gameId);
         game.stopPaddle(data.player);
         const socket1 = await this.getSocket(game.player1.getPlayerId());
         const socket2 = await this.getSocket(game.player2.getPlayerId());
-        socket1.send(JSON.stringify({type: 'paddlePos', paddlePlayer: data.player, player: 1, position: game.player1.paddle.y}));
-        socket2.send(JSON.stringify({type: 'paddlePos', paddlePlayer: data.player, player: 2, position: game.player2.paddle.y}));
+        socket1.send(JSON.stringify({type: 'paddlePos', paddle: game.player1.paddle.getPaddleData, paddlePlayer: data.player, screen: game.getScreen}));
+        socket2.send(JSON.stringify({type: 'paddlePos', paddle: game.player2.paddle.getPaddleData, paddlePlayer: data.player, screen: game.getScreen}));
     }
 
     async checkIfGameExist(gameId: number) {
@@ -172,7 +175,6 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
     async createGame(player1: number, player2: number, typeOfGame: number) {
         const game = new gameInterface.Game();
-        console.log(typeOfGame);
         game.typeOfGame = typeOfGame;
         let gameId: number = Math.floor(Math.random() * 1000000000);
         while (gameId === 0 || this.gameInstance.has(gameId))
@@ -196,7 +198,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         Game2.enemyScore = (await game.whoWin()).getScore();
         Game2.Win = false;
         Game2.myEnemy = await this.userService.getUser((await game.whoWin()).getPlayerId(), true);
-        console.log(Game1, Game2);
+
         await this.gameRepository.save(Game1);
         await this.userService.getUser((await game.whoWin()).getPlayerId(), true).then((user) => {
             user.game.push(Game1);
@@ -213,14 +215,10 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         this.gameInstance.delete(gameId);
     }
 
-    async classicGameRoutine(gameId: number, socket1: WebSocket, socket2: WebSocket)
+    async classicGameRoutine(player1:number, player2:number, gameId: number, socket1: WebSocket, socket2: WebSocket)
     {
         const game = this.gameInstance.get(gameId);
-        const player1 = game.player1.getPlayerId();
-        const player2 = game.player2.getPlayerId();
         let gameContinue: boolean = true;
-
-        console.log('classicGameRoutine');
 
         game.gameInit(player1, player2, socket1, socket2);
         while (gameContinue)
@@ -228,34 +226,30 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
             if (socket1.readyState !== socket1.OPEN)
             {
                 game.playerDisconnect(player1);
-                this.gameEnd(gameId, game);
+                this.gameEnd(gameId, game, true);
                 return;
             }
             if (socket2.readyState !== socket2.OPEN)
             {
                 game.playerDisconnect(player2);
-                this.gameEnd(gameId, game);
+                this.gameEnd(gameId, game, true);
                 return;
             }
             await game.moveBall();
             gameContinue = await game.checkCollision(socket1, socket2);
             await game.sendBallPos(socket1, socket2);
-            await this.wait(40);
+            await this.wait(16);
         }
         console.log('score1 = ', await game.player1.getScore(), 'score2 = ', await game.player2.getScore());
         this.gameEnd(gameId, game);
     }
 
-    async deluxeGameRoutine(gameId: number, socket1: WebSocket, socket2: WebSocket)
+    async deluxeGameRoutine(player1:number, player2:number, gameId: number, socket1: WebSocket, socket2: WebSocket)
     {
         const game = this.gameInstance.get(gameId);
-        const player1 = game.player1.getPlayerId();
-        const player2 = game.player2.getPlayerId();
         let gameContinue:boolean = true;
         let activeGameEffect: boolean = false;
         let gameEffect: number = 0
-
-        console.log('deluxeGameRoutine');
 
         game.gameInit(player1, player2, socket1, socket2);
         while (gameContinue)
@@ -263,13 +257,13 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
             if (socket1.readyState !== socket1.OPEN)
             {
                 game.playerDisconnect(player1);
-                this.gameEnd(gameId, game);
+                this.gameEnd(gameId, game, true);
                 return;
             }
             if (socket2.readyState !== socket2.OPEN)
             {
                 game.playerDisconnect(player2);
-                this.gameEnd(gameId, game);
+                this.gameEnd(gameId, game, true);
                 return;
             }
             await game.moveBall();
@@ -279,8 +273,9 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
                 await game.gameEffect(activeGameEffect, socket1, socket2);
             if (gameEffect % 500 === 0)
                 await game.releaseGameEffect(activeGameEffect, socket1, socket2);
-            await this.wait(40);
-            gameEffect += 40;
+            await this.wait(16);
+            gameEffect += 16;
+
         }
         this.gameEnd(gameId, game);
     }

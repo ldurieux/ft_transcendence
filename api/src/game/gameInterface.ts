@@ -13,7 +13,7 @@ export class Ball {
         this.x = 0;
         this.y = 0;
         this.radius = 0;
-        this.speed = 0;
+        this.speed = 5;
         this.vectorRadians = 0;
     }
 
@@ -32,11 +32,7 @@ export class Ball {
     }
 
     getBallData() {
-        return (
-            this.x,
-            this.y,
-            this.radius
-            );
+        return ({x: this.x, y: this.y, radius: this.radius});
     }
 
     checkCollision(screen: Screen, paddle1: Paddle, paddle2: Paddle) {
@@ -46,7 +42,7 @@ export class Ball {
             return (1);
         if (this.y - this.radius <= 0 || this.y + this.radius >= screen.height)
         {
-            this.vectorRadians = Math.PI * 2 - this.vectorRadians + 180;
+            this.vectorRadians = Math.PI * 2 + this.vectorRadians + 180;
             return (3);
         }
         if (this.x - this.radius <= paddle2.x + paddle2.width / 2 && this.y > paddle2.y - paddle2.height / 2 && this.y < paddle2.y + paddle2.height / 2)
@@ -94,14 +90,11 @@ export class Paddle {
     }
 
     getPaddleData() {
-        return (this.y,
-            this.x,
-            this.width,
-            this.height);
+        return ({x: this.x, y: this.y, width: this.width, height: this.height});
     }
 
 
-    movePaddle(direction:number, socket1: WebSocket, socket2: WebSocket, paddlePlayer: number) {
+    movePaddle(direction:number, socket1: WebSocket, socket2: WebSocket, paddlePlayer: number, screen: Screen) {
         this.movingPaddle = 1;
         if (direction === 1)
         {
@@ -111,9 +104,10 @@ export class Paddle {
                     this.y = this.height / 2;
                 else
                     this.y -= this.paddleSpeed;
-                socket1.send(JSON.stringify({type: 'paddlePos', data: {paddle: this.getPaddleData, paddlePlayer: paddlePlayer}}));
-                socket2.send(JSON.stringify({type: 'paddlePos', data: {paddle: this.getPaddleData, paddlePlayer: paddlePlayer}}));
-                wait(4);
+                console.log(this.getPaddleData);
+                socket1.send(JSON.stringify({type: 'paddlePos', paddle: this.getPaddleData, paddlePlayer: paddlePlayer, screen: screen}));
+                socket2.send(JSON.stringify({type: 'paddlePos', paddle: this.getPaddleData, paddlePlayer: paddlePlayer, screen: screen}));
+                wait(16);
             }
         }
         if (direction === -1)
@@ -124,9 +118,10 @@ export class Paddle {
                     this.y = screen.height - this.height / 2;
                 else
                     this.y += this.paddleSpeed;
-                socket1.send(JSON.stringify({type: 'paddlePos', data: {paddle: this.getPaddleData, paddlePlayer: paddlePlayer}}));
-                socket2.send(JSON.stringify({type: 'paddlePos', data: {paddle: this.getPaddleData, paddlePlayer: paddlePlayer}}));
-                wait(4);
+                console.log(this.getPaddleData);
+                socket1.send(JSON.stringify({type: 'paddlePos', paddle: this.getPaddleData, paddlePlayer: paddlePlayer, screen: screen}));
+                socket2.send(JSON.stringify({type: 'paddlePos',  paddle: this.getPaddleData, paddlePlayer: paddlePlayer, screen: screen}));
+                wait(16);
             }
         }
     }
@@ -165,7 +160,7 @@ export class Player {
 
     getScoreData() {
         return (
-            JSON.stringify({score: this.score})
+            {score: this.score}
         );
     }
 
@@ -236,9 +231,9 @@ export class Game {
 
     async movePaddle(playerId: number, direction: number, socket1: WebSocket, socket2: WebSocket) {
         if (playerId === this.player1.getPlayerId())
-            this.player1.paddle.movePaddle(direction, socket1, socket2, 1);
+            this.player1.paddle.movePaddle(direction, socket1, socket2, 1, this.screen);
         if (playerId === this.player2.getPlayerId())
-            this.player2.paddle.movePaddle(direction, socket1, socket2, 2);
+            this.player2.paddle.movePaddle(direction, socket1, socket2, 2, this.screen);
     }
 
     async stopPaddle(playerId: number) {
@@ -248,11 +243,15 @@ export class Game {
             this.player2.paddle.stopPaddle();
     }
 
-    async playerScore(player: Player, socket1: WebSocket, socket2: WebSocket): Promise<number> {
+    async checkIfWinner(player: Player, socket1: WebSocket, socket2: WebSocket): Promise<boolean> {
         player.updateScore();
-        if (player.getScore() === 5)
-            return (1);
-        return (0);
+        if (player.getScore() >= 5)
+            return (true);
+        return (false);
+    }
+
+    async getScreen() {
+        return (this.screen);
     }
 
     async boardReset(socket1: WebSocket, socket2: WebSocket) {
@@ -269,7 +268,7 @@ export class Game {
         const collision = this.ball.checkCollision(this.screen, this.player1.paddle, this.player2.paddle);
         if (collision === 1)
         {
-            if (await this.playerScore(this.player1, socket1, socket2) === 1)
+            if (await this.checkIfWinner(this.player1, socket1, socket2) === true)
             {
                 this.player1.setWinner(true);
                 this.player2.setWinner(false);
@@ -279,7 +278,7 @@ export class Game {
         }
         else if (collision === 2)
         {
-            if (await this.playerScore(this.player2, socket1, socket2) === 1)
+            if (await this.checkIfWinner(this.player2, socket1, socket2) === true)
             {
                 this.player2.setWinner(true);
                 this.player1.setWinner(false);
@@ -291,8 +290,8 @@ export class Game {
     }
 
     async sendBallPos(socket1: WebSocket, socket2: WebSocket) {
-        socket1.send(JSON.stringify({type: 'ballPos', data: {ball: this.ball.getBallData(), screen: this.screen}}));
-        socket2.send(JSON.stringify({type: 'ballPos', data: {ball: this.ball.getBallData(), screen: this.screen}}));
+        socket1.send(JSON.stringify({type: 'ballPos', ball: this.ball.getBallData(), screen: this.screen}));
+        socket2.send(JSON.stringify({type: 'ballPos', ball: this.ball.getBallData(), screen: this.screen}));
     }
 
     async gameEffect(activeGameEffect: boolean, socket1: WebSocket, socket2: WebSocket)

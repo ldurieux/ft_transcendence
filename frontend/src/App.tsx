@@ -9,6 +9,7 @@ function App() {
     const url = `ws://${process.env.REACT_APP_WEB_HOST}:3001`;
     // const {setSocket} = useContext(SocketContext);
     const socket = new WebSocket(url);
+    const [popupContent, setPopupContent] = useState({});
 
     useEffect(() => {
         if (document.visibilityState === 'visible') {
@@ -35,13 +36,14 @@ function App() {
     }, [url, socket, document.visibilityState]);
 
     socket.onmessage = (event) => {
-        console.log('message received');
         const data = JSON.parse(event.data);
-        console.log(data.type);
         if (data.type === 'gameStart') {
             window.location.href = '/game';
         }
-        console.log(data);
+        if (data.type === 'invite') 
+        {
+            setPopupContent({user: data.user, typeOfGame: data.typeOfGame});
+        }
     };
 
     return (

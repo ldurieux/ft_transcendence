@@ -1,21 +1,47 @@
 body {
     background-color: #1e2122;
-    box-sizing: border-box;
 }
 
-.gameBoard {
+#game-board {
     background-color: black;
     width: 65%;
     height: 50%;
-    aspect-ratio: 2/1;
     top: 0;
     left: 0;
-    bottom: 0;
     right: 0;
+    bottom: 0;
     margin: auto;
-    border: 1px solid white;
     border-radius: 2%;
+    border: 1px solid white;
     position: absolute;
+}
+
+#ball {
+    background-color: white;
+    border-radius: 50%;
+    position: absolute;
+}
+
+#paddle1 {
+    background-color: white;
+    position: absolute;
+}
+
+#paddle2 {
+    background-color: white;
+    position: absolute;
+}
+
+.button-container {
+    display: flex;
+}
+
+.change-board-color {
+    background-color: transparent;
+    margin-right: 10px;
+    margin-left: 2px;
+    border: 0px;
+    color: white;
 }
 
 .colors {

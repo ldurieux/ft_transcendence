@@ -25,29 +25,39 @@ export class GameReply {
         this.ClassicMatchMaking = new Array<number>();
     }
 
-
-    async invite(type: string, id: number, user: User)
+    async sendNotConnected(id: number)
     {
-        const socket: WebSocket = this.socketServer.getSocket(id);
-        if (!socket)
+        const socket = await this.socketServer.getSocket(id);
+        if (socket)
+            socket.send(JSON.stringify({type: 'notConnected'}));
+    }
+
+    async invite(id: number, friendId: number, typeOfGame: number)
+    {
+        const socket: WebSocket = await this.socketServer.getSocket(friendId);
+
+        if (socket === null || socket === undefined)
+        {
+            this.sendNotConnected(id);
             return;
-        if (this.gameGateway.isInGame(id))
+        }
+        if (await this.gameGateway.isInGame(friendId))
         {
             this.sendInGame(id);
             return;
         }
-        socket.send(JSON.stringify(user));
+        socket.send(JSON.stringify({type: 'invite', user: (await this.userService.getUser(id)).display_name, typeOfGame: typeOfGame}));
     }
 
     async sendInGame(id: number)
     {
         const socket = await this.socketServer.getSocket(id);
-        socket.send(JSON.stringify({type: 'InGame'}));
+        if (socket)
+            socket.send(JSON.stringify({type: 'InGame'}));
     }
 
     async MatchMaking(id: number, typeOfGame: number)
     {
-        console.log('MatchMaking');
         if (typeOfGame === 1)
         {
             if (this.DeluxeMatchMaikng[0] === id)
@@ -57,7 +67,6 @@ export class GameReply {
             this.ClassicMatchMaking.push(id);
             if (this.ClassicMatchMaking.length === 2)
             {
-                console.log('gameStart');
                 this.gameStart(this.ClassicMatchMaking[0], this.ClassicMatchMaking[1], typeOfGame);
                 this.ClassicMatchMaking.splice(0, 2);
             }
@@ -71,7 +80,6 @@ export class GameReply {
             this.DeluxeMatchMaikng.push(id);
             if (this.DeluxeMatchMaikng.length === 2)
             {
-                console.log('gameStart');
                 this.gameStart(this.DeluxeMatchMaikng[0], this.DeluxeMatchMaikng[1], typeOfGame);
                 this.DeluxeMatchMaikng.splice(0, 2);
             }
@@ -79,8 +87,8 @@ export class GameReply {
     }
 
     async inviteRefused(id: number, friendId: number) {
-        const friendSocket: WebSocket = this.socketServer.getSocket(friendId);
-        const socket: WebSocket = this.socketServer.getSocket(id);
+        const friendSocket: WebSocket = await this.socketServer.getSocket(friendId);
+        const socket: WebSocket = await this.socketServer.getSocket(id);
         if (friendSocket)
             friendSocket.send(JSON.stringify({type: 'inviteRefused', user : this.userService.getUser(id)}));
         if (socket)
@@ -90,8 +98,8 @@ export class GameReply {
     async gameStart(Id1: number, Id2: number, typeOfGame: number)
     {
         console.log('gameStart');
-        const friendSocket: WebSocket = this.socketServer.getSocket(Id1);
-        const socket: WebSocket = this.socketServer.getSocket(Id2);
+        const friendSocket: WebSocket = await this.socketServer.getSocket(Id1);
+        const socket: WebSocket = await this.socketServer.getSocket(Id2);
         if (friendSocket == null || socket == null)
             return;
         console.log('gameStart');
