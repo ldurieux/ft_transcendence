@@ -9,15 +9,12 @@ export default function GameComponent() {
     var gameId = 0;
     var MyId = 0;
     const ballData = new gameData.Ball();
-    const players = new Array<gameData.Player>(2);
+    const players = new Map<number, gameData.Player>;
+    const score = useRef([0, 0]);
     const screen: gameData.Screen = {
         width: 0,
         height: 0
     };
-    const [score, setScore] = useState({
-        score1: 0,
-        score2: 0
-    });
     useEffect(() => {
         gameSocket.onopen = () => {
             const baguette = { event: 'auth', data: { data: `Bearer ${localStorage.getItem('token')}` } };
@@ -45,41 +42,49 @@ export default function GameComponent() {
         const onKeydown = (e) => {
             if (e.key === 'ArrowDown' && !alreadyPressed.down && !alreadyPressed.up)
             {
-                console.log(gameId, MyId);
-                const data = { gameId: gameId, player: MyId, direction: 'down'};
+                const data = { gameId: gameId, player: MyId, direction: -1};
                 gameSocket.send(JSON.stringify({ event: 'movePaddle', data: data}));
                 alreadyPressed.down = true;
-                console.log('keydown', e.key);
             }
             else if (e.key === 'ArrowUp' && !alreadyPressed.up && !alreadyPressed.down)
             {
-                console.log(gameId, MyId);
-                const data = { gameId: gameId, player: MyId, direction: 'up'};
-                gameSocket.send(JSON.stringify({ event: 'movePaddle', data: {gameId: gameId, player: MyId, direction: 'up' } }));
+                const data = { gameId: gameId, player: MyId, direction: 1};
+                gameSocket.send(JSON.stringify({ event: 'movePaddle', data: data}));
                 alreadyPressed.up = true;
-                console.log('keydown', e.key);
             }
         }
     
         const onKeyup = (e) => {
             if (e.key === 'ArrowDown' && alreadyPressed.down && !alreadyPressed.up)
             {
-                console.log(gameId, MyId);
                 const data = { gameId: gameId, player: MyId};
                 gameSocket.send(JSON.stringify({ event: 'stopPaddle', data: data}));
                 alreadyPressed.down = false;
-                console.log('keyup', e.key);
             }
             else if (e.key === 'ArrowUp' && alreadyPressed.up && !alreadyPressed.down)
             {
-                console.log(gameId, MyId);
                 const data = { gameId: gameId, player: MyId};
                 gameSocket.send(JSON.stringify({ event: 'stopPaddle', data: data}));
                 alreadyPressed.up = false;
-                console.log('keyup', e.key);
+            }
+        }
+
+        const onResize = () => {
+            const cssElement = document.getElementById("game-board");
+            const paddle1 = document.getElementById("paddle1");
+            const paddle2 = document.getElementById("paddle2");
+            const ball = document.getElementById("ball");
+
+            if (ball && cssElement && paddle1 && paddle2)
+            {
+                players.forEach((player, key) => {
+                    player.drawPaddle(paddle1, paddle2, cssElement, screen, key);
+                    ballData.drawBall(ball, cssElement, screen);
+                });
             }
         }
     
+        window.addEventListener('resize', onResize, false);
         window.addEventListener('keydown', onKeydown, false);
         window.addEventListener('keyup', onKeyup, false);
     }, []);
@@ -94,11 +99,47 @@ export default function GameComponent() {
         const data = JSON.parse(event.data);
         if (data.type === 'synchronized')
         {
-            console.log('synchronized');
-            console.log(data.gameId, data.myId);
             gameId = data.gameId;
             MyId = data.myId;
-            console.log(gameId, MyId);
+            players.set(1, new gameData.Player());
+            players.set(2, new gameData.Player());
+        }
+        else if (data.type === 'initBoard')
+        {
+            const ball = document.getElementById("ball");
+            const paddle1 = document.getElementById("paddle1");
+            const paddle2 = document.getElementById("paddle2");
+            const cssElement = document.getElementById("game-board");
+            const player1 = players.get(1);
+            const player2 = players.get(2);
+            ballData.setBall(
+                data.ball.x,
+                data.ball.y,
+                data.ball.radius
+            );
+            if (player1 && player2)
+            {
+                player1.setPaddlePosition(
+                    data.paddle1.x,
+                    data.paddle1.y,
+                    data.paddle1.width,
+                    data.paddle1.height
+                );
+                player2.setPaddlePosition(
+                    data.paddle2.x,
+                    data.paddle2.y,
+                    data.paddle2.width,
+                    data.paddle2.height
+                );
+                score[0] = 0;
+                score[1] = 0;
+            }
+            if (ball && paddle1 && paddle2 && cssElement && player1 && player2)
+            {
+                player1.drawPaddle(paddle1, paddle2, cssElement, screen, 1);
+                player2.drawPaddle(paddle1, paddle2, cssElement, screen, 2);
+                ballData.drawBall(ball, cssElement, screen);
+            }
         }
         else if (data.type === 'ballPos')
         {
@@ -112,34 +153,43 @@ export default function GameComponent() {
             screen.width = data.screen.width;
             screen.height = data.screen.height;
             if (ball && cssElement)
-            {
-                console.log('truc');
-                const left = ballData.x * cssElement.offsetWidth / screen.width;
-                const top = ballData.y * cssElement.offsetHeight / screen.height;
-                ball.style.left = `${left}px`;
-                ball.style.top = `${top}px`;
-                ball.style.width = `${ballData.radius}px`;
-                ball.style.height = `${ballData.radius}px`;
-            }
+                ballData.drawBall(ball, cssElement, screen);
         }
         else if (data.type === 'paddlePos')
         {
             const paddle1 = document.getElementById("paddle1");
             const paddle2 = document.getElementById("paddle2");
             const cssElement = document.getElementById("game-board");
-            console.log('paddle data = ', data.paddle);
-            console.log('truc = ', players[data.paddlePlayer - 1]);
-            players[data.paddlePlayer - 1].setPaddlePosition(
-                data.paddle.x,
-                data.paddle.y,
-                data.paddle.width,
-                data.paddle.height
-            );
-            screen.width = data.screen.width;
-            screen.height = data.screen.height;
-            if (paddle1 && paddle2 && cssElement)
+            const player = players.get(data.paddlePlayer);
+            if (player)
             {
-                players[data.paddlePlayer - 1].drawPaddle(paddle1, paddle2, cssElement, screen, data.paddlePlayer);
+                player.setPaddlePosition(
+                    data.paddle.x,
+                    data.paddle.y,
+                    data.paddle.width,
+                    data.paddle.height
+                );
+                screen.width = data.screen.width;
+                screen.height = data.screen.height;
+                if (paddle1 && paddle2 && cssElement)
+                {
+                    player.drawPaddle(paddle1, paddle2, cssElement, screen, data.paddlePlayer);
+                }
+            }
+        }
+        else if (data.type === "updateScore")
+        {
+            score[0] = data.score1;
+            score[1] = data.score2;
+        }
+        else if (data.type === "gameEffect")
+        {
+            ballData.setBallEffect();
+            if (ballData.getBallEffect())
+            {
+                const ball = document.getElementById("ball");
+                if (ball)
+                    ballData.undrawBall(ball);
             }
         }
     }
@@ -147,16 +197,21 @@ export default function GameComponent() {
     // const button = document.getElementById("arrow");
     
     return (
-        <div>
-            <div id="game-board">
-                <div className="button-container">
-                    <button className="change-board-color" onClick={() => setBoardColor("darkred")}>Red</button>
-                    <button className="change-board-color" onClick={() => setBoardColor("black")}>black</button>
-                    <div id="ball"></div>
-                    <div id="paddle1"></div>
-                    <div id="paddle2"></div>
-                </div>
+        <div id="game-board">
+            {/* <div className="ready-button-container">
+                <button className="ready-button">Ready</button>
+            </div> */}
+            <div className="color-button-container">
+                <button className="change-board-color" onClick={() => setBoardColor("darkred")}>Red</button>
+                <button className="change-board-color" onClick={() => setBoardColor("black")}>black</button>
             </div>
+            <div className="score-container">
+                <p id="score1">{score[0]}</p>
+                <p id="score2">{score[1]}</p>
+            </div>
+            <div id="ball"></div>
+            <div id="paddle1"></div>
+            <div id="paddle2"></div>
         </div>
     );
 } 

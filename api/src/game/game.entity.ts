@@ -6,8 +6,8 @@ export class Game {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @OneToOne(type => User)
-    myEnemy: User;
+    @Column({default: 0})
+    opponentId: number;
 
     @Column({default: 0})
     myScore: number;

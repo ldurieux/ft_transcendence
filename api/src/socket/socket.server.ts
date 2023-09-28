@@ -26,7 +26,6 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
 
     async handleConnection(client: WebSocket) {
         client.data = {}
-        console.log('Client isConnected');
     }
     
     @SubscribeMessage('auth')
@@ -84,7 +83,6 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
     async handleDisconnect(client: WebSocket) {
         if (client.data.user != null && client.data.user != undefined)
             this.broadcast(client.data.user, { event: "disconnect", data: { user: client.data.user } })
-        console.log('Client disconnected');
     }
 
     static instance() {
