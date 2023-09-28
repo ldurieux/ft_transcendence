@@ -172,9 +172,9 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         const socket1 = await this.getSocket(game.player1.getPlayerId());
         const socket2 = await this.getSocket(game.player2.getPlayerId());
         if (socket1 !== null)
-            socket1.send(JSON.stringify({type: 'paddlePos', paddle: game.player1.paddle.getPaddleData(), paddlePlayer: data.player, screen: game.getScreen()}));
+            socket1.send(JSON.stringify({type: 'paddlePos', paddle: game.player1.paddle.getPaddleData(), paddlePlayer: data.player, screen: await game.getScreen()}));
         if (socket2 !== null)
-            socket2.send(JSON.stringify({type: 'paddlePos', paddle: game.player2.paddle.getPaddleData(), paddlePlayer: data.player, screen: game.getScreen()}));
+            socket2.send(JSON.stringify({type: 'paddlePos', paddle: game.player2.paddle.getPaddleData(), paddlePlayer: data.player, screen: await game.getScreen()}));
     }
 
     async checkIfGameExist(gameId: number) {
@@ -255,9 +255,9 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
                 user.games_played = 0;
             user.games_played++;
         });
-        if (socketwinner !== null || socketwinner !== undefined)
+        if (socketwinner !== null)
             socketwinner.send(JSON.stringify({type: 'WIN'}));
-        if (socketloser !== null || socketloser !== undefined)
+        if (socketloser !== null)
             socketloser.send(JSON.stringify({type: 'LOSE'}));
         game.destroyGame();
         this.gameInstance.delete(gameId);
@@ -270,25 +270,26 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         const game = this.gameInstance.get(gameId);
         let gameContinue: boolean = true;
 
-        game.gameInit(player1, player2, socket1, socket2);
+        await game.gameInit(player1, player2, socket1, socket2);
         while (gameContinue)
         {
             if (socket1 === null || socket1.readyState === 3)
             {
                 socket1 = await this.getSocket(game.player1.getPlayerId());
-                socket1.send(JSON.stringify({type: 'reconnect', paddle1: game.getPaddlePos(1), paddle2: game.getPaddlePos(2), screen: game.getScreen()}))
+                if (socket1 !== null)
+                    socket1.send(JSON.stringify({type: 'reconnect', paddle1: game.getPaddlePos(1), paddle2: game.getPaddlePos(2), screen: game.getScreen()}))
             }
             if (socket2 === null || socket2.readyState === 3)
             {
                 socket2 = await this.getSocket(game.player2.getPlayerId());
-                socket1.send(JSON.stringify({type: 'reconnect', paddle1: game.getPaddlePos(1), paddle2: game.getPaddlePos(2), screen: game.getScreen()}))
+                if (socket2 !== null)
+                    socket1.send(JSON.stringify({type: 'reconnect', paddle1: game.getPaddlePos(1), paddle2: game.getPaddlePos(2), screen: game.getScreen()}))
             }
             await game.moveBall();
             gameContinue = await game.checkCollision(socket1, socket2);
             await game.sendBallPos(socket1, socket2);
-            await this.wait(16);
+            await this.wait(10);
         }
-        console.log('score1 = ', await game.player1.getScore(), 'score2 = ', await game.player2.getScore());
         this.gameEnd(gameId, game);
     }
 
@@ -298,30 +299,32 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         var socket2: WebSocket = await this.getSocket(player2);
         const game = this.gameInstance.get(gameId);
         let gameContinue:boolean = true;
-        let gameEffect: number = 16;
+        let gameEffect: number = 20;
 
-        game.gameInit(player1, player2, socket1, socket2);
+        await game.gameInit(player1, player2, socket1, socket2);
         while (gameContinue)
         {
             if (socket1 === null || socket1.readyState === 3)
             {
                 socket1 = await this.getSocket(game.player1.getPlayerId());
-                socket1.send(JSON.stringify({type: 'reconnect', paddle1: game.getPaddlePos(1), paddle2: game.getPaddlePos(2), screen: game.getScreen()}))
+                if (socket1 !== null)
+                    socket1.send(JSON.stringify({type: 'reconnect', paddle1: game.getPaddlePos(1), paddle2: game.getPaddlePos(2), screen: game.getScreen()}))
             }
             if (socket2 === null || socket2.readyState === 3)
             {
                 socket2 = await this.getSocket(game.player2.getPlayerId());
-                socket1.send(JSON.stringify({type: 'reconnect', paddle1: game.getPaddlePos(1), paddle2: game.getPaddlePos(2), screen: game.getScreen()}))
+                if (socket2 !== null)
+                    socket1.send(JSON.stringify({type: 'reconnect', paddle1: game.getPaddlePos(1), paddle2: game.getPaddlePos(2), screen: game.getScreen()}))
             }
             await game.moveBall();
             gameContinue = await game.checkCollision(socket1, socket2);
             await game.sendBallPos(socket1, socket2);
-            if (gameEffect % 2000 === 0)
+            if (gameEffect % 4000 === 0)
                 await game.gameEffect(socket1, socket2);
-            if (gameEffect % 500 === 0)
-                await game.gameEffect(socket1, socket2);
-            await this.wait(16);
-            gameEffect += 16;
+            else if (gameEffect % 1000 === 0)
+                game.releaseGameEffect();
+            await this.wait(10);
+            gameEffect += 10;
 
         }
         this.gameEnd(gameId, game);

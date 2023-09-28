@@ -10,7 +10,8 @@ export default function GameComponent() {
     var MyId = 0;
     const ballData = new gameData.Ball();
     const players = new Map<number, gameData.Player>;
-    const score = useRef([0, 0]);
+    const [score1, setScore1] = useState<number>(0);
+    const [score2, setScore2] = useState<number>(0);
     const screen: gameData.Screen = {
         width: 0,
         height: 0
@@ -95,6 +96,12 @@ export default function GameComponent() {
             cssElement.style.backgroundColor = boardColor;
     }, [boardColor]);
 
+    const Score = ({id, score}) => {
+        return (
+            <p id={id}>{score}</p>
+        );
+    };
+
     gameSocket.onmessage = (event) => {
         const data = JSON.parse(event.data);
         if (data.type === 'synchronized')
@@ -112,6 +119,8 @@ export default function GameComponent() {
             const cssElement = document.getElementById("game-board");
             const player1 = players.get(1);
             const player2 = players.get(2);
+            screen.width = data.screen.width;
+            screen.height = data.screen.height;
             ballData.setBall(
                 data.ball.x,
                 data.ball.y,
@@ -131,8 +140,8 @@ export default function GameComponent() {
                     data.paddle2.width,
                     data.paddle2.height
                 );
-                score[0] = 0;
-                score[1] = 0;
+                setScore1(0);
+                setScore2(0);
             }
             if (ball && paddle1 && paddle2 && cssElement && player1 && player2)
             {
@@ -179,18 +188,14 @@ export default function GameComponent() {
         }
         else if (data.type === "updateScore")
         {
-            score[0] = data.score1;
-            score[1] = data.score2;
+            setScore1(data.score1);
+            setScore2(data.score2);
         }
         else if (data.type === "gameEffect")
         {
-            ballData.setBallEffect();
-            if (ballData.getBallEffect())
-            {
                 const ball = document.getElementById("ball");
                 if (ball)
                     ballData.undrawBall(ball);
-            }
         }
     }
 
@@ -206,8 +211,8 @@ export default function GameComponent() {
                 <button className="change-board-color" onClick={() => setBoardColor("black")}>black</button>
             </div>
             <div className="score-container">
-                <p id="score1">{score[0]}</p>
-                <p id="score2">{score[1]}</p>
+                <Score id={"score1"} score={score1}/>
+                <Score id={"score2"} score={score2}/>
             </div>
             <div id="ball"></div>
             <div id="paddle1"></div>

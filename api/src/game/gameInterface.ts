@@ -90,7 +90,7 @@ export class Paddle {
     paddleInit(screen: Screen, paddlePlayer: number) {
         this.y = screen.height / 2 + this.height / 2;
         if (paddlePlayer === 1)
-            this.x = (screen.width - 20) - this.width / 2;
+            this.x = (screen.width - 20) - this.width;
         else if (paddlePlayer === 2)
             this.x = 20;
     }
@@ -186,6 +186,7 @@ export class Game {
     public player2: Player;
     public ball: Ball;
     private screen: Screen;
+    private ballEffect: boolean;
     typeOfGame: number;
 
     constructor() {
@@ -196,6 +197,7 @@ export class Game {
             width: 1000,
             height: 1000,
         };
+        this.ballEffect = false;
     }
 
     destroyGame() {
@@ -289,17 +291,22 @@ export class Game {
     }
 
     async sendBallPos(socket1: any, socket2: any) {
-        if (socket1 !== null)
+        if (socket1 !== null && this.ballEffect === false)
             socket1.send(JSON.stringify({type: 'ballPos', ball: this.ball.getBallData(), screen: this.screen}));
-        if (socket2 !== null)
+        if (socket2 !== null && this.ballEffect === false)
             socket2.send(JSON.stringify({type: 'ballPos', ball: this.ball.getBallData(), screen: this.screen}));
+    }
+
+    async releaseGameEffect() {
+        this.ballEffect = false;
     }
 
     async gameEffect(socket1: any, socket2: any)
     {
-        if (socket1 !== null)
+        this.ballEffect = !this.ballEffect;
+        if (socket1 !== null && this.ballEffect === true)
             socket1.send(JSON.stringify({type: 'gameEffect'}));
-        if (socket2 !== null)
+        if (socket2 !== null && this.ballEffect === true)
             socket2.send(JSON.stringify({type: 'gameEffect'}));
     }
 
