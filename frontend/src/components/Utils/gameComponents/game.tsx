@@ -12,6 +12,7 @@ export default function GameComponent() {
     const players = new Map<number, gameData.Player>;
     const [score1, setScore1] = useState<number>(0);
     const [score2, setScore2] = useState<number>(0);
+    const [whowin, setWhowin] = useState<string>("");
     const screen: gameData.Screen = {
         width: 0,
         height: 0
@@ -102,6 +103,15 @@ export default function GameComponent() {
         );
     };
 
+    const WhoWin = ({id, whoWin}) => {
+        const ball = document.getElementById("ball");
+        if (ball)
+            ballData.undrawBall(ball);
+        return (
+            <p id={id}>{whoWin}</p>
+        );
+    };
+
     gameSocket.onmessage = (event) => {
         const data = JSON.parse(event.data);
         if (data.type === 'synchronized')
@@ -113,6 +123,7 @@ export default function GameComponent() {
         }
         else if (data.type === 'initBoard')
         {
+            console.log(MyId)
             const ball = document.getElementById("ball");
             const paddle1 = document.getElementById("paddle1");
             const paddle2 = document.getElementById("paddle2");
@@ -197,15 +208,48 @@ export default function GameComponent() {
                 if (ball)
                     ballData.undrawBall(ball);
         }
+        else if (data.type === "whoWin")
+        {
+            const ball = document.getElementById("ball");
+            const paddle1 = document.getElementById("paddle1");
+            const paddle2 = document.getElementById("paddle2");
+            const player1 = players.get(1);
+            const player2 = players.get(2);
+            if (ball && paddle1 && paddle2 && player1 && player2 && score1 && score2)
+            {
+                player1.undrawPaddle(paddle1, paddle2, 1);
+                player2.undrawPaddle(paddle1, paddle2, 2);
+                ballData.undrawBall(ball);
+            }   
+            setWhowin(data.whoWin);
+        }
+        else if (data.type === "reconnect")
+        {
+            console.log(data);
+            console.log("reconnect");
+            const paddle1 = document.getElementById("paddle1");
+            const paddle2 = document.getElementById("paddle2");
+            const cssElement = document.getElementById("game-board");
+            screen.width = data.screen.width;
+            screen.height = data.screen.height;
+            setScore1(data.score1);
+            setScore2(data.score2);
+            if (paddle1 && paddle2 && cssElement)
+            {
+                console.log(players);
+                players.forEach((player, key) => {
+                    console.log(player);
+                    console.log(key);
+                    player.drawPaddle(paddle1, paddle2, cssElement, screen, key);
+                });
+            }
+        }
     }
 
     // const button = document.getElementById("arrow");
     
     return (
         <div id="game-board">
-            {/* <div className="ready-button-container">
-                <button className="ready-button">Ready</button>
-            </div> */}
             <div className="color-button-container">
                 <button className="change-board-color" onClick={() => setBoardColor("darkred")}>Red</button>
                 <button className="change-board-color" onClick={() => setBoardColor("black")}>black</button>
@@ -217,6 +261,9 @@ export default function GameComponent() {
             <div id="ball"></div>
             <div id="paddle1"></div>
             <div id="paddle2"></div>
+            <div className="whoWin-container">
+                <WhoWin id={"whoWin"} whoWin={whowin}/>
+            </div>
         </div>
     );
 } 

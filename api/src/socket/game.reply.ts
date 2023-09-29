@@ -71,8 +71,11 @@ export class GameReply {
 
     async MatchMaking(id: number, typeOfGame: number)
     {
+        console.log('MatchMaking');
+
         if (await this.gameGateway.isInGame(id))
         {
+            console.log('currentlyInGame');
             this.currentlyInGame(id);
             return;
         }

@@ -8,6 +8,7 @@ export class Ball {
     private radius: number;
     private speed: number;
     private vectorRadians: number;
+    private maxSpeed: number;
 
     constructor() {
         this.x = 0;
@@ -22,47 +23,67 @@ export class Ball {
         this.y = screen.height / 2;
         this.radius = 10;
         this.speed = 5;
-        // const rad = Math.random() * Math.PI * 2;
-        // if (rad > Math.PI / 3 && rad < Math.PI * 2 / 3)
-        //    this.vectorRadians = rad + Math.PI / 2;
-        // else if (rad > Math.PI * 5 / 4 && rad < Math.PI * 7 / 4)
-        //     this.vectorRadians = rad + Math.PI / 2;
-        // else if(rad > Math.PI * 5 / 6 && rad < Math.PI * 7 / 6)
-        //     this.vectorRadians = rad + Math.PI / 2;
-        // else
-        //     this.vectorRadians = rad;
-        const rad = Math.PI;
+        this.maxSpeed = 12;
+        const rad = Math.random() * Math.PI * 2;
+        if (rad > Math.PI / 3 && rad < Math.PI * 2 / 3)
+           this.vectorRadians = rad + Math.PI / 4;
+        else if (rad > Math.PI * 5 / 4 && rad < Math.PI * 7 / 4)
+            this.vectorRadians = rad + Math.PI / 4;
+        else if(rad > Math.PI * 5 / 6 && rad < Math.PI * 7 / 6)
+            this.vectorRadians = rad + Math.PI / 4;
+        else if (rad > Math.PI * 11 / 6 && rad < Math.PI / 6)
+            this.vectorRadians = rad + Math.PI / 4;
+        else
+            this.vectorRadians = rad;
+    }
+
+    updateSpeed() {
+        if (this.speed < this.maxSpeed)
+            this.speed = this.speed + 1;
     }
 
     getBallData() {
         return ({x: this.x, y: this.y, radius: this.radius});
     }
+
     checkCollision(screen: Screen, paddle1: Paddle, paddle2: Paddle) {
-        if (this.x - this.radius <= 0)
-            return (2);
-        if (this.x + this.radius >= screen.width)
-            return (1);
-        if (this.y - this.radius <= 0 || this.y + this.radius >= screen.height)
+        if (this.y - this.radius <= 0 || this.y + this.radius > screen.height)
         {
             this.vectorRadians = Math.PI * 2 - this.vectorRadians;
             return (3);
         }
-        if (this.x - this.radius <= paddle2.x &&
-            this.y < paddle2.y &&
-            this.y > paddle2.y - paddle2.height)
+        else if (this.x - this.radius <= paddle2.x &&
+            this.y <= paddle2.y &&
+            this.y >= paddle2.y - paddle2.height)
         {
             this.vectorRadians = Math.PI - this.vectorRadians;
-            this.speed = this.speed + 1;
+            this.updateSpeed();
             return (3);
         }
-        if (this.x + this.radius >= paddle1.x &&
-            this.y < paddle1.y &&
-            this.y > paddle1.y - paddle1.height)
+        else if (this.x + this.radius >= paddle1.x &&
+            this.y <= paddle1.y &&
+            this.y >= paddle1.y - paddle1.height)
         {
             this.vectorRadians = Math.PI - this.vectorRadians;
-            this.speed = this.speed + 1;
+            this.updateSpeed();
             return (3);
         }
+        else if (this.y - this.radius <= paddle2.y && this.y - this.radius >= paddle2.y - 10 && this.x <= paddle2.x + paddle2.width)
+        {
+            this.vectorRadians = Math.PI - this.vectorRadians;
+            this.updateSpeed();
+            return (3);
+        }
+        // else if (this.y <= paddle2.y || this.y >= paddle2.y - paddle2.height)
+        // {
+        //     this.vectorRadians = Math.PI - this.vectorRadians;
+        //     this.updateSpeed();
+        //     return (3);
+        // }
+        else if (this.x + this.radius >= screen.width)
+            return (1);
+        else if (this.x - this.radius <= 0)
+            return (2);
         return (0);
     }
 
@@ -78,7 +99,7 @@ export class Paddle {
     public width: number;
     height: number;
     private paddleSpeed: number;
-    movingPaddle: number;
+    movingPaddle: boolean;
 
     constructor() {
         this.y = 0;
@@ -100,13 +121,16 @@ export class Paddle {
     }
 
     async movePaddle(direction:number, socket1: any, socket2: any, paddlePlayer: number, screen: Screen) {
-        this.movingPaddle = 1;
+        this.movingPaddle = true;
         if (direction === 1)
         {
             while (this.movingPaddle)
             {
                 if (this.y + this.paddleSpeed >= screen.height)
+                {
+                    this.movingPaddle = false;
                     this.y = screen.height;
+                }
                 else
                     this.y += this.paddleSpeed;
                 if (socket1 !== null)
@@ -122,7 +146,10 @@ export class Paddle {
             while(this.movingPaddle)
             {
                 if ((this.y - this.height) - this.paddleSpeed <= 0)
+                {
+                    this.movingPaddle = false;
                     this.y = this.height;
+                }
                 else
                     this.y -= this.paddleSpeed;
                 if (socket1 !== null)
@@ -136,13 +163,14 @@ export class Paddle {
     }
 
     async stopPaddle() {
-        this.movingPaddle = 0;
+        this.movingPaddle = false;
     }
 }
 
 export class Player {
     private score: number;
     private playerId: number;
+    private playerGameId: number;
     public paddle: Paddle;
     private winner: boolean;
 
@@ -162,6 +190,14 @@ export class Player {
 
     setPlayerId(id: number) {
         this.playerId = id;
+    }
+
+    setPlayerGameId(id: number) {
+        this.playerGameId = id;
+    }
+
+    getPlayerGameId() {
+        return (this.playerGameId);
     }
 
     getScore() {
@@ -211,6 +247,8 @@ export class Game {
     async gameInit(player1Id: number, player2Id: number, socket1: any, socket2: any) {
         await this.player1.setPlayerId(player1Id);
         await this.player2.setPlayerId(player2Id);
+        await this.player1.setPlayerGameId(1);
+        await this.player2.setPlayerGameId(2);
         await this.player1.paddle.paddleInit(this.screen, 1);
         await this.player2.paddle.paddleInit(this.screen, 2);
         await this.ball.ballInit(this.screen);
@@ -225,24 +263,32 @@ export class Game {
     }
 
     async movePaddle(playerId: number, direction: number, socket1: WebSocket, socket2: WebSocket) {
-        if (playerId === this.player1.getPlayerId())
+        console.log(playerId);
+        if (playerId === this.player1.getPlayerGameId())
             await this.player1.paddle.movePaddle(direction, socket1, socket2, 1, this.screen);
-        if (playerId === this.player2.getPlayerId())
+        if (playerId === this.player2.getPlayerGameId())
             await this.player2.paddle.movePaddle(direction, socket1, socket2, 2, this.screen);
     }
 
-    async stopPaddle(playerId: number) {
-        if (playerId === this.player1.getPlayerId())
+    async stopPaddle(playerId: number): Promise<number> {
+        if (playerId === this.player1.getPlayerGameId())
+        {
             await this.player1.paddle.stopPaddle();
-        else if (playerId === this.player2.getPlayerId())
+            return (1);
+        }
+        else if (playerId === this.player2.getPlayerGameId())
+        {
             await this.player2.paddle.stopPaddle();
+            return (2);
+        }
+        return (0);
     }
 
     async checkIfWinner(player: Player, socket1: WebSocket, socket2: WebSocket): Promise<boolean> {
 
         player.updateScore();
 
-        if (player.getScore() >= 5)
+        if (player.getScore() >= 1000)
             return (true);
         return (false);
     }
@@ -251,7 +297,7 @@ export class Game {
         return (this.screen);
     }
 
-    async boardReset(socket1: any, socket2: any) {
+    async updateScore(socket1: any, socket2: any) {
         this.ball.ballInit(this.screen);
         console.log(this.player1.getScore(), this.player2.getScore());
         if (socket1 !== null)
@@ -268,24 +314,23 @@ export class Game {
         const collision = this.ball.checkCollision(this.screen, this.player1.paddle, this.player2.paddle);
         if (collision === 1)
         {
+            this.updateScore(socket1, socket2);
             if (await this.checkIfWinner(this.player1, socket1, socket2) === true)
             {
                 this.player1.setWinner(true);
                 this.player2.setWinner(false);
                 return (false);
             }
-
-            this.boardReset(socket1, socket2);
         }
         else if (collision === 2)
         {
+            this.updateScore(socket1, socket2);
             if (await this.checkIfWinner(this.player2, socket1, socket2) === true)
             {
                 this.player2.setWinner(true);
                 this.player1.setWinner(false);
                 return (false);
             }
-            this.boardReset(socket1, socket2);
         }
         return (true);
     }
@@ -311,9 +356,9 @@ export class Game {
     }
 
     async setWinner(playerId: number) {
-        if (playerId === this.player1.getPlayerId())
+        if (playerId === this.player1.getPlayerGameId())
             this.player1.setWinner(true);
-        else if (playerId === this.player2.getPlayerId())
+        else if (playerId === this.player2.getPlayerGameId())
             this.player2.setWinner(true);
     }
 
@@ -333,27 +378,15 @@ export class Game {
         return (null);
     }
 
-    async playerDisconnect(playerId: number) {
-        if (playerId === this.player1.getPlayerId())
-        {
-            this.player2.setWinner(true);
-            this.player1.setWinner(false);
-        }
-        else if (playerId === this.player2.getPlayerId())
-        {
-            this.player1.setWinner(true);
-            this.player2.setWinner(false);
-        }
-    }
-
     async getPaddlePos(playerId: number) {
-        if (playerId === this.player1.getPlayerId())
+        if (playerId === this.player1.getPlayerGameId())
             return (this.player1.paddle.getPaddleData());
-        else if (playerId === this.player2.getPlayerId())
+        else if (playerId === this.player2.getPlayerGameId())
             return (this.player2.paddle.getPaddleData());
         return (null);
     }
 }
+
 
 export interface Screen {
     width: number;

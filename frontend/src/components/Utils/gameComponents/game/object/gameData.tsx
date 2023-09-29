@@ -17,9 +17,13 @@ export class Ball {
         this.color = color;
     }
 
+    getRadius() {
+        return this.radius;
+    }
+
     drawBall(ball: HTMLElement, cssElement: HTMLElement, screen: Screen) {
-            const left = this.x * cssElement.offsetWidth / screen.width;
-            const top = this.y * cssElement.offsetHeight / screen.height;
+            const left = (this.x - this.radius) * cssElement.offsetWidth / screen.width;
+            let top = (screen.height - this.y) * cssElement.offsetHeight / screen.height;
             ball.style.left = `${left}px`;
             ball.style.top = `${top}px`;
             ball.style.width = `${this.radius}px`;
@@ -68,15 +72,10 @@ export class Player {
     drawPaddle(paddle1: HTMLElement, paddle2: HTMLElement, cssElement: HTMLElement, screen: Screen, id:number) {
         if (id === 1)
         {
-            console.log(paddle1);
-            console.log(this.x, this.y, this.width, this.height);
-            console.log(screen.width, screen.height);
-            console.log('draw paddle 1');
             const width:number = this.width * cssElement.offsetWidth / screen.width;
-            const right:number = this.x * cssElement.offsetWidth / screen.width - width;
+            const right:number = this.x * cssElement.offsetWidth / screen.width;
             const top:number = cssElement.offsetHeight - this.y * cssElement.offsetHeight / screen.height;
             const height:number = this.height * cssElement.offsetHeight / screen.height;
-            console.log(width, right, top, height);
             paddle1.style.left = `${right}px`;
             paddle1.style.top = `${top}px`;
             paddle1.style.width = `${width}px`;
@@ -84,19 +83,31 @@ export class Player {
         }
         else if (id === 2)
         {
-            console.log(paddle2);
-            console.log('draw paddle 2');
-            console.log(this.x, this.y, this.width, this.height);
-            console.log(screen.width, screen.height);
             const width:number = this.width * cssElement.offsetWidth / screen.width;
             const left:number = this.x * cssElement.offsetWidth / screen.width;
             const top:number = cssElement.offsetHeight - this.y * cssElement.offsetHeight / screen.height;
             const height:number = this.height * cssElement.offsetHeight / screen.height;
-            console.log(width, left, top, height);
             paddle2.style.left = `${left}px`;
             paddle2.style.top = `${top}px`;
             paddle2.style.width = `${width}px`;
             paddle2.style.height = `${height}px`;
+        }
+    }
+
+    undrawPaddle(paddle1: HTMLElement, paddle2: HTMLElement, id:number) {
+        if (id === 1)
+        {
+            paddle1.style.left = `0px`;
+            paddle1.style.top = `0px`;
+            paddle1.style.width = `0px`;
+            paddle1.style.height = `0px`;
+        }
+        else if (id === 2)
+        {
+            paddle2.style.left = `0px`;
+            paddle2.style.top = `0px`;
+            paddle2.style.width = `0px`;
+            paddle2.style.height = `0px`;
         }
     }
 }
