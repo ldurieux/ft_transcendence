@@ -35,6 +35,7 @@ function App() {
 
     }, [url, socket]);
 
+
     socket.onmessage = (event) => {
         const data = JSON.parse(event.data);
         if (data.type === 'gameStart') {

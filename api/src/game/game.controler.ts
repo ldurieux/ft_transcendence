@@ -64,4 +64,11 @@ export class GameControler
             throw new HttpException("", HttpStatus.BAD_REQUEST);
         this.gameReply.MatchMaking(id, typeOfGame);
     }
+
+    @UseGuards(AuthGuard)
+    @Get('getMathHistory')
+    async getMathHistory(@Request() req) {
+        const id = req['user'];
+        return await this.userService.getMtachHistory(id);
+    }
 }

@@ -223,10 +223,12 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         Game1.myScore = (await game.whoWin()).getScore();
         Game1.enemyScore = (await game.whoLose()).getScore();
         Game1.opponentId = (await game.whoLose()).getPlayerId();
+        Game1.opponentName = (await this.userService.getUser(Game1.opponentId, true)).display_name;
         Game1.Win = true;
         Game2.myScore = (await game.whoLose()).getScore();
         Game2.enemyScore = (await game.whoWin()).getScore();
         Game2.opponentId = (await game.whoWin()).getPlayerId();
+        Game2.opponentName = (await this.userService.getUser(Game2.opponentId, true)).display_name;
         Game2.Win = false;
 
         console.log(Game1, Game2);

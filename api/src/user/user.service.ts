@@ -368,4 +368,9 @@ export class UserService {
     isBlocked(self: User, userId: number): boolean {
         return self.blocked.some(e => e.id == userId);
     }
+
+    async getMtachHistory(id: number): Promise<Game[]> {
+        const user: User = await this.getUser(id, true, true);
+        return user.game;
+    }
 }

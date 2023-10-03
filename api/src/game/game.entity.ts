@@ -9,6 +9,9 @@ export class Game {
     @Column({default: 0})
     opponentId: number;
 
+    @Column({default: null})
+    opponentName: string;
+
     @Column({default: 0})
     myScore: number;
 
