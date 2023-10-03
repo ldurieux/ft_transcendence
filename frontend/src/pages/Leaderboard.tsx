@@ -22,6 +22,10 @@ class Leaderboard extends Component {
                 let data = await response.json();
                 this.setState({data: data});
             }
+            else if (response.status === 401) {
+                localStorage.removeItem('token');
+                window.location.href = '/login';
+            }
         }
         catch (error) {
             console.log(error);

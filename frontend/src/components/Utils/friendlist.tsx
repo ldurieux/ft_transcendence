@@ -35,6 +35,20 @@ function Friendlist({socket}) {
                         }));
                     }
                 }
+                else if (data.event === "disconnect") {
+                    //if user disconnected is one of your friends
+                    //set his status to offline in list
+                    if (list.some((item) => item.id === data.data.user))
+                    {
+                        setList(list.map((item) => {
+                            if (item.id === data.data.user)
+                            {
+                                item.status = "offline";
+                            }
+                            return item;
+                        }));
+                    }
+                }
             }
         }
     }, [list, socket])

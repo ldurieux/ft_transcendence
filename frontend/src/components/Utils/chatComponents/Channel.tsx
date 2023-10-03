@@ -57,13 +57,12 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                 return error;
             }
         })();
-    }, [channel.id, channel.users, channel.admins, channel.owner, currentUser.id]);
+    }, [channel, currentUser.id]);
 
     useEffect(() => {
         if (socket) {
             socket.onmessage = (event) => {
                 const ret = JSON.parse(event.data)
-                console.log(ret.data);
                 if (ret.event === "leave" && ret.data.channel === channel.id) {
                     //remove the user who left from the channel
                     setUsers(prev => {
@@ -86,6 +85,24 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                     //add the message to the messages list
                     if (ret.data.channel === channel.id)
                         setMessages((prev) => [...prev, ret.data]);
+                }
+                else if (ret.event === "connect") {
+                    //update user status to online in userlist
+                    setUsers(prev => {
+                        const updatedUsers = { ...prev };
+                        updatedUsers[ret.data.user].status = "online";
+                        return updatedUsers;
+                    }
+                    );
+                }
+                else if (ret.event === "disconnect") {
+                    //update user status to offline in userlist
+                    setUsers(prev => {
+                        const updatedUsers = { ...prev };
+                        updatedUsers[ret.data.user].status = "offline";
+                        return updatedUsers;
+                    }
+                    );
                 }
             };
         }
@@ -239,7 +256,7 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                                 alt={selectedUser?.display_name}
                                 src={users[selectedUser?.id]?.profile_picture ?? defaultAvatar}/>
                             <p>{selectedUser?.display_name}</p>
-                            <p>{selectedUser?.status}</p>
+                            <p>{users[selectedUser?.id]?.status}</p>
                         </div>
                         <div className="FriendsOptions">
                             <ul>
