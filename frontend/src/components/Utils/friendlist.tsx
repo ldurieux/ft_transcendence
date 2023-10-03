@@ -183,6 +183,11 @@ function Friendlist({socket}) {
                                 src={list[selectedFriendIndex]?.profile_picture ?? defaultAvatar}/>
                             <p>{list[selectedFriendIndex]?.display_name}</p>
                             <p>{list[selectedFriendIndex].status}</p>
+                            <ul>
+                                <li>
+                                {/*    match history */}
+                                </li>
+                            </ul>
                         </div>
                         <div className="FriendsOptions">
                         <ul>

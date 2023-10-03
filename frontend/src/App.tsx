@@ -1,63 +1,33 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { PopupProvider } from "./components/Utils/chatComponents/PopupContext.tsx";
+import SocketService from "./components/Utils/SocketService.tsx";
 
 const Header = React.lazy(() => import('./components/Header/index.tsx'));
 const FrontRoute = React.lazy(() => import('./components/redirect.tsx'));
 
 function App() {
-    const url = `ws://${process.env.REACT_APP_WEB_HOST}:3001`;
-    // const {setSocket} = useContext(SocketContext);
-    const socket = new WebSocket(url);
-    const [popupContent, setPopupContent] = useState({});
+    const socketService = new SocketService();
 
     useEffect(() => {
         if (document.visibilityState === 'visible') {
-            socket.onopen = () => {
-                const baguette = { event: 'auth', data: { data: `Bearer ${localStorage.getItem('token')}` } };
-                socket.send(JSON.stringify(baguette));
-                console.log('connected to server');
-            };
-        } else {
-            socket.onclose = () => {
-                console.log('disconnected from server');
-            };
+            socketService.connect();
         }
-
 
         return () => {
-            if (socket.readyState === WebSocket.OPEN)
-            {
-                console.log('closing socket');
-                socket.close();
-            }
+            socketService.disconnect();
         };
-
-    }, [url, socket]);
-
-
-    socket.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        if (data.type === 'gameStart') {
-            window.location.href = '/game';
-        }
-        if (data.type === 'invite') 
-        {
-            setPopupContent({user: data.user, typeOfGame: data.typeOfGame});
-        }
-    };
+    }, [socketService]);
 
     return (
         <div className="App-header">
             <PopupProvider>
-                {/*<SocketProvider>*/}
-                    <div className="App">
-                        <BrowserRouter>
-                            <Header />
-                            <FrontRoute socket={socket}/>
-                        </BrowserRouter>
-                    </div>
-                {/*</SocketProvider>*/}
+                <div className="App">
+                    <BrowserRouter>
+                        <Header />
+                        <FrontRoute socket={socketService.getSocket()} />
+                    </BrowserRouter>
+                </div>
             </PopupProvider>
         </div>
     );
