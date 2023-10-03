@@ -145,7 +145,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
             this.deluxeGameRoutine(player1, player2, gameId);
     }
 
-    // @UseGuards(auth)
+
     @SubscribeMessage('movePaddle')
     async movePaddle(@ConnectedSocket() client: WebSocket, @MessageBody() data: {gameId: number, player: number, direction: number})
     {
@@ -160,7 +160,6 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         game.movePaddle(data.player, data.direction, socket1, socket2);
     }
 
-    // @UseGuards(auth)
     @SubscribeMessage('stopPaddle')
     async stopPaddle(@ConnectedSocket() client: WebSocket, @MessageBody() data: {gameId: number, player: number})
     {

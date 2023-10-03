@@ -80,7 +80,7 @@ export default function GameComponent() {
             if (ball && cssElement && paddle1 && paddle2)
             {
                 players.forEach((player, key) => {
-                    player.drawPaddle(paddle1, paddle2, cssElement, screen, key);
+                    player.drawPaddle(paddle1, paddle2, cssElement, screen, key, ballData);
                     ballData.drawBall(ball, cssElement, screen);
                 });
             }
@@ -156,8 +156,8 @@ export default function GameComponent() {
             }
             if (ball && paddle1 && paddle2 && cssElement && player1 && player2)
             {
-                player1.drawPaddle(paddle1, paddle2, cssElement, screen, 1);
-                player2.drawPaddle(paddle1, paddle2, cssElement, screen, 2);
+                player1.drawPaddle(paddle1, paddle2, cssElement, screen, 1, ballData);
+                player2.drawPaddle(paddle1, paddle2, cssElement, screen, 2, ballData);
                 ballData.drawBall(ball, cssElement, screen);
             }
         }
@@ -177,6 +177,7 @@ export default function GameComponent() {
         }
         else if (data.type === 'paddlePos')
         {
+            console.log(data);
             const paddle1 = document.getElementById("paddle1");
             const paddle2 = document.getElementById("paddle2");
             const cssElement = document.getElementById("game-board");
@@ -193,7 +194,7 @@ export default function GameComponent() {
                 screen.height = data.screen.height;
                 if (paddle1 && paddle2 && cssElement)
                 {
-                    player.drawPaddle(paddle1, paddle2, cssElement, screen, data.paddlePlayer);
+                    player.drawPaddle(paddle1, paddle2, cssElement, screen, data.paddlePlayer, ballData);
                 }
             }
         }
@@ -240,7 +241,7 @@ export default function GameComponent() {
                 players.forEach((player, key) => {
                     console.log(player);
                     console.log(key);
-                    player.drawPaddle(paddle1, paddle2, cssElement, screen, key);
+                    player.drawPaddle(paddle1, paddle2, cssElement, screen, key, ballData);
                 });
             }
         }
@@ -255,8 +256,8 @@ export default function GameComponent() {
                 <button className="change-board-color" onClick={() => setBoardColor("black")}>black</button>
             </div>
             <div className="score-container">
-                <Score id={"score1"} score={score1}/>
                 <Score id={"score2"} score={score2}/>
+                <Score id={"score1"} score={score1}/>
             </div>
             <div id="ball"></div>
             <div id="paddle1"></div>

@@ -17,7 +17,6 @@ body {
 
 #ball {
     background-color: white;
-    border-radius: 50%;
     position: absolute;
 }
 
@@ -42,7 +41,7 @@ body {
     justify-content: center;
 }
 
-#score1, #score2 {
+#score2, #score1 {
     background-color: black;
     color: rgb(159, 150, 150);
     font-size: 68px;
@@ -52,12 +51,12 @@ body {
 
 #score1 {
     text-align: left;
-    margin-right: 10%;
+    margin-left: 10%;
 }
 
 #score2 {
     text-align: right;
-    margin-left: 10%;
+    margin-right: 10%;
 }
 
 .color-button-container {

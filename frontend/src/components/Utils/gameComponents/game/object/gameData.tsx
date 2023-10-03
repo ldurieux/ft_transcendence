@@ -23,7 +23,7 @@ export class Ball {
 
     drawBall(ball: HTMLElement, cssElement: HTMLElement, screen: Screen) {
             const left = (this.x - this.radius) * cssElement.offsetWidth / screen.width;
-            let top = (screen.height - this.y) * cssElement.offsetHeight / screen.height;
+            let top = ((screen.height - this.y) * (cssElement.offsetHeight - this.radius) / screen.height);
             ball.style.left = `${left}px`;
             ball.style.top = `${top}px`;
             ball.style.width = `${this.radius}px`;
@@ -69,12 +69,12 @@ export class Player {
         this.score = score;
     }
 
-    drawPaddle(paddle1: HTMLElement, paddle2: HTMLElement, cssElement: HTMLElement, screen: Screen, id:number) {
+    drawPaddle(paddle1: HTMLElement, paddle2: HTMLElement, cssElement: HTMLElement, screen: Screen, id:number, ball: Ball) {
         if (id === 1)
         {
             const width:number = this.width * cssElement.offsetWidth / screen.width;
-            const right:number = this.x * cssElement.offsetWidth / screen.width;
-            const top:number = cssElement.offsetHeight - this.y * cssElement.offsetHeight / screen.height;
+            const right:number = (this.x * cssElement.offsetWidth / screen.width);
+            const top:number = (cssElement.offsetHeight - this.y * cssElement.offsetHeight / screen.height) - ball.radius / 3;
             const height:number = this.height * cssElement.offsetHeight / screen.height;
             paddle1.style.left = `${right}px`;
             paddle1.style.top = `${top}px`;
@@ -84,8 +84,8 @@ export class Player {
         else if (id === 2)
         {
             const width:number = this.width * cssElement.offsetWidth / screen.width;
-            const left:number = this.x * cssElement.offsetWidth / screen.width;
-            const top:number = cssElement.offsetHeight - this.y * cssElement.offsetHeight / screen.height;
+            const left:number = (this.x * cssElement.offsetWidth / screen.width) - this.width;
+            const top:number = (cssElement.offsetHeight - this.y * cssElement.offsetHeight / screen.height) - ball.radius / 3;
             const height:number = this.height * cssElement.offsetHeight / screen.height;
             paddle2.style.left = `${left}px`;
             paddle2.style.top = `${top}px`;
