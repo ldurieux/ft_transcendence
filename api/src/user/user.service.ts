@@ -369,7 +369,7 @@ export class UserService {
         return self.blocked.some(e => e.id == userId);
     }
 
-    async getMtachHistory(id: number): Promise<Game[]> {
+    async getMatchHistory(id: number): Promise<Game[]> {
         const user: User = await this.getUser(id, true, true);
         return user.game;
     }

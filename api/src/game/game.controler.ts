@@ -66,9 +66,9 @@ export class GameControler
     }
 
     @UseGuards(AuthGuard)
-    @Get('getMathHistory')
-    async getMathHistory(@Request() req) {
+    @Get('getMatchHistory')
+    async getMatchHistory(@Request() req) {
         const id = req['user'];
-        return await this.userService.getMtachHistory(id);
+        return await this.userService.getMatchHistory(id);
     }
 }
