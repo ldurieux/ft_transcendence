@@ -1,5 +1,9 @@
 // socketService.js ou socketService.ts
 export default class SocketService {
+
+    socket: WebSocket | null;
+    url: string;
+
     constructor() {
         this.socket = null;
         this.url = `ws://${process.env.REACT_APP_WEB_HOST}:3001`;
@@ -10,7 +14,8 @@ export default class SocketService {
 
         this.socket.onopen = () => {
             const baguette = { event: 'auth', data: { data: `Bearer ${localStorage.getItem('token')}` } };
-            this.socket.send(JSON.stringify(baguette));
+            if (this.socket)
+                this.socket.send(JSON.stringify(baguette));
             console.log('connected to server');
         };
 
@@ -18,15 +23,15 @@ export default class SocketService {
             console.log('disconnected from server');
         };
 
-        this.socket.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            if (data.type === 'gameStart') {
-                window.location.href = '/game';
-            }
-            if (data.type === 'invite') {
-                // Gérer la logique des invitations ici
-            }
-        };
+        // this.socket.onmessage = (event) => {
+        //     const data = JSON.parse(event.data);
+        //     if (data.type === 'gameStart') {
+        //         window.location.href = '/game';
+        //     }
+        //     if (data.type === 'invite') {
+        //         // Gérer la logique des invitations ici
+        //     }
+        // };
     }
 
     disconnect() {

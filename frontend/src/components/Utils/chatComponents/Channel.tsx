@@ -58,7 +58,9 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
         if (socket) {
             socket.onmessage = (event) => {
                 const ret = JSON.parse(event.data)
-                console.log(channel.id)
+                console.log(socket);
+                console.log(ret);
+                console.log(channel.id);
                 if (ret.event === "leave" && ret.data.channel === channel.id) {
                     //remove the user who left from the channel
                     setUsers(prev => {

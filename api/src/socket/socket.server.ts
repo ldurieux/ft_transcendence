@@ -85,6 +85,7 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
         if (client.data.user != null && client.data.user != undefined)
             this.broadcast(client.data.user, { event: "disconnect", data: { user: client.data.user } })
         console.log("Disconnected");
+        console.log(client.data);
     }
 
     static instance() {

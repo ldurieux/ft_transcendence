@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { PopupProvider } from "./components/Utils/chatComponents/PopupContext.tsx";
 import SocketService from "./components/Utils/SocketService.tsx";
@@ -9,14 +9,13 @@ const FrontRoute = React.lazy(() => import('./components/redirect.tsx'));
 function App() {
     const socketService = new SocketService();
 
-    useEffect(() => {
+
+    const socket = useMemo(() => {
         if (document.visibilityState === 'visible') {
             socketService.connect();
         }
 
-        return () => {
-            socketService.disconnect();
-        };
+        return (socketService.getSocket());
     }, [socketService]);
 
     return (
@@ -25,7 +24,7 @@ function App() {
                 <div className="App">
                     <BrowserRouter>
                         <Header />
-                        <FrontRoute socket={socketService.getSocket()} />
+                        <FrontRoute socket={socket} />
                     </BrowserRouter>
                 </div>
             </PopupProvider>
