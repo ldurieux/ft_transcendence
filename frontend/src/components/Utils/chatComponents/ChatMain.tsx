@@ -62,7 +62,7 @@ function ChatMain({socket}) {
                 }
             }
         }
-    }, [socket, channelList]);
+    }, [socket, channelList, channel, user?.id]);
 
     // Function to handle button click and update the selected list
     function switchList(listType) {

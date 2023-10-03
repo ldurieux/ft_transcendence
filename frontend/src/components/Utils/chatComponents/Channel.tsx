@@ -15,7 +15,6 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
     const [users, setUsers] = useState({});
     const [selectedUser, setSelectedUser] = useState(null);
     const [isAdmin, setIsAdmin] = useState(false);
-    const [Owner, setOwner] = useState({});
     const [admins, setAdmins] = useState([]);
     const [username, setUsername] = useState("");
     const defaultAvatar = require("./42-logo.png");
@@ -47,10 +46,6 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                     if (admin) {
                         setIsAdmin(true);
                     }
-                }
-                //search if the current user is the owner of the channel
-                if (channel.owner) {
-                    setOwner(channel.owner);
                 }
             }
             catch (error) {
