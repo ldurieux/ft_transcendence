@@ -63,7 +63,7 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
         if (socket) {
             socket.onmessage = (event) => {
                 const ret = JSON.parse(event.data)
-                console.log(ret.data);
+                console.log(channel.id)
                 if (ret.event === "leave" && ret.data.channel === channel.id) {
                     //remove the user who left from the channel
                     setUsers(prev => {
@@ -74,7 +74,9 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                     if (ret.data.user === currentUser.id)
                         closeChannel();
                 }
-                if (ret.event === "join" && ret.data.channel.id === channel.id) {
+                if (ret.event === "join" && ret.data.channel === channel.id) {
+                    console.log("join")
+                    console.log(ret.data.user)
                     //add the user who joined to the channel
                     setUsers(prev => {
                         const updatedUsers = { ...prev };

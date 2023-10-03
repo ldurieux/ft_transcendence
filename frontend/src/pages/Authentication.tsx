@@ -142,7 +142,7 @@ const Authentication = () => {
 
     return (
         <div className="AuthBody">
-            {/* {show &&
+            {show &&
             <div className="Popup">
 
                     <div className="Popup-inner">
@@ -166,7 +166,7 @@ const Authentication = () => {
                     </div>
 
             </div>
-            } */}
+            }
             <div>
                 {user?.isLoggedIn === false &&
                     <a
