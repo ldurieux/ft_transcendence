@@ -4,9 +4,6 @@ export class Ball {
     public radius: number;
     public color: string;
 
-    constructor() {
-    }
-
     setBall(x: number, y: number, radius: number) {
         this.x = x;
         this.y = y;
@@ -51,8 +48,6 @@ export class Player {
     public height: number;
     public color: string;
     public score: number;
-
-    constructor() {}
 
     setPaddlePosition(x: number, y: number, width: number, height: number) {
         this.x = x;

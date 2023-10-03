@@ -33,7 +33,7 @@ function App() {
             }
         };
 
-    }, [url, socket, document.visibilityState]);
+    }, [url, socket]);
 
     socket.onmessage = (event) => {
         const data = JSON.parse(event.data);

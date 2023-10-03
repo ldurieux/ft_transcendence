@@ -1,6 +1,4 @@
-import React, { Component } from "react";
-// import { MyGame } from "../components/Utils/game.tsx";
-// import "../components/Styles/GameStyle.css";
+import React from "react";
 import GameComponent from "../components/Utils/gameComponents/game.tsx";
 
 function Game() {

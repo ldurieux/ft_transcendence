@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { get, post } from "../Request.tsx";
+import { get } from "../Request.tsx";
 import * as React from 'react';
 import "../../Styles/lobbyStyles.css" 
 import * as lobbyFunction from "./lobby/lobbyFunction.tsx"

@@ -1,5 +1,5 @@
-import { get, post } from "../../Request.tsx";
-import React, { component } from 'react';
+import { post } from "../../Request.tsx";
+import React from 'react';
 import "../../../Styles/lobbyStyles.css"
 
 export function inviteFriend(friendId:number, typeOfGame:number) {

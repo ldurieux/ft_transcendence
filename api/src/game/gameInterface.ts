@@ -380,7 +380,6 @@ export class Game {
     }
 }
 
-
 export interface Screen {
     width: number;
     height: number;

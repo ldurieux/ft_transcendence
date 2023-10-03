@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import "../../Styles/GameStyle.css";
 import * as gameData from "./game/object/gameData.tsx"
 
@@ -34,7 +34,7 @@ export default function GameComponent() {
                 gameSocket.close();
             }
         };
-    }, []);
+    }, [gameSocket]);
 
     useEffect(() => {
         let alreadyPressed = {
@@ -89,7 +89,7 @@ export default function GameComponent() {
         window.addEventListener('resize', onResize, false);
         window.addEventListener('keydown', onKeydown, false);
         window.addEventListener('keyup', onKeyup, false);
-    }, []);
+    }, [MyId, gameId, gameSocket, players, ballData, screen]);
 
     useEffect(() => {
         const cssElement = document.getElementById("game-board");
