@@ -168,7 +168,7 @@ const Authentication = () => {
             </div>
             } */}
             <div>
-                {user.isLoggedIn === false &&
+                {user?.isLoggedIn === false &&
                     <a
                     className="btn-42-login"
                     href={`https://api.intra.42.fr/oauth/authorize?client_id=${process.env.REACT_APP_INTRA_ID}&redirect_uri=http%3A%2F%2F${process.env.REACT_APP_WEB_HOST}%3A${process.env.REACT_APP_FRONT_PORT}%2Flogin&response_type=code`}
@@ -207,14 +207,14 @@ const Authentication = () => {
                         onKeyDown={sendTwoFa}
                     />
                 }
-                {user.twoFaEnabled === false &&
+                {user?.twoFaEnabled === false &&
                     <button className="EnableTwoFA"
                             onClick={createTwoFa}
                     >
                         Enable 2FA
                     </button>
                 }
-                {user.twoFaEnabled === true &&
+                {user?.twoFaEnabled === true &&
                     <div className="DisableTwoFA">
                         <button onClick={disableTwoFa}>
                             Disable 2FA
