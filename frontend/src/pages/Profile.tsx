@@ -4,7 +4,6 @@ import { ProfileUser } from "../components/Utils/ProfileInfo.tsx";
 import Friendlist from "../components/Utils/friendlist.tsx";
 
 function Profile({socket}) {
-
     return (
         <div className="Profile">
             <div className="ProfileHeader">

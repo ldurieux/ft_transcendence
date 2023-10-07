@@ -7,6 +7,85 @@
   pointer-events: none;
 }
 
+.InvitePopup {
+    align-items: center;
+    background: rgba(0, 0, 0, 0.5);
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 1000;
+}
+
+.InvitePopup .InvitePopupContent {
+    background: #1e2122;
+    border: 1px solid #1e2122;
+    border-radius: 5px;
+    box-shadow: 0 0 10px #1e2122;
+    color: #fff;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    padding: 20px;
+    width: 400px;
+}
+
+.InvitePopup .InvitePopupContent .InvitePopupHeader {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.InvitePopup .InvitePopupContent .InvitePopupBody {
+
+}
+
+.InvitePopup .InvitePopupContent .InvitePopupBody .InvitePopupBodyText {
+    margin-bottom: 20px;
+}
+
+.InvitePopup .InvitePopupContent .InvitePopupBody .InvitePopupButtons {
+    display: flex;
+    justify-content: center;
+}
+
+.InvitePopup .InvitePopupContent .InvitePopupBody .InvitePopupButtons .InvitePopupButtonA {
+    background: green;
+    border: 1px solid #1e2122;
+    border-radius: 5px;
+    color: #1e2122;
+    cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    margin-left: 10px;
+    padding: 10px 20px;
+}
+
+.InvitePopupButtonA:hover {
+  opacity: 0.8;
+  transition: 0.3s;
+}
+
+.InvitePopup .InvitePopupContent .InvitePopupBody .InvitePopupButtons .InvitePopupButtonR {
+    background: red;
+    border: 1px solid #1e2122;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    margin-left: 10px;
+    padding: 10px 20px;
+}
+
+.InvitePopupButtonR:hover {
+  opacity: 0.8;
+  transition: 0.3s;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
