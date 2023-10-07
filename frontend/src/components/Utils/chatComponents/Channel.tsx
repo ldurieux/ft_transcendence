@@ -8,6 +8,8 @@ import Popup from "../popup.tsx";
 
 function Channel({ socket, channel, currentUser, setChanParams, setChannelList, updateChannelUsers, closeChannel }) {
     const bottomChat = useRef<null | HTMLDivElement>(null);
+    const [owner, setOwner] = useState(null);
+    const [newPassword, setNewPassword] = useState("");
     const { showPopup, setShowPopup } = useContext(PopupContext);
     const isDM: boolean = channel.type === "dm";
     const [messages, setMessages] = useState([]);
@@ -35,6 +37,7 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                         return map;
                     }, {});
                     setUsers(userMap);
+                    setOwner(channel.owner)
                     if (message) {
                         setMessages(message);
                     }
@@ -58,9 +61,6 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
         if (socket) {
             socket.onmessage = (event) => {
                 const ret = JSON.parse(event.data)
-                console.log(socket);
-                console.log(ret);
-                console.log(channel.id);
                 if (ret.event === "leave" && ret.data.channel === channel.id) {
                     //remove the user who left from the channel
                     setUsers(prev => {
@@ -72,8 +72,6 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                         closeChannel();
                 }
                 if (ret.event === "join" && ret.data.channel === channel.id) {
-                    console.log("join")
-                    console.log(ret.data.user)
                     //add the user who joined to the channel
                     setUsers(prev => {
                         const updatedUsers = { ...prev };
@@ -216,6 +214,23 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
         }
     }
 
+    async function changePassword(channel) {
+        try {
+            const ret = await post(`channel/update`, { id: channel.id, password: newPassword });
+            if (ret.status === "updated") {
+                setNewPassword("");
+            }
+        }
+        catch (error) {
+        }
+    }
+
+    const KeyPressPassword = (e) => {
+        if (e.key === "Enter") {
+            changePassword(channel)
+        }
+    }
+
     const handlePopupClose = () => {
         setShowPopup(false);
     };
@@ -328,6 +343,17 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                         <div className="popup-settings-inner">
                             <div className="popup-settings-header">
                                 <div className="popup-settings-title">{channel?.display_name}</div>
+                                {owner.id === currentUser.id &&
+                                    <div className="ChangePassword">
+                                        <input
+                                            type="text"
+                                            placeholder="New Password"
+                                            value={newPassword}
+                                            onChange={(e) => setNewPassword(e.target.value)}
+                                            onKeyDown={KeyPressPassword}
+                                        />
+                                    </div>
+                                }
                                 <div className="popup-settings-close" onClick={handlePopupClose}>
                                     <i className="bx bx-x"></i>
                                 </div>
