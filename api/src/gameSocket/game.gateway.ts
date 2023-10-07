@@ -16,6 +16,10 @@ import { Repository } from 'typeorm';
 
 import { UserService } from 'src/user/user.service';
 
+import { GeneralReply } from 'src/socket/general.reply';
+
+import { SocketServer } from 'src/socket/socket.server';
+
 import {
     Injectable,
     UsePipes
@@ -59,6 +63,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         private userRepository: Repository<User>,
         private jwtService: JwtService,
         private readonly userService: UserService,
+        private readonly socketServer: SocketServer,
     ) {
         this.gameInstance = new Map<number, gameInterface.Game>();
         this.playerInGame = new Set<number>();
@@ -160,6 +165,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         console.log('synchronized');
         this.playerInGame.add(player1);
         this.playerInGame.add(player2);
+        this.socketServer.broadcast(player1, {event: "isInGame", data: {user: player1}})
+        this.socketServer.broadcast(player2, {event: "isInGame", data: {user: player2}})
         socket1.send(JSON.stringify({type: 'synchronized', gameId: gameId, myId: player1, opponentId: player2}));
         socket2.send(JSON.stringify({type: 'synchronized', gameId: gameId, myId: player2, opponentId: player1}));
         if (this.gameInstance.get(gameId).typeOfGame === 1)
@@ -245,8 +252,6 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         const user1: User = await this.userService.getUser((await game.whoWin()).getPlayerId(), true, true)
         const user2: User = await this.userService.getUser((await game.whoLose()).getPlayerId(), true, true)
 
-        this.playerInGame.delete(game.player1.getPlayerId());
-        this.playerInGame.delete(game.player2.getPlayerId());
 
         Game1.myScore = (await game.whoWin()).getScore();
         Game1.enemyScore = (await game.whoLose()).getScore();
@@ -295,6 +300,12 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
             socketwinner.send(JSON.stringify({type: 'whoWin', whoWin: "WIN"}));
         if (socketloser !== null)
             socketloser.send(JSON.stringify({type: 'whoWin', whoWin: "LOSE"}));
+
+        this.playerInGame.delete(game.player1.getPlayerId());
+        this.playerInGame.delete(game.player2.getPlayerId());
+        this.socketServer.broadcast(user1.id, {event: "isNotInGame", data: {user: user1.id}});
+        this.socketServer.broadcast(user2.id, {event: "isNotInGame", data: {user: user2.id}});
+
         game.destroyGame();
         this.gameInstance.delete(gameId);
     }

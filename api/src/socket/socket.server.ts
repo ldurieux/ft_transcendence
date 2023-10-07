@@ -1,11 +1,14 @@
 import * as WebSocket from 'ws';
 import { OnGatewayConnection, OnGatewayDisconnect, MessageBody, OnGatewayInit ,SubscribeMessage, WebSocketGateway, ConnectedSocket, WebSocketServer } from '@nestjs/websockets';
 import { JwtService } from '@nestjs/jwt';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
+import { GeneralReply } from './general.reply';
+
 
 // import { GameReply } from './game.reply';
 
 import { Deque } from 'double-ended-queue';
+import { User } from 'src/user/user.entity';
 
 @Injectable()
 @WebSocketGateway({ 
@@ -15,7 +18,6 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
     constructor(
         private jwtService: JwtService,
     ) {}
-
 
     @WebSocketServer() server: WebSocket;
     static serverRef;

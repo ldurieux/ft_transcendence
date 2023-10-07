@@ -21,6 +21,8 @@ import { JwtService } from '@nestjs/jwt';
 
 import { GameGateway } from 'src/gameSocket/game.gateway';
 
+import { GeneralReply } from 'src/socket/general.reply';
+
 
 import * as gameService from './game.service'
 import { GameSocketModule } from 'src/gameSocket/gameSocket.module';
@@ -33,7 +35,7 @@ import { GameSocketModule } from 'src/gameSocket/gameSocket.module';
         TypeOrmModule.forFeature([FriendRequest]),
         TypeOrmModule.forFeature([Game]),
     ],
-    providers: [JwtService, GameGateway, Repository, SocketServer, GameReply, UserService, GameControler, AuthService, FriendRequestService],
+    providers: [JwtService, GeneralReply, GameGateway, Repository, SocketServer, GameReply, UserService, GameControler, AuthService, FriendRequestService],
     controllers: [GameControler],
 })
 export class GameModule {}
