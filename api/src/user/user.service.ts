@@ -371,6 +371,7 @@ export class UserService {
 
     async getMatchHistory(id: number): Promise<Game[]> {
         const user: User = await this.getUser(id, true, true);
+        console.log(user);
         return user.game;
     }
 }

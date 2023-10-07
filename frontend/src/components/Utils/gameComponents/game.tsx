@@ -3,38 +3,40 @@ import "../../Styles/GameStyle.css";
 import * as gameData from "./game/object/gameData.tsx"
 
 export default function GameComponent() {
-    const url = `ws://${process.env.REACT_APP_WEB_HOST}:3001/game`;
-    const gameSocket = new WebSocket(url);
-    const [boardColor, setBoardColor] = useState<string>("black");
-    var gameId = 0;
-    var MyId = 0;
-    const ballData = new gameData.Ball();
-    const players = new Map<number, gameData.Player>;
     const [score1, setScore1] = useState<number>(0);
     const [score2, setScore2] = useState<number>(0);
     const [whowin, setWhowin] = useState<string>("");
+    const [pause, setPause] = useState<string>("");
+    const [boardColor, setBoardColor] = useState<string>("black");
+
+    const url = `ws://${process.env.REACT_APP_WEB_HOST}:3001/game`;
+    const gameSocket = new WebSocket(url);
+
+    var gameId = 0;
+    var MyId = 0;
+    var opponentId = 0;
+
+    const ballData = new gameData.Ball();
+    const players = new Map<number, gameData.Player>;
+
     const screen: gameData.Screen = {
         width: 0,
         height: 0
     };
+
     useEffect(() => {
         gameSocket.onopen = () => {
             const baguette = { event: 'auth', data: { data: `Bearer ${localStorage.getItem('token')}` } };
             gameSocket.send(JSON.stringify(baguette));
-            console.log("connected to game server");
         };
-        gameSocket.onclose = () => {
-            console.log("disconnected from game server");
-        };
+        gameSocket.onclose = () => {};
         
         return () => {
-            if (gameSocket.readyState === WebSocket.OPEN)
-            {
-                console.log("closing game socket");
+            if (gameSocket.readyState === WebSocket.OPEN) {
                 gameSocket.close();
             }
         };
-    }, [gameSocket]);
+    }, []);
 
     useEffect(() => {
         let alreadyPressed = {
@@ -73,14 +75,12 @@ export default function GameComponent() {
 
         const onResize = () => {
             const cssElement = document.getElementById("game-board");
-            const paddle1 = document.getElementById("paddle1");
-            const paddle2 = document.getElementById("paddle2");
             const ball = document.getElementById("ball");
 
-            if (ball && cssElement && paddle1 && paddle2)
+            if (ball && cssElement)
             {
                 players.forEach((player, key) => {
-                    player.drawPaddle(paddle1, paddle2, cssElement, screen, key, ballData);
+                    player.drawPaddle(cssElement, screen, ballData);
                     ballData.drawBall(ball, cssElement, screen);
                 });
             }
@@ -89,7 +89,7 @@ export default function GameComponent() {
         window.addEventListener('resize', onResize, false);
         window.addEventListener('keydown', onKeydown, false);
         window.addEventListener('keyup', onKeyup, false);
-    }, [MyId, gameId, gameSocket, players, ballData, screen]);
+    }, []);
 
     useEffect(() => {
         const cssElement = document.getElementById("game-board");
@@ -112,32 +112,46 @@ export default function GameComponent() {
         );
     };
 
+    const Pause = ({id, pause}) => {
+        return (
+            <p id={id}>{pause}</p>
+        );
+    };
+
     gameSocket.onmessage = (event) => {
         const data = JSON.parse(event.data);
+
         if (data.type === 'synchronized')
         {
             gameId = data.gameId;
             MyId = data.myId;
-            players.set(1, new gameData.Player());
-            players.set(2, new gameData.Player());
+            opponentId = data.opponentId;
+            players.set(MyId, new gameData.Player());
+            players.set(opponentId, new gameData.Player());
         }
+
         else if (data.type === 'initBoard')
         {
-            console.log(MyId)
             const ball = document.getElementById("ball");
+            const cssElement = document.getElementById("game-board");
             const paddle1 = document.getElementById("paddle1");
             const paddle2 = document.getElementById("paddle2");
-            const cssElement = document.getElementById("game-board");
-            const player1 = players.get(1);
-            const player2 = players.get(2);
+            const player1 = players.get(MyId);
+            const player2 = players.get(opponentId);
+            if (player1 && paddle1)
+                player1.paddle = paddle1;
+            if (player2 && paddle2)
+                player2.paddle = paddle2;
             screen.width = data.screen.width;
             screen.height = data.screen.height;
+            setScore1(data.score1);
+            setScore2(data.score2);
             ballData.setBall(
                 data.ball.x,
                 data.ball.y,
                 data.ball.radius
             );
-            if (player1 && player2)
+            if (player1 && player2 && ball && cssElement)
             {
                 player1.setPaddlePosition(
                     data.paddle1.x,
@@ -151,16 +165,12 @@ export default function GameComponent() {
                     data.paddle2.width,
                     data.paddle2.height
                 );
-                setScore1(0);
-                setScore2(0);
-            }
-            if (ball && paddle1 && paddle2 && cssElement && player1 && player2)
-            {
-                player1.drawPaddle(paddle1, paddle2, cssElement, screen, 1, ballData);
-                player2.drawPaddle(paddle1, paddle2, cssElement, screen, 2, ballData);
+                player1.drawPaddle(cssElement, screen, ballData);
+                player2.drawPaddle(cssElement, screen, ballData);
                 ballData.drawBall(ball, cssElement, screen);
             }
         }
+
         else if (data.type === 'ballPos')
         {
             const ball = document.getElementById("ball");
@@ -175,11 +185,9 @@ export default function GameComponent() {
             if (ball && cssElement)
                 ballData.drawBall(ball, cssElement, screen);
         }
+
         else if (data.type === 'paddlePos')
         {
-            console.log(data);
-            const paddle1 = document.getElementById("paddle1");
-            const paddle2 = document.getElementById("paddle2");
             const cssElement = document.getElementById("game-board");
             const player = players.get(data.paddlePlayer);
             if (player)
@@ -192,23 +200,24 @@ export default function GameComponent() {
                 );
                 screen.width = data.screen.width;
                 screen.height = data.screen.height;
-                if (paddle1 && paddle2 && cssElement)
-                {
-                    player.drawPaddle(paddle1, paddle2, cssElement, screen, data.paddlePlayer, ballData);
-                }
+                if (cssElement)
+                    player.drawPaddle(cssElement, screen, ballData);
             }
         }
+
         else if (data.type === "updateScore")
         {
             setScore1(data.score1);
             setScore2(data.score2);
         }
+
         else if (data.type === "gameEffect")
         {
                 const ball = document.getElementById("ball");
                 if (ball)
                     ballData.undrawBall(ball);
         }
+
         else if (data.type === "whoWin")
         {
             const ball = document.getElementById("ball");
@@ -218,33 +227,18 @@ export default function GameComponent() {
             const player2 = players.get(2);
             if (ball && paddle1 && paddle2 && player1 && player2 && score1 && score2)
             {
-                player1.undrawPaddle(paddle1, paddle2, 1);
-                player2.undrawPaddle(paddle1, paddle2, 2);
+                player1.undrawPaddle();
+                player2.undrawPaddle();
                 ballData.undrawBall(ball);
             }   
             setWhowin(data.whoWin);
+            setPause("");
         }
-        else if (data.type === "reconnect")
-        {
-            console.log(data);
-            console.log("reconnect");
-            const paddle1 = document.getElementById("paddle1");
-            const paddle2 = document.getElementById("paddle2");
-            const cssElement = document.getElementById("game-board");
-            screen.width = data.screen.width;
-            screen.height = data.screen.height;
-            setScore1(data.score1);
-            setScore2(data.score2);
-            if (paddle1 && paddle2 && cssElement)
-            {
-                console.log(players);
-                players.forEach((player, key) => {
-                    console.log(player);
-                    console.log(key);
-                    player.drawPaddle(paddle1, paddle2, cssElement, screen, key, ballData);
-                });
-            }
-        }
+
+        if (data.type === "PAUSE")
+            setPause("PAUSE");
+        else if (data.type === "RESUME")
+            setPause("");
     }
 
     // const button = document.getElementById("arrow");
@@ -264,6 +258,9 @@ export default function GameComponent() {
             <div id="paddle2"></div>
             <div className="whoWin-container">
                 <WhoWin id={"whoWin"} whoWin={whowin}/>
+            </div>
+            <div className="Pause-container">
+                <Pause id={"Pause"} pause={pause}/>
             </div>
         </div>
     );

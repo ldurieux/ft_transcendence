@@ -3,6 +3,7 @@ import { AuthGuard } from "src/auth/auth.guard";
 import { HttpException, HttpStatus, Controller, Get, Post, Body, Request, UseGuards, UploadedFile, UseInterceptors, ParseFilePipe, FileTypeValidator, MaxFileSizeValidator } from '@nestjs/common';
 
 import { GameReply } from "src/socket/game.reply";
+import { GameGateway } from "src/gameSocket/game.gateway";
 import { type } from "os";
 
 // import { GameService } from "./game.service";
@@ -13,6 +14,7 @@ export class GameControler
     constructor(
         private readonly userService: UserService,
         private readonly gameReply: GameReply,
+        private readonly gameGateway: GameGateway,
     ){}
 
     @UseGuards(AuthGuard)
@@ -66,9 +68,18 @@ export class GameControler
     }
 
     @UseGuards(AuthGuard)
-    @Get('getMatchHistory')
+    @Get('MatchHistory')
     async getMatchHistory(@Request() req) {
         const id = req['user'];
-        return await this.userService.getMatchHistory(id);
+        const gameHistory = await this.userService.getMatchHistory(id);
+        return gameHistory;
+    }
+
+    @UseGuards(AuthGuard)
+    @Get('isInGame')
+    async isInGame(@Request() req) {
+        const id = req['user'];
+        const isInGame = await this.gameGateway.isInGame(id);
+        return isInGame;
     }
 }

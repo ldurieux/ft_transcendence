@@ -86,3 +86,17 @@ body {
     font-size: 100px;
     font-weight: 700;
 }
+
+.Pause-container {
+    display: flex;
+    position: relative;
+    justify-content: center;
+    top: 25%;
+}
+
+#Pause {
+    background-color: none;
+    color: rgb(159, 150, 150);
+    font-size: 100px;
+    font-weight: 700;
+}

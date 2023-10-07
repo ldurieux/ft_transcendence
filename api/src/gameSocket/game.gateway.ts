@@ -1,6 +1,8 @@
-import { Inject, UseGuards, Injectable, ValidationPipe, forwardRef } from '@nestjs/common';
+import * as gameInterface from '../game/game.service';
 
-import { OnGatewayConnection, OnGatewayDisconnect, MessageBody, OnGatewayInit ,SubscribeMessage, WebSocketGateway, ConnectedSocket, WebSocketServer } from '@nestjs/websockets';
+import { InjectRepository } from '@nestjs/typeorm';
+
+import { ZodValidationPipe } from '../validationPipe/zod.pipe';
 
 import { WebSocket } from 'ws';
 
@@ -8,19 +10,38 @@ import { JwtService } from '@nestjs/jwt';
 
 import { Game } from '../game/game.entity';
 
+import { User } from '../user/user.entity';
+
 import { Repository } from 'typeorm';
 
 import { UserService } from 'src/user/user.service';
 
+import {
+    Injectable,
+    UsePipes
+} from '@nestjs/common';
 
-import * as gameInterface from '../game/gameInterface';
-import { subscribe } from 'diagnostics_channel';
-import { connected } from 'process';
-import { InjectRepository } from '@nestjs/typeorm';
+import { 
+    OnGatewayConnection, 
+    OnGatewayDisconnect,
+    MessageBody,
+    OnGatewayInit,
+    SubscribeMessage,
+    WebSocketGateway,
+    ConnectedSocket,
+    WebSocketServer
+} from '@nestjs/websockets';
 
-import { User } from 'src/user/user.entity';
-import { get } from 'http';
-import { SocketGuard } from 'src/auth/auth.guard';
+import {
+    MovePaddle,
+    StopPaddle,
+} from '../game/game.interface';
+
+
+import {    
+    movePaddleSchema,
+    stopPaddleSchema 
+} from 'src/validationPipe/game.schema';
 
 @Injectable()
 @WebSocketGateway({
@@ -34,6 +55,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     constructor(
         @InjectRepository(Game)
         private gameRepository: Repository<Game>,
+        @InjectRepository(User)
+        private userRepository: Repository<User>,
         private jwtService: JwtService,
         private readonly userService: UserService,
     ) {
@@ -55,6 +78,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     
     async handleDisconnect(client: WebSocket) {
         console.log('disconnected');
+        this.server.clients.delete(client);
     }
 
     async getSocket(id: number): Promise<WebSocket> {
@@ -65,7 +89,6 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         }
         return null;
     }
-
     
     @SubscribeMessage('auth')
     async handleAuth(@ConnectedSocket() client: WebSocket, @MessageBody('data') authHeader: any) {
@@ -137,40 +160,38 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         console.log('synchronized');
         this.playerInGame.add(player1);
         this.playerInGame.add(player2);
-        socket1.send(JSON.stringify({type: 'synchronized', gameId: gameId, myId: 1}));
-        socket2.send(JSON.stringify({type: 'synchronized', gameId: gameId, myId: 2}));
+        socket1.send(JSON.stringify({type: 'synchronized', gameId: gameId, myId: player1, opponentId: player2}));
+        socket2.send(JSON.stringify({type: 'synchronized', gameId: gameId, myId: player2, opponentId: player1}));
         if (this.gameInstance.get(gameId).typeOfGame === 1)
             this.classicGameRoutine(player1, player2, gameId);
         else if (this.gameInstance.get(gameId).typeOfGame === 2)
             this.deluxeGameRoutine(player1, player2, gameId);
     }
 
-
+    @UsePipes(new ZodValidationPipe(movePaddleSchema))
     @SubscribeMessage('movePaddle')
-    async movePaddle(@ConnectedSocket() client: WebSocket, @MessageBody() data: {gameId: number, player: number, direction: number})
+    async movePaddle(
+        @MessageBody() payload: MovePaddle): 
+        Promise<void>
     {
-        if (await this.checkIfGameExist(data.gameId) === false)
-        {
-            client.send(JSON.stringify({type: 'Error', Error: 'GameNotExist'}));
+        if (await this.checkIfGameExist(payload.gameId) === false)
             return;
-        }
-        const game = this.gameInstance.get(data.gameId);
+        const game = this.gameInstance.get(payload.gameId);
         const socket1 = await this.getSocket(game.player1.getPlayerId());
         const socket2 = await this.getSocket(game.player2.getPlayerId());
-        game.movePaddle(data.player, data.direction, socket1, socket2);
+        await game.movePaddle(payload.player, payload.direction, socket1, socket2);
     }
 
+    @UsePipes(new ZodValidationPipe(stopPaddleSchema))
     @SubscribeMessage('stopPaddle')
-    async stopPaddle(@ConnectedSocket() client: WebSocket, @MessageBody() data: {gameId: number, player: number})
+    async stopPaddle(
+        @MessageBody() payload: StopPaddle): 
+        Promise<void>
     {
-
-        if (await this.checkIfGameExist(data.gameId) === false)
-        {
-            client.send(JSON.stringify({type: 'Error', Error: 'GameNotExist'}));
+        if (await this.checkIfGameExist(payload.gameId) === false)
             return;
-        }
-        const game = this.gameInstance.get(data.gameId);
-        game.stopPaddle(data.player);
+        const game = this.gameInstance.get(payload.gameId);
+        await game.stopPaddle(payload.player);
     }
 
     async checkIfGameExist(gameId: number) {
@@ -193,9 +214,12 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
             return false;
         this.gameInstance.forEach((value: gameInterface.Game, key: number) => {
             if (value.player1.getPlayerId() === clientId || value.player2.getPlayerId() === clientId)
-                socket.send(JSON.stringify({type: 'synchronized', gameId: key, myId: value.player1.getPlayerId() === clientId ? 1 : 2}));
+            {
+                socket.send(JSON.stringify({type: 'synchronized', gameId: key, myId: clientId, opponentId: (value.player1.getPlayerId() === clientId ? value.player2.getPlayerId() : value.player1.getPlayerId())}));
+                const game = this.gameInstance.get(key);
+                game.reconnect(socket, clientId);
+            }
         });
-        socket.data.inGame = true;
         return true;
     }
 
@@ -210,52 +234,63 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         this.synchronizedPlayer(player1, player2, gameId);
     }
 
-    async gameEnd(gameId: number, game: gameInterface.Game, disconnect: boolean = false) {
-        const Game1 = new Game();
-        const Game2 = new Game();
+    async gameEnd(gameId: number, game: gameInterface.Game) {
+        const Game1:Game = new Game();
+        const Game2:Game = new Game();
         const socketwinner = await this.getSocket((await game.whoWin()).getPlayerId());
         const socketloser = await this.getSocket((await game.whoLose()).getPlayerId());
-        game.stopPaddle(1);
-        game.stopPaddle(2);
+        game.stopPaddle(game.player1.getPlayerId());
+        game.stopPaddle(game.player2.getPlayerId());
+
+        const user1: User = await this.userService.getUser((await game.whoWin()).getPlayerId(), true, true)
+        const user2: User = await this.userService.getUser((await game.whoLose()).getPlayerId(), true, true)
 
         this.playerInGame.delete(game.player1.getPlayerId());
         this.playerInGame.delete(game.player2.getPlayerId());
+
         Game1.myScore = (await game.whoWin()).getScore();
         Game1.enemyScore = (await game.whoLose()).getScore();
         Game1.opponentId = (await game.whoLose()).getPlayerId();
         Game1.opponentName = (await this.userService.getUser(Game1.opponentId, true)).display_name;
+        Game1.user = user1;
         Game1.Win = true;
+
         Game2.myScore = (await game.whoLose()).getScore();
         Game2.enemyScore = (await game.whoWin()).getScore();
         Game2.opponentId = (await game.whoWin()).getPlayerId();
         Game2.opponentName = (await this.userService.getUser(Game2.opponentId, true)).display_name;
+        Game2.user = user2;
         Game2.Win = false;
 
-        console.log(Game1, Game2);
-        await this.gameRepository.save(Game1);
-        await this.userService.getUser((await game.whoWin()).getPlayerId(), true).then((user) => {
-            if (user.game === undefined)
-                user.game = [];
-            user.game.push(Game1);
-            if (user.games_won === undefined)
-                user.games_won = 0;
-            user.games_won++;
-            if (user.games_played === undefined)
-                user.games_played = 0;
-            user.games_played++;
-        });
+
         await this.gameRepository.save(Game2);
-        await this.userService.getUser((await game.whoLose()).getPlayerId(), true).then((user) => {
-            if (user.game === undefined)
-                user.game = [];
-            user.game.push(Game2);
-            if (user.games_won === undefined)
-                user.games_won = 0;
-            user.games_lost++;
-            if (user.games_played === undefined)
-                user.games_played = 0;
-            user.games_played++;
-        });
+        await this.gameRepository.save(Game1);
+        console.log(Game1.id);
+        console.log(Game2.id);
+
+        if (user1.game === undefined || user1.game === null)
+            user1.game = [];
+        await user1.game.push(Game1);
+        if (user1.games_won === undefined)
+            user1.games_won = 0;
+        user1.games_won++;
+        if (user1.games_played === undefined)
+            user1.games_played = 0;
+        user1.games_played++;
+
+        if (user2.game === undefined || user2.game === null)
+            user2.game = [];
+        user2.game.push(Game2);
+        if (user2.games_lost === undefined)
+            user2.games_lost = 0;
+        user2.games_lost++;
+        if (user2.games_played === undefined)
+            user2.games_played = 0;
+        user2.games_played++;
+
+        await this.userRepository.save(user1);
+        await this.userRepository.save(user2);
+        console.log(user1);
         if (socketwinner !== null)
             socketwinner.send(JSON.stringify({type: 'whoWin', whoWin: "WIN"}));
         if (socketloser !== null)
@@ -270,27 +305,42 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         var socket2: WebSocket = await this.getSocket(player2);
         const game = this.gameInstance.get(gameId);
         let gameContinue: boolean = true;
+        let disconnect: number = 0;
 
         await game.gameInit(player1, player2, socket1, socket2);
         while (gameContinue)
         {
-            if (socket1 === null || socket1.readyState === 3)
-            {
-                socket1 = await this.getSocket(game.player1.getPlayerId());
-                if (socket1 !== null)
-                    socket1.send(JSON.stringify({type: 'reconnect', paddle1: await game.getPaddlePos(1), paddle2: await game.getPaddlePos(2), screen: await game.getScreen(), score1: await game.player1.getScore(), score2: await game.player2.getScore()}))
-            }
-            if (socket2 === null || socket2.readyState === 3)
-            {
-                socket2 = await this.getSocket(game.player2.getPlayerId());
-                if (socket2 !== null)
-                    socket2.send(JSON.stringify({type: 'reconnect', paddle1: await game.getPaddlePos(1), paddle2: await game.getPaddlePos(2), screen: await game.getScreen(), score1: await game.player1.getScore(), score2: await game.player2.getScore()}))
-            }
             await game.moveBall();
             gameContinue = await game.checkCollision(socket1, socket2);
             await game.sendBallPos(socket1, socket2);
-            await this.wait(10);
+            await this.wait(16);
+            if (socket1 === null || socket1.readyState === 3)
+            {
+                disconnect = await this.gamePause(player1, player2);
+                socket1 = await this.getSocket(player1);
+            }
+            if (socket2 === null || socket2.readyState === 3)
+            {
+                disconnect = await this.gamePause(player1, player2);
+                socket2 = await this.getSocket(player2);
+            }
+            if (disconnect)
+                gameContinue = false;
         }
+        console.log(disconnect);
+        console.log(player1, player2);
+        if (disconnect === player1)
+        {
+            game.setWinner(game.player2.getPlayerId());
+            game.player1.setScore(-1);
+        }
+        else if (disconnect === player2)
+        {
+            game.setWinner(game.player1.getPlayerId());
+            game.player2.setScore(-1);
+        }
+        if (disconnect === -1)
+            return await this.gameDisconnect(gameId, game);
         this.gameEnd(gameId, game);
     }
 
@@ -300,35 +350,97 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         var socket2: WebSocket = await this.getSocket(player2);
         const game = this.gameInstance.get(gameId);
         let gameContinue:boolean = true;
-        let gameEffect: number = 20;
+        let disconnect: number = 0;
+        let gameEffect: number = 16;
+
 
         await game.gameInit(player1, player2, socket1, socket2);
         while (gameContinue)
         {
-            if (socket1 === null || socket1.readyState === 3)
-            {
-                socket1 = await this.getSocket(game.player1.getPlayerId());
-                if (socket1 !== null)
-                    socket1.send(JSON.stringify({type: 'reconnect', paddle1: await game.getPaddlePos(1), paddle2: await game.getPaddlePos(2), screen: await game.getScreen(), score1: await game.player1.getScore(), score2: await game.player2.getScore()}))
-            }
-
-            if (socket2 === null || socket2.readyState === 3)
-            {
-                socket2 = await this.getSocket(game.player2.getPlayerId());
-                if (socket2 !== null)
-                    socket2.send(JSON.stringify({type: 'reconnect', paddle1: await game.getPaddlePos(1), paddle2: await game.getPaddlePos(2), screen: await game.getScreen(), score1: await game.player1.getScore(), score2: await game.player2.getScore()}))
-            }
+            console.log(gameContinue);
             await game.moveBall();
             gameContinue = await game.checkCollision(socket1, socket2);
             await game.sendBallPos(socket1, socket2);
-            if (gameEffect % 4000 === 0)
+            if (gameEffect % 2000 === 0)
                 await game.gameEffect(socket1, socket2);
-            else if (gameEffect % 1000 === 0)
+            else if (gameEffect % 500 === 0)
                 game.releaseGameEffect();
-            await this.wait(10);
-            gameEffect += 10;
-
+            await this.wait(16);
+            gameEffect += 16;
+            if (socket1 === null || socket1.readyState === 3)
+            {
+                disconnect = await this.gamePause(player1, player2);
+                socket1 = await this.getSocket(player1);
+            }
+            if (socket2 === null || socket2.readyState === 3)
+            {
+                disconnect = await this.gamePause(player1, player2);
+                socket2 = await this.getSocket(player2);
+            }
+            if (disconnect)
+                gameContinue = false;
         }
+        if (disconnect === player1)
+        {
+            game.setWinner(game.player2.getPlayerId());
+            game.player1.setScore(-1);
+        }
+        else if (disconnect === player2)
+        {
+            game.setWinner(game.player1.getPlayerId());
+            game.player2.setScore(-1);
+        }
+        if (disconnect === -1)
+            return await this.gameDisconnect(gameId, game);
         this.gameEnd(gameId, game);
+    }
+
+    async gamePause(player1: number, player2: number): Promise<number>
+    {
+        var pause: number = 0;
+        var socket1 = await this.getSocket(player1);
+        var socket2 = await this.getSocket(player2);
+        while ((socket1 === null || socket2 === null) && pause < 10)
+        {
+            if (socket1 !== null)
+                socket1.send(JSON.stringify({type: 'PAUSE'}));
+            if (socket2 !== null)
+                socket2.send(JSON.stringify({type: 'PAUSE'}));
+            socket1 = await this.getSocket(player1);
+            socket2 = await this.getSocket(player2);
+            if (socket1 === null)
+                console.log("socket1 null");
+            if (socket2 === null)
+                console.log("socket2 null");
+            console.log(pause);
+            if (socket1 === null && socket2 === null)
+            {
+                console.log("disconnect");
+                return (-1);
+            }
+            await this.wait(1000);
+            pause += 1;
+        }
+        if (pause >= 10)
+        {
+            if (socket1 === null)
+                return (player1);
+            else
+                return (player2);
+        }
+        if (socket1 !== null)
+            socket1.send(JSON.stringify({type: 'RESUME'}));
+        if (socket2 !== null)
+            socket2.send(JSON.stringify({type: 'RESUME'}));
+        return (0);
+    }
+
+    async gameDisconnect(gameId: number, game: gameInterface.Game): Promise<void>
+    {
+        console.log("disconnect");
+        this.playerInGame.delete(game.player1.getPlayerId());
+        this.playerInGame.delete(game.player2.getPlayerId());
+        game.destroyGame();
+        this.gameInstance.delete(gameId);
     }
 }

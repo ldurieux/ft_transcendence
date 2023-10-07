@@ -22,7 +22,7 @@ import { JwtService } from '@nestjs/jwt';
 import { GameGateway } from 'src/gameSocket/game.gateway';
 
 
-import * as gameInterface from './gameInterface'
+import * as gameService from './game.service'
 import { GameSocketModule } from 'src/gameSocket/gameSocket.module';
 
 

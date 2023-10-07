@@ -28,6 +28,9 @@ export class Ball {
     }
 
     undrawBall(ball: HTMLElement) {
+        this.x = 0;
+        this.y = 0;
+        this.radius = 0;
         ball.style.left = `0px`;
         ball.style.top = `0px`;
         ball.style.width = `0px`;
@@ -48,6 +51,7 @@ export class Player {
     public height: number;
     public color: string;
     public score: number;
+    public paddle: HTMLElement;
 
     setPaddlePosition(x: number, y: number, width: number, height: number) {
         this.x = x;
@@ -64,45 +68,29 @@ export class Player {
         this.score = score;
     }
 
-    drawPaddle(paddle1: HTMLElement, paddle2: HTMLElement, cssElement: HTMLElement, screen: Screen, id:number, ball: Ball) {
-        if (id === 1)
-        {
+    drawPaddle(cssElement: HTMLElement, screen: Screen, ball: Ball) {
+            var left:number;
             const width:number = this.width * cssElement.offsetWidth / screen.width;
-            const right:number = (this.x * cssElement.offsetWidth / screen.width);
+            if (this.x <= screen.width / 2)
+                left = (this.x * cssElement.offsetWidth / screen.width) - width;
+            else
+                left = (this.x * cssElement.offsetWidth / screen.width);
             const top:number = (cssElement.offsetHeight - this.y * cssElement.offsetHeight / screen.height) - ball.radius / 3;
             const height:number = this.height * cssElement.offsetHeight / screen.height;
-            paddle1.style.left = `${right}px`;
-            paddle1.style.top = `${top}px`;
-            paddle1.style.width = `${width}px`;
-            paddle1.style.height = `${height}px`;
-        }
-        else if (id === 2)
-        {
-            const width:number = this.width * cssElement.offsetWidth / screen.width;
-            const left:number = (this.x * cssElement.offsetWidth / screen.width) - this.width;
-            const top:number = (cssElement.offsetHeight - this.y * cssElement.offsetHeight / screen.height) - ball.radius / 3;
-            const height:number = this.height * cssElement.offsetHeight / screen.height;
-            paddle2.style.left = `${left}px`;
-            paddle2.style.top = `${top}px`;
-            paddle2.style.width = `${width}px`;
-            paddle2.style.height = `${height}px`;
-        }
+            this.paddle.style.left = `${left}px`;
+            this.paddle.style.top = `${top}px`;
+            this.paddle.style.width = `${width}px`;
+            this.paddle.style.height = `${height}px`;
     }
 
-    undrawPaddle(paddle1: HTMLElement, paddle2: HTMLElement, id:number) {
-        if (id === 1)
-        {
-            paddle1.style.left = `0px`;
-            paddle1.style.top = `0px`;
-            paddle1.style.width = `0px`;
-            paddle1.style.height = `0px`;
-        }
-        else if (id === 2)
-        {
-            paddle2.style.left = `0px`;
-            paddle2.style.top = `0px`;
-            paddle2.style.width = `0px`;
-            paddle2.style.height = `0px`;
-        }
+    undrawPaddle() {
+        this.x = 0;
+        this.y = 0;
+        this.width = 0;
+        this.height = 0;
+        this.paddle.style.left = `0px`;
+        this.paddle.style.top = `0px`;
+        this.paddle.style.width = `0px`;
+        this.paddle.style.height = `0px`;
     }
 }

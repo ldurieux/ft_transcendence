@@ -1,10 +1,13 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToOne, OneToMany, ManyToMany, ManyToOne, JoinTable } from 'typeorm';
 import { User } from 'src/user/user.entity';
 
 @Entity()
 export class Game {
     @PrimaryGeneratedColumn()
     id: number;
+
+    @ManyToOne(() => User, (user) => user.game)
+    user: User;
 
     @Column({default: 0})
     opponentId: number;

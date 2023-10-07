@@ -40,8 +40,7 @@ export class User {
   @Column({default: 0})
   points: number;
 
-  @ManyToOne(() => Game)
-  @JoinTable()
+  @OneToMany(() => Game, (game) => game.user)
   game: Game[];
 
   @Column({default: 0})

@@ -23,15 +23,14 @@ export default class SocketService {
             console.log('disconnected from server');
         };
 
-        // this.socket.onmessage = (event) => {
-        //     const data = JSON.parse(event.data);
-        //     if (data.type === 'gameStart') {
-        //         window.location.href = '/game';
-        //     }
-        //     if (data.type === 'invite') {
-        //         // Gérer la logique des invitations ici
-        //     }
-        // };
+        this.socket.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            if (data.type === 'gameStart') {
+                window.location.href = '/game';
+            }
+            if (data.type === 'invite') {
+            }
+        };
     }
 
     disconnect() {
