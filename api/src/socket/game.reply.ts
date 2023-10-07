@@ -28,7 +28,7 @@ export class GameReply {
     async sendNotConnected(id: number)
     {
         const socket = await this.socketServer.getSocket(id);
-        if (socket)
+        if (socket !== null)
             socket.send(JSON.stringify({type: 'notConnected'}));
     }
 
@@ -52,7 +52,8 @@ export class GameReply {
             this.ClassicMatchMaking.pop();
         if (this.DeluxeMatchMaikng.includes(id))
             this.DeluxeMatchMaikng.pop();
-        socket.send(JSON.stringify({type: 'invite', user: (await this.userService.getUser(id)).display_name, typeOfGame: typeOfGame}));
+        if (socket !== null)
+            socket.send(JSON.stringify({type: 'invite', user: (await this.userService.getUser(id)).display_name, typeOfGame: typeOfGame}));
     }
 
     async sendInGame(id: number)
