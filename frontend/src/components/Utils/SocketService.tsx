@@ -16,11 +16,9 @@ export default class SocketService {
             const baguette = { event: 'auth', data: { data: `Bearer ${localStorage.getItem('token')}` } };
             if (this.socket)
                 this.socket.send(JSON.stringify(baguette));
-            console.log('connected to server');
         };
 
         this.socket.onclose = () => {
-            console.log('disconnected from server');
         };
 
         this.socket.onmessage = (event) => {
@@ -35,7 +33,6 @@ export default class SocketService {
 
     disconnect() {
         if (this.socket && this.socket.readyState === WebSocket.OPEN) {
-            console.log('closing socket');
             this.socket.close();
         }
     }

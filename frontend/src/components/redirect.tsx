@@ -10,8 +10,6 @@ const Game = React.lazy(() => import("../pages/Game.tsx"));
 
 
 const FrontRoutes = ({socket}) => {
-    console.log("socket = ", socket);
-
     return (
         <Routes>
             <Route path="/login" element={<Authentication />} />

@@ -50,18 +50,15 @@ function ChatMain({socket}) {
         })();
         if (socket && !channel) {
             socket.onmessage = (e) => {
-                console.log("socket")
                 const data = JSON.parse(e.data);
                 if (data.type === "gameStart") {
                     window.location.href = "/game";
                 }
                 if (data.event === "join" && data.data.user.id === user.id) {
-                    console.log("aled")
                     setChannelList([...channelList, data.data.channel]);
                 }
                 else if (data.event === "leave" && data.data.user.id === user.id) {
                     setChannelList(channelList.filter((item) => item.id !== data.data.channel.id));
-                    console.log("aled")
                 }
             }
         }

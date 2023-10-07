@@ -16,7 +16,6 @@ function ProfileUser() {
     useEffect(() => {
         (async () => {
             const result = await get('user/self');
-            console.log(result)
             setUser(result);
         })()
     }, [setUser])
