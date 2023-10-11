@@ -1,0 +1,2000 @@
+docker compose logs api --follow
+ft_transcendence-api-1  | 
+ft_transcendence-api-1  | > api@0.0.1 start:debug
+ft_transcendence-api-1  | > nest start --debug --watch
+ft_transcendence-api-1  | 
+ft_transcendence-api-1  | c[[90m1:15:42 PM[0m] Starting compilation in watch mode...
+ft_transcendence-api-1  | 
+ft_transcendence-api-1  | [[90m1:15:45 PM[0m] Found 0 errors. Watching for file changes.
+ft_transcendence-api-1  | 
+ft_transcendence-api-1  | Debugger listening on ws://127.0.0.1:9229/96a9a74d-a28c-4719-8ddb-cdd91371cab5
+ft_transcendence-api-1  | For help, see: https://nodejs.org/en/docs/inspector
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +11ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigHostModule dependencies initialized[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmCoreModule dependencies initialized[39m[38;5;3m +147ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAuthModule dependencies initialized[39m[38;5;3m +1ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mFriendRequestModule dependencies initialized[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mUserModule dependencies initialized[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mChannelModule dependencies initialized[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mGameModule dependencies initialized[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[WebSocketsController] [39m[32mSocketServer subscribed to the "auth" message[39m[38;5;3m +7ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[WebSocketsController] [39m[32mGameGateway subscribed to the "auth" message[39m[38;5;3m +1ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[WebSocketsController] [39m[32mGameGateway subscribed to the "movePaddle" message[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[WebSocketsController] [39m[32mGameGateway subscribed to the "stopPaddle" message[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[WebSocketsController] [39m[32mSocketServer subscribed to the "auth" message[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAppController {/}:[39m[38;5;3m +1ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/, GET} route[39m[38;5;3m +1ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mUserController {/user}:[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user, GET} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/self, GET} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/friends, GET} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/block, GET} route[39m[38;5;3m +1ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/unblock, GET} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/leaderboard, GET} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/username, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/picture, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/register, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/login, POST} route[39m[38;5;3m +1ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/login2fa, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/enable2fa, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/disable2fa, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/generate2fa, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/friend, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/friend/reject, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/friend/delete, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mChannelController {/channel}:[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/channel, GET} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/channel, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/channel/update, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/channel/public, GET} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/channel/join, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/channel/leave, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/channel/add, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/channel/kick, POST} route[39m[38;5;3m +1ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/channel/ban, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/channel/mute, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/channel/promote, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/channel/demote, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/channel/message, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/channel/message, GET} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mGameControler {/game}:[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/game/invite, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/game/inviteResponse, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/game/MatchMaking, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 31  - [39m09/28/2023, 1:15:46 PM [32m    LOG[39m [38;5;3m[NestApplication] [39m[32mNest application successfully started[39m[38;5;3m +1ms[39m
+ft_transcendence-api-1  | c[[90m1:23:29 PM[0m] File change detected. Starting incremental compilation...
+ft_transcendence-api-1  | 
+ft_transcendence-api-1  | [[90m1:23:29 PM[0m] Found 0 errors. Watching for file changes.
+ft_transcendence-api-1  | 
+ft_transcendence-api-1  | Debugger listening on ws://127.0.0.1:9229/5e89516d-ba8d-498a-ae87-983781b40a60
+ft_transcendence-api-1  | For help, see: https://nodejs.org/en/docs/inspector
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +10ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigHostModule dependencies initialized[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmCoreModule dependencies initialized[39m[38;5;3m +62ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +1ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAuthModule dependencies initialized[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mFriendRequestModule dependencies initialized[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mUserModule dependencies initialized[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mChannelModule dependencies initialized[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mGameModule dependencies initialized[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[WebSocketsController] [39m[32mSocketServer subscribed to the "auth" message[39m[38;5;3m +6ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[WebSocketsController] [39m[32mGameGateway subscribed to the "auth" message[39m[38;5;3m +1ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[WebSocketsController] [39m[32mGameGateway subscribed to the "movePaddle" message[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[WebSocketsController] [39m[32mGameGateway subscribed to the "stopPaddle" message[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[WebSocketsController] [39m[32mSocketServer subscribed to the "auth" message[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAppController {/}:[39m[38;5;3m +1ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/, GET} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mUserController {/user}:[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user, GET} route[39m[38;5;3m +1ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/self, GET} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/friends, GET} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/block, GET} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/unblock, GET} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/leaderboard, GET} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/username, POST} route[39m[38;5;3m +1ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/picture, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/register, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/login, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/login2fa, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/enable2fa, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/disable2fa, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/generate2fa, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/friend, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/friend/reject, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/friend/delete, POST} route[39m[38;5;3m +1ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mChannelController {/channel}:[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/channel, GET} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/channel, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/channel/update, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/channel/public, GET} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/channel/join, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/channel/leave, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/channel/add, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/channel/kick, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/channel/ban, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/channel/mute, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/channel/promote, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/channel/demote, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/channel/message, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/channel/message, GET} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mGameControler {/game}:[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/game/invite, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/game/inviteResponse, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/game/MatchMaking, POST} route[39m[38;5;3m +1ms[39m
+ft_transcendence-api-1  | [32m[Nest] 46  - [39m09/28/2023, 1:23:30 PM [32m    LOG[39m [38;5;3m[NestApplication] [39m[32mNest application successfully started[39m[38;5;3m +1ms[39m
+ft_transcendence-api-1  | c[[90m1:24:06 PM[0m] File change detected. Starting incremental compilation...
+ft_transcendence-api-1  | 
+ft_transcendence-api-1  | [96msrc/game/gameInterface.ts[0m:[93m271[0m:[93m18[0m - [91merror[0m[90m TS2339: [0mProperty 'updateScore' does not exist on type 'Game'.
+ft_transcendence-api-1  | 
+ft_transcendence-api-1  | [7m271[0m             this.updateScore(socket1, socket2);
+ft_transcendence-api-1  | [7m   [0m [91m                 ~~~~~~~~~~~[0m
+ft_transcendence-api-1  | 
+ft_transcendence-api-1  | [[90m1:24:06 PM[0m] Found 1 error. Watching for file changes.
+ft_transcendence-api-1  | 
+ft_transcendence-api-1  | c[[90m1:24:16 PM[0m] File change detected. Starting incremental compilation...
+ft_transcendence-api-1  | 
+ft_transcendence-api-1  | [96msrc/game/gameInterface.ts[0m:[93m271[0m:[93m18[0m - [91merror[0m[90m TS2339: [0mProperty 'updateScore' does not exist on type 'Game'.
+ft_transcendence-api-1  | 
+ft_transcendence-api-1  | [7m271[0m             this.updateScore(socket1, socket2);
+ft_transcendence-api-1  | [7m   [0m [91m                 ~~~~~~~~~~~[0m
+ft_transcendence-api-1  | 
+ft_transcendence-api-1  | [96msrc/game/gameInterface.ts[0m:[93m281[0m:[93m18[0m - [91merror[0m[90m TS2339: [0mProperty 'updateScore' does not exist on type 'Game'.
+ft_transcendence-api-1  | 
+ft_transcendence-api-1  | [7m281[0m             this.updateScore(socket1, socket2);
+ft_transcendence-api-1  | [7m   [0m [91m                 ~~~~~~~~~~~[0m
+ft_transcendence-api-1  | 
+ft_transcendence-api-1  | [[90m1:24:16 PM[0m] Found 2 errors. Watching for file changes.
+ft_transcendence-api-1  | 
+ft_transcendence-api-1  | c[[90m1:24:27 PM[0m] File change detected. Starting incremental compilation...
+ft_transcendence-api-1  | 
+ft_transcendence-api-1  | [[90m1:24:28 PM[0m] Found 0 errors. Watching for file changes.
+ft_transcendence-api-1  | 
+ft_transcendence-api-1  | Debugger listening on ws://127.0.0.1:9229/a343376d-2e7c-4bd4-a707-bc9e6b59fa86
+ft_transcendence-api-1  | For help, see: https://nodejs.org/en/docs/inspector
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +9ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m[38;5;3m +1ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigHostModule dependencies initialized[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmCoreModule dependencies initialized[39m[38;5;3m +57ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +1ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAuthModule dependencies initialized[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mFriendRequestModule dependencies initialized[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mUserModule dependencies initialized[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mChannelModule dependencies initialized[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mGameModule dependencies initialized[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[WebSocketsController] [39m[32mSocketServer subscribed to the "auth" message[39m[38;5;3m +6ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[WebSocketsController] [39m[32mGameGateway subscribed to the "auth" message[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[WebSocketsController] [39m[32mGameGateway subscribed to the "movePaddle" message[39m[38;5;3m +1ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[WebSocketsController] [39m[32mGameGateway subscribed to the "stopPaddle" message[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[WebSocketsController] [39m[32mSocketServer subscribed to the "auth" message[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAppController {/}:[39m[38;5;3m +1ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/, GET} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mUserController {/user}:[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user, GET} route[39m[38;5;3m +1ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/self, GET} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/friends, GET} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/block, GET} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/unblock, GET} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/leaderboard, GET} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/username, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/picture, POST} route[39m[38;5;3m +1ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/register, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/login, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/login2fa, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/enable2fa, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/disable2fa, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/generate2fa, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/friend, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/friend/reject, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/friend/delete, POST} route[39m[38;5;3m +1ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mChannelController {/channel}:[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/channel, GET} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/channel, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/channel/update, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/channel/public, GET} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/channel/join, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/channel/leave, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/channel/add, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/channel/kick, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/channel/ban, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/channel/mute, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/channel/promote, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/channel/demote, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/channel/message, POST} route[39m[38;5;3m +1ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/channel/message, GET} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mGameControler {/game}:[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/game/invite, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/game/inviteResponse, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/game/MatchMaking, POST} route[39m[38;5;3m +0ms[39m
+ft_transcendence-api-1  | [32m[Nest] 61  - [39m09/28/2023, 1:24:28 PM [32m    LOG[39m [38;5;3m[NestApplication] [39m[32mNest application successfully started[39m[38;5;3m +1ms[39m
+ft_transcendence-api-1  | null
+ft_transcendence-api-1  | null
+ft_transcendence-api-1  | null
+ft_transcendence-api-1  | null
+ft_transcendence-api-1  | gameStart
+ft_transcendence-api-1  | synchronizedPlayer
+ft_transcendence-api-1  | <ref *1> WebSocket {
+ft_transcendence-api-1  |   _events: [Object: null prototype] {
+ft_transcendence-api-1  |     close: [Function (anonymous)],
+ft_transcendence-api-1  |     error: [Function (anonymous)]
+ft_transcendence-api-1  |   },
+ft_transcendence-api-1  |   _eventsCount: 2,
+ft_transcendence-api-1  |   _maxListeners: undefined,
+ft_transcendence-api-1  |   _binaryType: 'nodebuffer',
+ft_transcendence-api-1  |   _closeCode: 1006,
+ft_transcendence-api-1  |   _closeFrameReceived: false,
+ft_transcendence-api-1  |   _closeFrameSent: false,
+ft_transcendence-api-1  |   _closeMessage: <Buffer >,
+ft_transcendence-api-1  |   _closeTimer: null,
+ft_transcendence-api-1  |   _extensions: {},
+ft_transcendence-api-1  |   _paused: false,
+ft_transcendence-api-1  |   _protocol: '',
+ft_transcendence-api-1  |   _readyState: 1,
+ft_transcendence-api-1  |   _receiver: Receiver {
+ft_transcendence-api-1  |     _writableState: WritableState {
+ft_transcendence-api-1  |       objectMode: false,
+ft_transcendence-api-1  |       highWaterMark: 16384,
+ft_transcendence-api-1  |       finalCalled: false,
+ft_transcendence-api-1  |       needDrain: false,
+ft_transcendence-api-1  |       ending: false,
+ft_transcendence-api-1  |       ended: false,
+ft_transcendence-api-1  |       finished: false,
+ft_transcendence-api-1  |       destroyed: false,
+ft_transcendence-api-1  |       decodeStrings: true,
+ft_transcendence-api-1  |       defaultEncoding: 'utf8',
+ft_transcendence-api-1  |       length: 0,
+ft_transcendence-api-1  |       writing: false,
+ft_transcendence-api-1  |       corked: 0,
+ft_transcendence-api-1  |       sync: true,
+ft_transcendence-api-1  |       bufferProcessing: false,
+ft_transcendence-api-1  |       onwrite: [Function: bound onwrite],
+ft_transcendence-api-1  |       writecb: null,
+ft_transcendence-api-1  |       writelen: 0,
+ft_transcendence-api-1  |       afterWriteTickInfo: null,
+ft_transcendence-api-1  |       buffered: [],
+ft_transcendence-api-1  |       bufferedIndex: 0,
+ft_transcendence-api-1  |       allBuffers: true,
+ft_transcendence-api-1  |       allNoop: true,
+ft_transcendence-api-1  |       pendingcb: 0,
+ft_transcendence-api-1  |       constructed: true,
+ft_transcendence-api-1  |       prefinished: false,
+ft_transcendence-api-1  |       errorEmitted: false,
+ft_transcendence-api-1  |       emitClose: true,
+ft_transcendence-api-1  |       autoDestroy: true,
+ft_transcendence-api-1  |       errored: null,
+ft_transcendence-api-1  |       closed: false,
+ft_transcendence-api-1  |       closeEmitted: false,
+ft_transcendence-api-1  |       [Symbol(kOnFinished)]: []
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     _events: [Object: null prototype] {
+ft_transcendence-api-1  |       conclude: [Function: receiverOnConclude],
+ft_transcendence-api-1  |       drain: [Function: receiverOnDrain],
+ft_transcendence-api-1  |       error: [Function: receiverOnError],
+ft_transcendence-api-1  |       message: [Function: receiverOnMessage],
+ft_transcendence-api-1  |       ping: [Function: receiverOnPing],
+ft_transcendence-api-1  |       pong: [Function: receiverOnPong]
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     _eventsCount: 6,
+ft_transcendence-api-1  |     _maxListeners: undefined,
+ft_transcendence-api-1  |     _binaryType: 'nodebuffer',
+ft_transcendence-api-1  |     _extensions: {},
+ft_transcendence-api-1  |     _isServer: true,
+ft_transcendence-api-1  |     _maxPayload: 104857600,
+ft_transcendence-api-1  |     _skipUTF8Validation: false,
+ft_transcendence-api-1  |     _bufferedBytes: 0,
+ft_transcendence-api-1  |     _buffers: [],
+ft_transcendence-api-1  |     _compressed: false,
+ft_transcendence-api-1  |     _payloadLength: 0,
+ft_transcendence-api-1  |     _mask: undefined,
+ft_transcendence-api-1  |     _fragmented: 0,
+ft_transcendence-api-1  |     _masked: false,
+ft_transcendence-api-1  |     _fin: false,
+ft_transcendence-api-1  |     _opcode: 0,
+ft_transcendence-api-1  |     _totalPayloadLength: 0,
+ft_transcendence-api-1  |     _messageLength: 0,
+ft_transcendence-api-1  |     _fragments: [],
+ft_transcendence-api-1  |     _state: 0,
+ft_transcendence-api-1  |     _loop: false,
+ft_transcendence-api-1  |     [Symbol(kCapture)]: false,
+ft_transcendence-api-1  |     [Symbol(websocket)]: [Circular *1]
+ft_transcendence-api-1  |   },
+ft_transcendence-api-1  |   _sender: Sender {
+ft_transcendence-api-1  |     _extensions: {},
+ft_transcendence-api-1  |     _socket: Socket {
+ft_transcendence-api-1  |       connecting: false,
+ft_transcendence-api-1  |       _hadError: false,
+ft_transcendence-api-1  |       _parent: null,
+ft_transcendence-api-1  |       _host: null,
+ft_transcendence-api-1  |       _closeAfterHandlingError: false,
+ft_transcendence-api-1  |       _readableState: [ReadableState],
+ft_transcendence-api-1  |       _events: [Object: null prototype],
+ft_transcendence-api-1  |       _eventsCount: 4,
+ft_transcendence-api-1  |       _maxListeners: undefined,
+ft_transcendence-api-1  |       _writableState: [WritableState],
+ft_transcendence-api-1  |       allowHalfOpen: true,
+ft_transcendence-api-1  |       _sockname: null,
+ft_transcendence-api-1  |       _pendingData: null,
+ft_transcendence-api-1  |       _pendingEncoding: '',
+ft_transcendence-api-1  |       server: [Server],
+ft_transcendence-api-1  |       _server: [Server],
+ft_transcendence-api-1  |       parser: null,
+ft_transcendence-api-1  |       on: [Function (anonymous)],
+ft_transcendence-api-1  |       addListener: [Function (anonymous)],
+ft_transcendence-api-1  |       prependListener: [Function: prependListener],
+ft_transcendence-api-1  |       setEncoding: [Function: socketSetEncoding],
+ft_transcendence-api-1  |       _paused: false,
+ft_transcendence-api-1  |       timeout: 0,
+ft_transcendence-api-1  |       [Symbol(async_id_symbol)]: 126486,
+ft_transcendence-api-1  |       [Symbol(kHandle)]: [TCP],
+ft_transcendence-api-1  |       [Symbol(lastWriteQueueSize)]: 0,
+ft_transcendence-api-1  |       [Symbol(timeout)]: null,
+ft_transcendence-api-1  |       [Symbol(kBuffer)]: null,
+ft_transcendence-api-1  |       [Symbol(kBufferCb)]: null,
+ft_transcendence-api-1  |       [Symbol(kBufferGen)]: null,
+ft_transcendence-api-1  |       [Symbol(kCapture)]: false,
+ft_transcendence-api-1  |       [Symbol(kSetNoDelay)]: true,
+ft_transcendence-api-1  |       [Symbol(kSetKeepAlive)]: false,
+ft_transcendence-api-1  |       [Symbol(kSetKeepAliveInitialDelay)]: 0,
+ft_transcendence-api-1  |       [Symbol(kBytesRead)]: 0,
+ft_transcendence-api-1  |       [Symbol(kBytesWritten)]: 0,
+ft_transcendence-api-1  |       [Symbol(websocket)]: [Circular *1]
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     _firstFragment: true,
+ft_transcendence-api-1  |     _compress: false,
+ft_transcendence-api-1  |     _bufferedBytes: 0,
+ft_transcendence-api-1  |     _deflating: false,
+ft_transcendence-api-1  |     _queue: []
+ft_transcendence-api-1  |   },
+ft_transcendence-api-1  |   _socket: <ref *2> Socket {
+ft_transcendence-api-1  |     connecting: false,
+ft_transcendence-api-1  |     _hadError: false,
+ft_transcendence-api-1  |     _parent: null,
+ft_transcendence-api-1  |     _host: null,
+ft_transcendence-api-1  |     _closeAfterHandlingError: false,
+ft_transcendence-api-1  |     _readableState: ReadableState {
+ft_transcendence-api-1  |       objectMode: false,
+ft_transcendence-api-1  |       highWaterMark: 16384,
+ft_transcendence-api-1  |       buffer: BufferList { head: null, tail: null, length: 0 },
+ft_transcendence-api-1  |       length: 0,
+ft_transcendence-api-1  |       pipes: [],
+ft_transcendence-api-1  |       flowing: true,
+ft_transcendence-api-1  |       ended: false,
+ft_transcendence-api-1  |       endEmitted: false,
+ft_transcendence-api-1  |       reading: true,
+ft_transcendence-api-1  |       constructed: true,
+ft_transcendence-api-1  |       sync: false,
+ft_transcendence-api-1  |       needReadable: true,
+ft_transcendence-api-1  |       emittedReadable: false,
+ft_transcendence-api-1  |       readableListening: false,
+ft_transcendence-api-1  |       resumeScheduled: true,
+ft_transcendence-api-1  |       errorEmitted: false,
+ft_transcendence-api-1  |       emitClose: false,
+ft_transcendence-api-1  |       autoDestroy: true,
+ft_transcendence-api-1  |       destroyed: false,
+ft_transcendence-api-1  |       errored: null,
+ft_transcendence-api-1  |       closed: false,
+ft_transcendence-api-1  |       closeEmitted: false,
+ft_transcendence-api-1  |       defaultEncoding: 'utf8',
+ft_transcendence-api-1  |       awaitDrainWriters: null,
+ft_transcendence-api-1  |       multiAwaitDrain: false,
+ft_transcendence-api-1  |       readingMore: false,
+ft_transcendence-api-1  |       dataEmitted: false,
+ft_transcendence-api-1  |       decoder: null,
+ft_transcendence-api-1  |       encoding: null,
+ft_transcendence-api-1  |       [Symbol(kPaused)]: false
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     _events: [Object: null prototype] {
+ft_transcendence-api-1  |       end: [Array],
+ft_transcendence-api-1  |       close: [Function: socketOnClose],
+ft_transcendence-api-1  |       data: [Function: socketOnData],
+ft_transcendence-api-1  |       error: [Function: socketOnError]
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     _eventsCount: 4,
+ft_transcendence-api-1  |     _maxListeners: undefined,
+ft_transcendence-api-1  |     _writableState: WritableState {
+ft_transcendence-api-1  |       objectMode: false,
+ft_transcendence-api-1  |       highWaterMark: 16384,
+ft_transcendence-api-1  |       finalCalled: false,
+ft_transcendence-api-1  |       needDrain: false,
+ft_transcendence-api-1  |       ending: false,
+ft_transcendence-api-1  |       ended: false,
+ft_transcendence-api-1  |       finished: false,
+ft_transcendence-api-1  |       destroyed: false,
+ft_transcendence-api-1  |       decodeStrings: false,
+ft_transcendence-api-1  |       defaultEncoding: 'utf8',
+ft_transcendence-api-1  |       length: 0,
+ft_transcendence-api-1  |       writing: false,
+ft_transcendence-api-1  |       corked: 0,
+ft_transcendence-api-1  |       sync: false,
+ft_transcendence-api-1  |       bufferProcessing: false,
+ft_transcendence-api-1  |       onwrite: [Function: bound onwrite],
+ft_transcendence-api-1  |       writecb: null,
+ft_transcendence-api-1  |       writelen: 0,
+ft_transcendence-api-1  |       afterWriteTickInfo: [Object],
+ft_transcendence-api-1  |       buffered: [],
+ft_transcendence-api-1  |       bufferedIndex: 0,
+ft_transcendence-api-1  |       allBuffers: true,
+ft_transcendence-api-1  |       allNoop: true,
+ft_transcendence-api-1  |       pendingcb: 1,
+ft_transcendence-api-1  |       constructed: true,
+ft_transcendence-api-1  |       prefinished: false,
+ft_transcendence-api-1  |       errorEmitted: false,
+ft_transcendence-api-1  |       emitClose: false,
+ft_transcendence-api-1  |       autoDestroy: true,
+ft_transcendence-api-1  |       errored: null,
+ft_transcendence-api-1  |       closed: false,
+ft_transcendence-api-1  |       closeEmitted: false,
+ft_transcendence-api-1  |       [Symbol(kOnFinished)]: []
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     allowHalfOpen: true,
+ft_transcendence-api-1  |     _sockname: null,
+ft_transcendence-api-1  |     _pendingData: null,
+ft_transcendence-api-1  |     _pendingEncoding: '',
+ft_transcendence-api-1  |     server: Server {
+ft_transcendence-api-1  |       maxHeaderSize: undefined,
+ft_transcendence-api-1  |       insecureHTTPParser: undefined,
+ft_transcendence-api-1  |       requestTimeout: 300000,
+ft_transcendence-api-1  |       headersTimeout: 60000,
+ft_transcendence-api-1  |       keepAliveTimeout: 5000,
+ft_transcendence-api-1  |       connectionsCheckingInterval: 30000,
+ft_transcendence-api-1  |       requireHostHeader: true,
+ft_transcendence-api-1  |       joinDuplicateHeaders: undefined,
+ft_transcendence-api-1  |       rejectNonStandardBodyWrites: false,
+ft_transcendence-api-1  |       _events: [Object: null prototype],
+ft_transcendence-api-1  |       _eventsCount: 3,
+ft_transcendence-api-1  |       _maxListeners: undefined,
+ft_transcendence-api-1  |       _connections: 14,
+ft_transcendence-api-1  |       _handle: [TCP],
+ft_transcendence-api-1  |       _usingWorkers: false,
+ft_transcendence-api-1  |       _workers: [],
+ft_transcendence-api-1  |       _unref: false,
+ft_transcendence-api-1  |       allowHalfOpen: true,
+ft_transcendence-api-1  |       pauseOnConnect: false,
+ft_transcendence-api-1  |       noDelay: true,
+ft_transcendence-api-1  |       keepAlive: false,
+ft_transcendence-api-1  |       keepAliveInitialDelay: 0,
+ft_transcendence-api-1  |       highWaterMark: 16384,
+ft_transcendence-api-1  |       httpAllowHalfOpen: false,
+ft_transcendence-api-1  |       timeout: 0,
+ft_transcendence-api-1  |       maxHeadersCount: null,
+ft_transcendence-api-1  |       maxRequestsPerSocket: 0,
+ft_transcendence-api-1  |       _connectionKey: '6::::3001',
+ft_transcendence-api-1  |       [Symbol(IncomingMessage)]: [Function: IncomingMessage],
+ft_transcendence-api-1  |       [Symbol(ServerResponse)]: [Function: ServerResponse],
+ft_transcendence-api-1  |       [Symbol(kCapture)]: false,
+ft_transcendence-api-1  |       [Symbol(async_id_symbol)]: 61,
+ft_transcendence-api-1  |       [Symbol(http.server.connections)]: ConnectionsList {},
+ft_transcendence-api-1  |       [Symbol(http.server.connectionsCheckingInterval)]: Timeout {
+ft_transcendence-api-1  |         _idleTimeout: 30000,
+ft_transcendence-api-1  |         _idlePrev: [TimersList],
+ft_transcendence-api-1  |         _idleNext: [TimersList],
+ft_transcendence-api-1  |         _idleStart: 60513,
+ft_transcendence-api-1  |         _onTimeout: [Function: bound checkConnections],
+ft_transcendence-api-1  |         _timerArgs: undefined,
+ft_transcendence-api-1  |         _repeat: 30000,
+ft_transcendence-api-1  |         _destroyed: false,
+ft_transcendence-api-1  |         [Symbol(refed)]: false,
+ft_transcendence-api-1  |         [Symbol(kHasPrimitive)]: false,
+ft_transcendence-api-1  |         [Symbol(asyncId)]: 60,
+ft_transcendence-api-1  |         [Symbol(triggerId)]: 0
+ft_transcendence-api-1  |       },
+ft_transcendence-api-1  |       [Symbol(kUniqueHeaders)]: null
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     _server: Server {
+ft_transcendence-api-1  |       maxHeaderSize: undefined,
+ft_transcendence-api-1  |       insecureHTTPParser: undefined,
+ft_transcendence-api-1  |       requestTimeout: 300000,
+ft_transcendence-api-1  |       headersTimeout: 60000,
+ft_transcendence-api-1  |       keepAliveTimeout: 5000,
+ft_transcendence-api-1  |       connectionsCheckingInterval: 30000,
+ft_transcendence-api-1  |       requireHostHeader: true,
+ft_transcendence-api-1  |       joinDuplicateHeaders: undefined,
+ft_transcendence-api-1  |       rejectNonStandardBodyWrites: false,
+ft_transcendence-api-1  |       _events: [Object: null prototype],
+ft_transcendence-api-1  |       _eventsCount: 3,
+ft_transcendence-api-1  |       _maxListeners: undefined,
+ft_transcendence-api-1  |       _connections: 14,
+ft_transcendence-api-1  |       _handle: [TCP],
+ft_transcendence-api-1  |       _usingWorkers: false,
+ft_transcendence-api-1  |       _workers: [],
+ft_transcendence-api-1  |       _unref: false,
+ft_transcendence-api-1  |       allowHalfOpen: true,
+ft_transcendence-api-1  |       pauseOnConnect: false,
+ft_transcendence-api-1  |       noDelay: true,
+ft_transcendence-api-1  |       keepAlive: false,
+ft_transcendence-api-1  |       keepAliveInitialDelay: 0,
+ft_transcendence-api-1  |       highWaterMark: 16384,
+ft_transcendence-api-1  |       httpAllowHalfOpen: false,
+ft_transcendence-api-1  |       timeout: 0,
+ft_transcendence-api-1  |       maxHeadersCount: null,
+ft_transcendence-api-1  |       maxRequestsPerSocket: 0,
+ft_transcendence-api-1  |       _connectionKey: '6::::3001',
+ft_transcendence-api-1  |       [Symbol(IncomingMessage)]: [Function: IncomingMessage],
+ft_transcendence-api-1  |       [Symbol(ServerResponse)]: [Function: ServerResponse],
+ft_transcendence-api-1  |       [Symbol(kCapture)]: false,
+ft_transcendence-api-1  |       [Symbol(async_id_symbol)]: 61,
+ft_transcendence-api-1  |       [Symbol(http.server.connections)]: ConnectionsList {},
+ft_transcendence-api-1  |       [Symbol(http.server.connectionsCheckingInterval)]: Timeout {
+ft_transcendence-api-1  |         _idleTimeout: 30000,
+ft_transcendence-api-1  |         _idlePrev: [TimersList],
+ft_transcendence-api-1  |         _idleNext: [TimersList],
+ft_transcendence-api-1  |         _idleStart: 60513,
+ft_transcendence-api-1  |         _onTimeout: [Function: bound checkConnections],
+ft_transcendence-api-1  |         _timerArgs: undefined,
+ft_transcendence-api-1  |         _repeat: 30000,
+ft_transcendence-api-1  |         _destroyed: false,
+ft_transcendence-api-1  |         [Symbol(refed)]: false,
+ft_transcendence-api-1  |         [Symbol(kHasPrimitive)]: false,
+ft_transcendence-api-1  |         [Symbol(asyncId)]: 60,
+ft_transcendence-api-1  |         [Symbol(triggerId)]: 0
+ft_transcendence-api-1  |       },
+ft_transcendence-api-1  |       [Symbol(kUniqueHeaders)]: null
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     parser: null,
+ft_transcendence-api-1  |     on: [Function (anonymous)],
+ft_transcendence-api-1  |     addListener: [Function (anonymous)],
+ft_transcendence-api-1  |     prependListener: [Function: prependListener],
+ft_transcendence-api-1  |     setEncoding: [Function: socketSetEncoding],
+ft_transcendence-api-1  |     _paused: false,
+ft_transcendence-api-1  |     timeout: 0,
+ft_transcendence-api-1  |     [Symbol(async_id_symbol)]: 126486,
+ft_transcendence-api-1  |     [Symbol(kHandle)]: TCP {
+ft_transcendence-api-1  |       reading: true,
+ft_transcendence-api-1  |       onconnection: null,
+ft_transcendence-api-1  |       _consumed: true,
+ft_transcendence-api-1  |       [Symbol(owner_symbol)]: [Circular *2]
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     [Symbol(lastWriteQueueSize)]: 0,
+ft_transcendence-api-1  |     [Symbol(timeout)]: null,
+ft_transcendence-api-1  |     [Symbol(kBuffer)]: null,
+ft_transcendence-api-1  |     [Symbol(kBufferCb)]: null,
+ft_transcendence-api-1  |     [Symbol(kBufferGen)]: null,
+ft_transcendence-api-1  |     [Symbol(kCapture)]: false,
+ft_transcendence-api-1  |     [Symbol(kSetNoDelay)]: true,
+ft_transcendence-api-1  |     [Symbol(kSetKeepAlive)]: false,
+ft_transcendence-api-1  |     [Symbol(kSetKeepAliveInitialDelay)]: 0,
+ft_transcendence-api-1  |     [Symbol(kBytesRead)]: 0,
+ft_transcendence-api-1  |     [Symbol(kBytesWritten)]: 0,
+ft_transcendence-api-1  |     [Symbol(websocket)]: [Circular *1]
+ft_transcendence-api-1  |   },
+ft_transcendence-api-1  |   _isServer: true,
+ft_transcendence-api-1  |   data: {},
+ft_transcendence-api-1  |   [Symbol(kCapture)]: false
+ft_transcendence-api-1  | }
+ft_transcendence-api-1  | <ref *1> WebSocket {
+ft_transcendence-api-1  |   _events: [Object: null prototype] {
+ft_transcendence-api-1  |     close: [Function (anonymous)],
+ft_transcendence-api-1  |     error: [Function (anonymous)]
+ft_transcendence-api-1  |   },
+ft_transcendence-api-1  |   _eventsCount: 2,
+ft_transcendence-api-1  |   _maxListeners: undefined,
+ft_transcendence-api-1  |   _binaryType: 'nodebuffer',
+ft_transcendence-api-1  |   _closeCode: 1006,
+ft_transcendence-api-1  |   _closeFrameReceived: false,
+ft_transcendence-api-1  |   _closeFrameSent: false,
+ft_transcendence-api-1  |   _closeMessage: <Buffer >,
+ft_transcendence-api-1  |   _closeTimer: null,
+ft_transcendence-api-1  |   _extensions: {},
+ft_transcendence-api-1  |   _paused: false,
+ft_transcendence-api-1  |   _protocol: '',
+ft_transcendence-api-1  |   _readyState: 1,
+ft_transcendence-api-1  |   _receiver: Receiver {
+ft_transcendence-api-1  |     _writableState: WritableState {
+ft_transcendence-api-1  |       objectMode: false,
+ft_transcendence-api-1  |       highWaterMark: 16384,
+ft_transcendence-api-1  |       finalCalled: false,
+ft_transcendence-api-1  |       needDrain: false,
+ft_transcendence-api-1  |       ending: false,
+ft_transcendence-api-1  |       ended: false,
+ft_transcendence-api-1  |       finished: false,
+ft_transcendence-api-1  |       destroyed: false,
+ft_transcendence-api-1  |       decodeStrings: true,
+ft_transcendence-api-1  |       defaultEncoding: 'utf8',
+ft_transcendence-api-1  |       length: 0,
+ft_transcendence-api-1  |       writing: false,
+ft_transcendence-api-1  |       corked: 0,
+ft_transcendence-api-1  |       sync: true,
+ft_transcendence-api-1  |       bufferProcessing: false,
+ft_transcendence-api-1  |       onwrite: [Function: bound onwrite],
+ft_transcendence-api-1  |       writecb: null,
+ft_transcendence-api-1  |       writelen: 0,
+ft_transcendence-api-1  |       afterWriteTickInfo: null,
+ft_transcendence-api-1  |       buffered: [],
+ft_transcendence-api-1  |       bufferedIndex: 0,
+ft_transcendence-api-1  |       allBuffers: true,
+ft_transcendence-api-1  |       allNoop: true,
+ft_transcendence-api-1  |       pendingcb: 0,
+ft_transcendence-api-1  |       constructed: true,
+ft_transcendence-api-1  |       prefinished: false,
+ft_transcendence-api-1  |       errorEmitted: false,
+ft_transcendence-api-1  |       emitClose: true,
+ft_transcendence-api-1  |       autoDestroy: true,
+ft_transcendence-api-1  |       errored: null,
+ft_transcendence-api-1  |       closed: false,
+ft_transcendence-api-1  |       closeEmitted: false,
+ft_transcendence-api-1  |       [Symbol(kOnFinished)]: []
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     _events: [Object: null prototype] {
+ft_transcendence-api-1  |       conclude: [Function: receiverOnConclude],
+ft_transcendence-api-1  |       drain: [Function: receiverOnDrain],
+ft_transcendence-api-1  |       error: [Function: receiverOnError],
+ft_transcendence-api-1  |       message: [Function: receiverOnMessage],
+ft_transcendence-api-1  |       ping: [Function: receiverOnPing],
+ft_transcendence-api-1  |       pong: [Function: receiverOnPong]
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     _eventsCount: 6,
+ft_transcendence-api-1  |     _maxListeners: undefined,
+ft_transcendence-api-1  |     _binaryType: 'nodebuffer',
+ft_transcendence-api-1  |     _extensions: {},
+ft_transcendence-api-1  |     _isServer: true,
+ft_transcendence-api-1  |     _maxPayload: 104857600,
+ft_transcendence-api-1  |     _skipUTF8Validation: false,
+ft_transcendence-api-1  |     _bufferedBytes: 0,
+ft_transcendence-api-1  |     _buffers: [],
+ft_transcendence-api-1  |     _compressed: false,
+ft_transcendence-api-1  |     _payloadLength: 0,
+ft_transcendence-api-1  |     _mask: undefined,
+ft_transcendence-api-1  |     _fragmented: 0,
+ft_transcendence-api-1  |     _masked: false,
+ft_transcendence-api-1  |     _fin: false,
+ft_transcendence-api-1  |     _opcode: 0,
+ft_transcendence-api-1  |     _totalPayloadLength: 0,
+ft_transcendence-api-1  |     _messageLength: 0,
+ft_transcendence-api-1  |     _fragments: [],
+ft_transcendence-api-1  |     _state: 0,
+ft_transcendence-api-1  |     _loop: false,
+ft_transcendence-api-1  |     [Symbol(kCapture)]: false,
+ft_transcendence-api-1  |     [Symbol(websocket)]: [Circular *1]
+ft_transcendence-api-1  |   },
+ft_transcendence-api-1  |   _sender: Sender {
+ft_transcendence-api-1  |     _extensions: {},
+ft_transcendence-api-1  |     _socket: Socket {
+ft_transcendence-api-1  |       connecting: false,
+ft_transcendence-api-1  |       _hadError: false,
+ft_transcendence-api-1  |       _parent: null,
+ft_transcendence-api-1  |       _host: null,
+ft_transcendence-api-1  |       _closeAfterHandlingError: false,
+ft_transcendence-api-1  |       _readableState: [ReadableState],
+ft_transcendence-api-1  |       _events: [Object: null prototype],
+ft_transcendence-api-1  |       _eventsCount: 4,
+ft_transcendence-api-1  |       _maxListeners: undefined,
+ft_transcendence-api-1  |       _writableState: [WritableState],
+ft_transcendence-api-1  |       allowHalfOpen: true,
+ft_transcendence-api-1  |       _sockname: null,
+ft_transcendence-api-1  |       _pendingData: null,
+ft_transcendence-api-1  |       _pendingEncoding: '',
+ft_transcendence-api-1  |       server: [Server],
+ft_transcendence-api-1  |       _server: [Server],
+ft_transcendence-api-1  |       parser: null,
+ft_transcendence-api-1  |       on: [Function (anonymous)],
+ft_transcendence-api-1  |       addListener: [Function (anonymous)],
+ft_transcendence-api-1  |       prependListener: [Function: prependListener],
+ft_transcendence-api-1  |       setEncoding: [Function: socketSetEncoding],
+ft_transcendence-api-1  |       _paused: false,
+ft_transcendence-api-1  |       timeout: 0,
+ft_transcendence-api-1  |       [Symbol(async_id_symbol)]: 126489,
+ft_transcendence-api-1  |       [Symbol(kHandle)]: [TCP],
+ft_transcendence-api-1  |       [Symbol(lastWriteQueueSize)]: 0,
+ft_transcendence-api-1  |       [Symbol(timeout)]: null,
+ft_transcendence-api-1  |       [Symbol(kBuffer)]: null,
+ft_transcendence-api-1  |       [Symbol(kBufferCb)]: null,
+ft_transcendence-api-1  |       [Symbol(kBufferGen)]: null,
+ft_transcendence-api-1  |       [Symbol(kCapture)]: false,
+ft_transcendence-api-1  |       [Symbol(kSetNoDelay)]: true,
+ft_transcendence-api-1  |       [Symbol(kSetKeepAlive)]: false,
+ft_transcendence-api-1  |       [Symbol(kSetKeepAliveInitialDelay)]: 0,
+ft_transcendence-api-1  |       [Symbol(kBytesRead)]: 0,
+ft_transcendence-api-1  |       [Symbol(kBytesWritten)]: 0,
+ft_transcendence-api-1  |       [Symbol(websocket)]: [Circular *1]
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     _firstFragment: true,
+ft_transcendence-api-1  |     _compress: false,
+ft_transcendence-api-1  |     _bufferedBytes: 0,
+ft_transcendence-api-1  |     _deflating: false,
+ft_transcendence-api-1  |     _queue: []
+ft_transcendence-api-1  |   },
+ft_transcendence-api-1  |   _socket: <ref *2> Socket {
+ft_transcendence-api-1  |     connecting: false,
+ft_transcendence-api-1  |     _hadError: false,
+ft_transcendence-api-1  |     _parent: null,
+ft_transcendence-api-1  |     _host: null,
+ft_transcendence-api-1  |     _closeAfterHandlingError: false,
+ft_transcendence-api-1  |     _readableState: ReadableState {
+ft_transcendence-api-1  |       objectMode: false,
+ft_transcendence-api-1  |       highWaterMark: 16384,
+ft_transcendence-api-1  |       buffer: BufferList { head: null, tail: null, length: 0 },
+ft_transcendence-api-1  |       length: 0,
+ft_transcendence-api-1  |       pipes: [],
+ft_transcendence-api-1  |       flowing: true,
+ft_transcendence-api-1  |       ended: false,
+ft_transcendence-api-1  |       endEmitted: false,
+ft_transcendence-api-1  |       reading: true,
+ft_transcendence-api-1  |       constructed: true,
+ft_transcendence-api-1  |       sync: false,
+ft_transcendence-api-1  |       needReadable: true,
+ft_transcendence-api-1  |       emittedReadable: false,
+ft_transcendence-api-1  |       readableListening: false,
+ft_transcendence-api-1  |       resumeScheduled: true,
+ft_transcendence-api-1  |       errorEmitted: false,
+ft_transcendence-api-1  |       emitClose: false,
+ft_transcendence-api-1  |       autoDestroy: true,
+ft_transcendence-api-1  |       destroyed: false,
+ft_transcendence-api-1  |       errored: null,
+ft_transcendence-api-1  |       closed: false,
+ft_transcendence-api-1  |       closeEmitted: false,
+ft_transcendence-api-1  |       defaultEncoding: 'utf8',
+ft_transcendence-api-1  |       awaitDrainWriters: null,
+ft_transcendence-api-1  |       multiAwaitDrain: false,
+ft_transcendence-api-1  |       readingMore: false,
+ft_transcendence-api-1  |       dataEmitted: false,
+ft_transcendence-api-1  |       decoder: null,
+ft_transcendence-api-1  |       encoding: null,
+ft_transcendence-api-1  |       [Symbol(kPaused)]: false
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     _events: [Object: null prototype] {
+ft_transcendence-api-1  |       end: [Array],
+ft_transcendence-api-1  |       close: [Function: socketOnClose],
+ft_transcendence-api-1  |       data: [Function: socketOnData],
+ft_transcendence-api-1  |       error: [Function: socketOnError]
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     _eventsCount: 4,
+ft_transcendence-api-1  |     _maxListeners: undefined,
+ft_transcendence-api-1  |     _writableState: WritableState {
+ft_transcendence-api-1  |       objectMode: false,
+ft_transcendence-api-1  |       highWaterMark: 16384,
+ft_transcendence-api-1  |       finalCalled: false,
+ft_transcendence-api-1  |       needDrain: false,
+ft_transcendence-api-1  |       ending: false,
+ft_transcendence-api-1  |       ended: false,
+ft_transcendence-api-1  |       finished: false,
+ft_transcendence-api-1  |       destroyed: false,
+ft_transcendence-api-1  |       decodeStrings: false,
+ft_transcendence-api-1  |       defaultEncoding: 'utf8',
+ft_transcendence-api-1  |       length: 0,
+ft_transcendence-api-1  |       writing: false,
+ft_transcendence-api-1  |       corked: 0,
+ft_transcendence-api-1  |       sync: false,
+ft_transcendence-api-1  |       bufferProcessing: false,
+ft_transcendence-api-1  |       onwrite: [Function: bound onwrite],
+ft_transcendence-api-1  |       writecb: null,
+ft_transcendence-api-1  |       writelen: 0,
+ft_transcendence-api-1  |       afterWriteTickInfo: [Object],
+ft_transcendence-api-1  |       buffered: [],
+ft_transcendence-api-1  |       bufferedIndex: 0,
+ft_transcendence-api-1  |       allBuffers: true,
+ft_transcendence-api-1  |       allNoop: true,
+ft_transcendence-api-1  |       pendingcb: 1,
+ft_transcendence-api-1  |       constructed: true,
+ft_transcendence-api-1  |       prefinished: false,
+ft_transcendence-api-1  |       errorEmitted: false,
+ft_transcendence-api-1  |       emitClose: false,
+ft_transcendence-api-1  |       autoDestroy: true,
+ft_transcendence-api-1  |       errored: null,
+ft_transcendence-api-1  |       closed: false,
+ft_transcendence-api-1  |       closeEmitted: false,
+ft_transcendence-api-1  |       [Symbol(kOnFinished)]: []
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     allowHalfOpen: true,
+ft_transcendence-api-1  |     _sockname: null,
+ft_transcendence-api-1  |     _pendingData: null,
+ft_transcendence-api-1  |     _pendingEncoding: '',
+ft_transcendence-api-1  |     server: Server {
+ft_transcendence-api-1  |       maxHeaderSize: undefined,
+ft_transcendence-api-1  |       insecureHTTPParser: undefined,
+ft_transcendence-api-1  |       requestTimeout: 300000,
+ft_transcendence-api-1  |       headersTimeout: 60000,
+ft_transcendence-api-1  |       keepAliveTimeout: 5000,
+ft_transcendence-api-1  |       connectionsCheckingInterval: 30000,
+ft_transcendence-api-1  |       requireHostHeader: true,
+ft_transcendence-api-1  |       joinDuplicateHeaders: undefined,
+ft_transcendence-api-1  |       rejectNonStandardBodyWrites: false,
+ft_transcendence-api-1  |       _events: [Object: null prototype],
+ft_transcendence-api-1  |       _eventsCount: 3,
+ft_transcendence-api-1  |       _maxListeners: undefined,
+ft_transcendence-api-1  |       _connections: 14,
+ft_transcendence-api-1  |       _handle: [TCP],
+ft_transcendence-api-1  |       _usingWorkers: false,
+ft_transcendence-api-1  |       _workers: [],
+ft_transcendence-api-1  |       _unref: false,
+ft_transcendence-api-1  |       allowHalfOpen: true,
+ft_transcendence-api-1  |       pauseOnConnect: false,
+ft_transcendence-api-1  |       noDelay: true,
+ft_transcendence-api-1  |       keepAlive: false,
+ft_transcendence-api-1  |       keepAliveInitialDelay: 0,
+ft_transcendence-api-1  |       highWaterMark: 16384,
+ft_transcendence-api-1  |       httpAllowHalfOpen: false,
+ft_transcendence-api-1  |       timeout: 0,
+ft_transcendence-api-1  |       maxHeadersCount: null,
+ft_transcendence-api-1  |       maxRequestsPerSocket: 0,
+ft_transcendence-api-1  |       _connectionKey: '6::::3001',
+ft_transcendence-api-1  |       [Symbol(IncomingMessage)]: [Function: IncomingMessage],
+ft_transcendence-api-1  |       [Symbol(ServerResponse)]: [Function: ServerResponse],
+ft_transcendence-api-1  |       [Symbol(kCapture)]: false,
+ft_transcendence-api-1  |       [Symbol(async_id_symbol)]: 61,
+ft_transcendence-api-1  |       [Symbol(http.server.connections)]: ConnectionsList {},
+ft_transcendence-api-1  |       [Symbol(http.server.connectionsCheckingInterval)]: Timeout {
+ft_transcendence-api-1  |         _idleTimeout: 30000,
+ft_transcendence-api-1  |         _idlePrev: [TimersList],
+ft_transcendence-api-1  |         _idleNext: [TimersList],
+ft_transcendence-api-1  |         _idleStart: 60513,
+ft_transcendence-api-1  |         _onTimeout: [Function: bound checkConnections],
+ft_transcendence-api-1  |         _timerArgs: undefined,
+ft_transcendence-api-1  |         _repeat: 30000,
+ft_transcendence-api-1  |         _destroyed: false,
+ft_transcendence-api-1  |         [Symbol(refed)]: false,
+ft_transcendence-api-1  |         [Symbol(kHasPrimitive)]: false,
+ft_transcendence-api-1  |         [Symbol(asyncId)]: 60,
+ft_transcendence-api-1  |         [Symbol(triggerId)]: 0
+ft_transcendence-api-1  |       },
+ft_transcendence-api-1  |       [Symbol(kUniqueHeaders)]: null
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     _server: Server {
+ft_transcendence-api-1  |       maxHeaderSize: undefined,
+ft_transcendence-api-1  |       insecureHTTPParser: undefined,
+ft_transcendence-api-1  |       requestTimeout: 300000,
+ft_transcendence-api-1  |       headersTimeout: 60000,
+ft_transcendence-api-1  |       keepAliveTimeout: 5000,
+ft_transcendence-api-1  |       connectionsCheckingInterval: 30000,
+ft_transcendence-api-1  |       requireHostHeader: true,
+ft_transcendence-api-1  |       joinDuplicateHeaders: undefined,
+ft_transcendence-api-1  |       rejectNonStandardBodyWrites: false,
+ft_transcendence-api-1  |       _events: [Object: null prototype],
+ft_transcendence-api-1  |       _eventsCount: 3,
+ft_transcendence-api-1  |       _maxListeners: undefined,
+ft_transcendence-api-1  |       _connections: 14,
+ft_transcendence-api-1  |       _handle: [TCP],
+ft_transcendence-api-1  |       _usingWorkers: false,
+ft_transcendence-api-1  |       _workers: [],
+ft_transcendence-api-1  |       _unref: false,
+ft_transcendence-api-1  |       allowHalfOpen: true,
+ft_transcendence-api-1  |       pauseOnConnect: false,
+ft_transcendence-api-1  |       noDelay: true,
+ft_transcendence-api-1  |       keepAlive: false,
+ft_transcendence-api-1  |       keepAliveInitialDelay: 0,
+ft_transcendence-api-1  |       highWaterMark: 16384,
+ft_transcendence-api-1  |       httpAllowHalfOpen: false,
+ft_transcendence-api-1  |       timeout: 0,
+ft_transcendence-api-1  |       maxHeadersCount: null,
+ft_transcendence-api-1  |       maxRequestsPerSocket: 0,
+ft_transcendence-api-1  |       _connectionKey: '6::::3001',
+ft_transcendence-api-1  |       [Symbol(IncomingMessage)]: [Function: IncomingMessage],
+ft_transcendence-api-1  |       [Symbol(ServerResponse)]: [Function: ServerResponse],
+ft_transcendence-api-1  |       [Symbol(kCapture)]: false,
+ft_transcendence-api-1  |       [Symbol(async_id_symbol)]: 61,
+ft_transcendence-api-1  |       [Symbol(http.server.connections)]: ConnectionsList {},
+ft_transcendence-api-1  |       [Symbol(http.server.connectionsCheckingInterval)]: Timeout {
+ft_transcendence-api-1  |         _idleTimeout: 30000,
+ft_transcendence-api-1  |         _idlePrev: [TimersList],
+ft_transcendence-api-1  |         _idleNext: [TimersList],
+ft_transcendence-api-1  |         _idleStart: 60513,
+ft_transcendence-api-1  |         _onTimeout: [Function: bound checkConnections],
+ft_transcendence-api-1  |         _timerArgs: undefined,
+ft_transcendence-api-1  |         _repeat: 30000,
+ft_transcendence-api-1  |         _destroyed: false,
+ft_transcendence-api-1  |         [Symbol(refed)]: false,
+ft_transcendence-api-1  |         [Symbol(kHasPrimitive)]: false,
+ft_transcendence-api-1  |         [Symbol(asyncId)]: 60,
+ft_transcendence-api-1  |         [Symbol(triggerId)]: 0
+ft_transcendence-api-1  |       },
+ft_transcendence-api-1  |       [Symbol(kUniqueHeaders)]: null
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     parser: null,
+ft_transcendence-api-1  |     on: [Function (anonymous)],
+ft_transcendence-api-1  |     addListener: [Function (anonymous)],
+ft_transcendence-api-1  |     prependListener: [Function: prependListener],
+ft_transcendence-api-1  |     setEncoding: [Function: socketSetEncoding],
+ft_transcendence-api-1  |     _paused: false,
+ft_transcendence-api-1  |     timeout: 0,
+ft_transcendence-api-1  |     [Symbol(async_id_symbol)]: 126489,
+ft_transcendence-api-1  |     [Symbol(kHandle)]: TCP {
+ft_transcendence-api-1  |       reading: true,
+ft_transcendence-api-1  |       onconnection: null,
+ft_transcendence-api-1  |       _consumed: true,
+ft_transcendence-api-1  |       [Symbol(owner_symbol)]: [Circular *2]
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     [Symbol(lastWriteQueueSize)]: 0,
+ft_transcendence-api-1  |     [Symbol(timeout)]: null,
+ft_transcendence-api-1  |     [Symbol(kBuffer)]: null,
+ft_transcendence-api-1  |     [Symbol(kBufferCb)]: null,
+ft_transcendence-api-1  |     [Symbol(kBufferGen)]: null,
+ft_transcendence-api-1  |     [Symbol(kCapture)]: false,
+ft_transcendence-api-1  |     [Symbol(kSetNoDelay)]: true,
+ft_transcendence-api-1  |     [Symbol(kSetKeepAlive)]: false,
+ft_transcendence-api-1  |     [Symbol(kSetKeepAliveInitialDelay)]: 0,
+ft_transcendence-api-1  |     [Symbol(kBytesRead)]: 0,
+ft_transcendence-api-1  |     [Symbol(kBytesWritten)]: 0,
+ft_transcendence-api-1  |     [Symbol(websocket)]: [Circular *1]
+ft_transcendence-api-1  |   },
+ft_transcendence-api-1  |   _isServer: true,
+ft_transcendence-api-1  |   data: {},
+ft_transcendence-api-1  |   [Symbol(kCapture)]: false
+ft_transcendence-api-1  | }
+ft_transcendence-api-1  | paddle data up =  { x: 970, y: 620, width: 10, height: 200 }
+ft_transcendence-api-1  | paddle data up =  { x: 970, y: 640, width: 10, height: 200 }
+ft_transcendence-api-1  | paddle data up =  { x: 970, y: 660, width: 10, height: 200 }
+ft_transcendence-api-1  | paddle data up =  { x: 970, y: 680, width: 10, height: 200 }
+ft_transcendence-api-1  | paddle data up =  { x: 970, y: 700, width: 10, height: 200 }
+ft_transcendence-api-1  | paddle data up =  { x: 970, y: 720, width: 10, height: 200 }
+ft_transcendence-api-1  | paddle data up =  { x: 970, y: 740, width: 10, height: 200 }
+ft_transcendence-api-1  | paddle data up =  { x: 970, y: 760, width: 10, height: 200 }
+ft_transcendence-api-1  | paddle data up =  { x: 970, y: 780, width: 10, height: 200 }
+ft_transcendence-api-1  | paddle data up =  { x: 970, y: 800, width: 10, height: 200 }
+ft_transcendence-api-1  | paddle data up =  { x: 970, y: 820, width: 10, height: 200 }
+ft_transcendence-api-1  | paddle data up =  { x: 970, y: 840, width: 10, height: 200 }
+ft_transcendence-api-1  | paddle data up =  { x: 970, y: 860, width: 10, height: 200 }
+ft_transcendence-api-1  | paddle data up =  { x: 970, y: 880, width: 10, height: 200 }
+ft_transcendence-api-1  | paddle data up =  { x: 970, y: 900, width: 10, height: 200 }
+ft_transcendence-api-1  | paddle data up =  { x: 970, y: 920, width: 10, height: 200 }
+ft_transcendence-api-1  | 0 0
+ft_transcendence-api-1  | Game { myScore: 1, enemyScore: 0, opponentId: 1, Win: true } Game { myScore: 0, enemyScore: 1, opponentId: 2, Win: false }
+ft_transcendence-api-1  | paddle data up =  { x: 970, y: 940, width: 10, height: 200 }
+ft_transcendence-api-1  | <ref *1> WebSocket {
+ft_transcendence-api-1  |   _events: [Object: null prototype] {
+ft_transcendence-api-1  |     close: [Function (anonymous)],
+ft_transcendence-api-1  |     error: [Function (anonymous)]
+ft_transcendence-api-1  |   },
+ft_transcendence-api-1  |   _eventsCount: 2,
+ft_transcendence-api-1  |   _maxListeners: undefined,
+ft_transcendence-api-1  |   _binaryType: 'nodebuffer',
+ft_transcendence-api-1  |   _closeCode: 1006,
+ft_transcendence-api-1  |   _closeFrameReceived: false,
+ft_transcendence-api-1  |   _closeFrameSent: false,
+ft_transcendence-api-1  |   _closeMessage: <Buffer >,
+ft_transcendence-api-1  |   _closeTimer: null,
+ft_transcendence-api-1  |   _extensions: {},
+ft_transcendence-api-1  |   _paused: false,
+ft_transcendence-api-1  |   _protocol: '',
+ft_transcendence-api-1  |   _readyState: 1,
+ft_transcendence-api-1  |   _receiver: Receiver {
+ft_transcendence-api-1  |     _writableState: WritableState {
+ft_transcendence-api-1  |       objectMode: false,
+ft_transcendence-api-1  |       highWaterMark: 16384,
+ft_transcendence-api-1  |       finalCalled: false,
+ft_transcendence-api-1  |       needDrain: false,
+ft_transcendence-api-1  |       ending: false,
+ft_transcendence-api-1  |       ended: false,
+ft_transcendence-api-1  |       finished: false,
+ft_transcendence-api-1  |       destroyed: false,
+ft_transcendence-api-1  |       decodeStrings: true,
+ft_transcendence-api-1  |       defaultEncoding: 'utf8',
+ft_transcendence-api-1  |       length: 0,
+ft_transcendence-api-1  |       writing: false,
+ft_transcendence-api-1  |       corked: 0,
+ft_transcendence-api-1  |       sync: true,
+ft_transcendence-api-1  |       bufferProcessing: false,
+ft_transcendence-api-1  |       onwrite: [Function: bound onwrite],
+ft_transcendence-api-1  |       writecb: null,
+ft_transcendence-api-1  |       writelen: 0,
+ft_transcendence-api-1  |       afterWriteTickInfo: null,
+ft_transcendence-api-1  |       buffered: [],
+ft_transcendence-api-1  |       bufferedIndex: 0,
+ft_transcendence-api-1  |       allBuffers: true,
+ft_transcendence-api-1  |       allNoop: true,
+ft_transcendence-api-1  |       pendingcb: 0,
+ft_transcendence-api-1  |       constructed: true,
+ft_transcendence-api-1  |       prefinished: false,
+ft_transcendence-api-1  |       errorEmitted: false,
+ft_transcendence-api-1  |       emitClose: true,
+ft_transcendence-api-1  |       autoDestroy: true,
+ft_transcendence-api-1  |       errored: null,
+ft_transcendence-api-1  |       closed: false,
+ft_transcendence-api-1  |       closeEmitted: false,
+ft_transcendence-api-1  |       [Symbol(kOnFinished)]: []
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     _events: [Object: null prototype] {
+ft_transcendence-api-1  |       conclude: [Function: receiverOnConclude],
+ft_transcendence-api-1  |       drain: [Function: receiverOnDrain],
+ft_transcendence-api-1  |       error: [Function: receiverOnError],
+ft_transcendence-api-1  |       message: [Function: receiverOnMessage],
+ft_transcendence-api-1  |       ping: [Function: receiverOnPing],
+ft_transcendence-api-1  |       pong: [Function: receiverOnPong]
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     _eventsCount: 6,
+ft_transcendence-api-1  |     _maxListeners: undefined,
+ft_transcendence-api-1  |     _binaryType: 'nodebuffer',
+ft_transcendence-api-1  |     _extensions: {},
+ft_transcendence-api-1  |     _isServer: true,
+ft_transcendence-api-1  |     _maxPayload: 104857600,
+ft_transcendence-api-1  |     _skipUTF8Validation: false,
+ft_transcendence-api-1  |     _bufferedBytes: 0,
+ft_transcendence-api-1  |     _buffers: [],
+ft_transcendence-api-1  |     _compressed: false,
+ft_transcendence-api-1  |     _payloadLength: 0,
+ft_transcendence-api-1  |     _mask: undefined,
+ft_transcendence-api-1  |     _fragmented: 0,
+ft_transcendence-api-1  |     _masked: false,
+ft_transcendence-api-1  |     _fin: false,
+ft_transcendence-api-1  |     _opcode: 0,
+ft_transcendence-api-1  |     _totalPayloadLength: 0,
+ft_transcendence-api-1  |     _messageLength: 0,
+ft_transcendence-api-1  |     _fragments: [],
+ft_transcendence-api-1  |     _state: 0,
+ft_transcendence-api-1  |     _loop: false,
+ft_transcendence-api-1  |     [Symbol(kCapture)]: false,
+ft_transcendence-api-1  |     [Symbol(websocket)]: [Circular *1]
+ft_transcendence-api-1  |   },
+ft_transcendence-api-1  |   _sender: Sender {
+ft_transcendence-api-1  |     _extensions: {},
+ft_transcendence-api-1  |     _socket: Socket {
+ft_transcendence-api-1  |       connecting: false,
+ft_transcendence-api-1  |       _hadError: false,
+ft_transcendence-api-1  |       _parent: null,
+ft_transcendence-api-1  |       _host: null,
+ft_transcendence-api-1  |       _closeAfterHandlingError: false,
+ft_transcendence-api-1  |       _readableState: [ReadableState],
+ft_transcendence-api-1  |       _events: [Object: null prototype],
+ft_transcendence-api-1  |       _eventsCount: 4,
+ft_transcendence-api-1  |       _maxListeners: undefined,
+ft_transcendence-api-1  |       _writableState: [WritableState],
+ft_transcendence-api-1  |       allowHalfOpen: true,
+ft_transcendence-api-1  |       _sockname: null,
+ft_transcendence-api-1  |       _pendingData: null,
+ft_transcendence-api-1  |       _pendingEncoding: '',
+ft_transcendence-api-1  |       server: [Server],
+ft_transcendence-api-1  |       _server: [Server],
+ft_transcendence-api-1  |       parser: null,
+ft_transcendence-api-1  |       on: [Function (anonymous)],
+ft_transcendence-api-1  |       addListener: [Function (anonymous)],
+ft_transcendence-api-1  |       prependListener: [Function: prependListener],
+ft_transcendence-api-1  |       setEncoding: [Function: socketSetEncoding],
+ft_transcendence-api-1  |       _paused: false,
+ft_transcendence-api-1  |       timeout: 0,
+ft_transcendence-api-1  |       [Symbol(async_id_symbol)]: 126901,
+ft_transcendence-api-1  |       [Symbol(kHandle)]: [TCP],
+ft_transcendence-api-1  |       [Symbol(lastWriteQueueSize)]: 0,
+ft_transcendence-api-1  |       [Symbol(timeout)]: null,
+ft_transcendence-api-1  |       [Symbol(kBuffer)]: null,
+ft_transcendence-api-1  |       [Symbol(kBufferCb)]: null,
+ft_transcendence-api-1  |       [Symbol(kBufferGen)]: null,
+ft_transcendence-api-1  |       [Symbol(kCapture)]: false,
+ft_transcendence-api-1  |       [Symbol(kSetNoDelay)]: true,
+ft_transcendence-api-1  |       [Symbol(kSetKeepAlive)]: false,
+ft_transcendence-api-1  |       [Symbol(kSetKeepAliveInitialDelay)]: 0,
+ft_transcendence-api-1  |       [Symbol(kBytesRead)]: 0,
+ft_transcendence-api-1  |       [Symbol(kBytesWritten)]: 0,
+ft_transcendence-api-1  |       [Symbol(websocket)]: [Circular *1]
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     _firstFragment: true,
+ft_transcendence-api-1  |     _compress: false,
+ft_transcendence-api-1  |     _bufferedBytes: 0,
+ft_transcendence-api-1  |     _deflating: false,
+ft_transcendence-api-1  |     _queue: []
+ft_transcendence-api-1  |   },
+ft_transcendence-api-1  |   _socket: <ref *2> Socket {
+ft_transcendence-api-1  |     connecting: false,
+ft_transcendence-api-1  |     _hadError: false,
+ft_transcendence-api-1  |     _parent: null,
+ft_transcendence-api-1  |     _host: null,
+ft_transcendence-api-1  |     _closeAfterHandlingError: false,
+ft_transcendence-api-1  |     _readableState: ReadableState {
+ft_transcendence-api-1  |       objectMode: false,
+ft_transcendence-api-1  |       highWaterMark: 16384,
+ft_transcendence-api-1  |       buffer: BufferList { head: null, tail: null, length: 0 },
+ft_transcendence-api-1  |       length: 0,
+ft_transcendence-api-1  |       pipes: [],
+ft_transcendence-api-1  |       flowing: true,
+ft_transcendence-api-1  |       ended: false,
+ft_transcendence-api-1  |       endEmitted: false,
+ft_transcendence-api-1  |       reading: true,
+ft_transcendence-api-1  |       constructed: true,
+ft_transcendence-api-1  |       sync: false,
+ft_transcendence-api-1  |       needReadable: true,
+ft_transcendence-api-1  |       emittedReadable: false,
+ft_transcendence-api-1  |       readableListening: false,
+ft_transcendence-api-1  |       resumeScheduled: true,
+ft_transcendence-api-1  |       errorEmitted: false,
+ft_transcendence-api-1  |       emitClose: false,
+ft_transcendence-api-1  |       autoDestroy: true,
+ft_transcendence-api-1  |       destroyed: false,
+ft_transcendence-api-1  |       errored: null,
+ft_transcendence-api-1  |       closed: false,
+ft_transcendence-api-1  |       closeEmitted: false,
+ft_transcendence-api-1  |       defaultEncoding: 'utf8',
+ft_transcendence-api-1  |       awaitDrainWriters: null,
+ft_transcendence-api-1  |       multiAwaitDrain: false,
+ft_transcendence-api-1  |       readingMore: false,
+ft_transcendence-api-1  |       dataEmitted: false,
+ft_transcendence-api-1  |       decoder: null,
+ft_transcendence-api-1  |       encoding: null,
+ft_transcendence-api-1  |       [Symbol(kPaused)]: false
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     _events: [Object: null prototype] {
+ft_transcendence-api-1  |       end: [Array],
+ft_transcendence-api-1  |       close: [Function: socketOnClose],
+ft_transcendence-api-1  |       data: [Function: socketOnData],
+ft_transcendence-api-1  |       error: [Function: socketOnError]
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     _eventsCount: 4,
+ft_transcendence-api-1  |     _maxListeners: undefined,
+ft_transcendence-api-1  |     _writableState: WritableState {
+ft_transcendence-api-1  |       objectMode: false,
+ft_transcendence-api-1  |       highWaterMark: 16384,
+ft_transcendence-api-1  |       finalCalled: false,
+ft_transcendence-api-1  |       needDrain: false,
+ft_transcendence-api-1  |       ending: false,
+ft_transcendence-api-1  |       ended: false,
+ft_transcendence-api-1  |       finished: false,
+ft_transcendence-api-1  |       destroyed: false,
+ft_transcendence-api-1  |       decodeStrings: false,
+ft_transcendence-api-1  |       defaultEncoding: 'utf8',
+ft_transcendence-api-1  |       length: 0,
+ft_transcendence-api-1  |       writing: false,
+ft_transcendence-api-1  |       corked: 0,
+ft_transcendence-api-1  |       sync: false,
+ft_transcendence-api-1  |       bufferProcessing: false,
+ft_transcendence-api-1  |       onwrite: [Function: bound onwrite],
+ft_transcendence-api-1  |       writecb: null,
+ft_transcendence-api-1  |       writelen: 0,
+ft_transcendence-api-1  |       afterWriteTickInfo: [Object],
+ft_transcendence-api-1  |       buffered: [],
+ft_transcendence-api-1  |       bufferedIndex: 0,
+ft_transcendence-api-1  |       allBuffers: true,
+ft_transcendence-api-1  |       allNoop: true,
+ft_transcendence-api-1  |       pendingcb: 1,
+ft_transcendence-api-1  |       constructed: true,
+ft_transcendence-api-1  |       prefinished: false,
+ft_transcendence-api-1  |       errorEmitted: false,
+ft_transcendence-api-1  |       emitClose: false,
+ft_transcendence-api-1  |       autoDestroy: true,
+ft_transcendence-api-1  |       errored: null,
+ft_transcendence-api-1  |       closed: false,
+ft_transcendence-api-1  |       closeEmitted: false,
+ft_transcendence-api-1  |       [Symbol(kOnFinished)]: []
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     allowHalfOpen: true,
+ft_transcendence-api-1  |     _sockname: null,
+ft_transcendence-api-1  |     _pendingData: null,
+ft_transcendence-api-1  |     _pendingEncoding: '',
+ft_transcendence-api-1  |     server: Server {
+ft_transcendence-api-1  |       maxHeaderSize: undefined,
+ft_transcendence-api-1  |       insecureHTTPParser: undefined,
+ft_transcendence-api-1  |       requestTimeout: 300000,
+ft_transcendence-api-1  |       headersTimeout: 60000,
+ft_transcendence-api-1  |       keepAliveTimeout: 5000,
+ft_transcendence-api-1  |       connectionsCheckingInterval: 30000,
+ft_transcendence-api-1  |       requireHostHeader: true,
+ft_transcendence-api-1  |       joinDuplicateHeaders: undefined,
+ft_transcendence-api-1  |       rejectNonStandardBodyWrites: false,
+ft_transcendence-api-1  |       _events: [Object: null prototype],
+ft_transcendence-api-1  |       _eventsCount: 3,
+ft_transcendence-api-1  |       _maxListeners: undefined,
+ft_transcendence-api-1  |       _connections: 16,
+ft_transcendence-api-1  |       _handle: [TCP],
+ft_transcendence-api-1  |       _usingWorkers: false,
+ft_transcendence-api-1  |       _workers: [],
+ft_transcendence-api-1  |       _unref: false,
+ft_transcendence-api-1  |       allowHalfOpen: true,
+ft_transcendence-api-1  |       pauseOnConnect: false,
+ft_transcendence-api-1  |       noDelay: true,
+ft_transcendence-api-1  |       keepAlive: false,
+ft_transcendence-api-1  |       keepAliveInitialDelay: 0,
+ft_transcendence-api-1  |       highWaterMark: 16384,
+ft_transcendence-api-1  |       httpAllowHalfOpen: false,
+ft_transcendence-api-1  |       timeout: 0,
+ft_transcendence-api-1  |       maxHeadersCount: null,
+ft_transcendence-api-1  |       maxRequestsPerSocket: 0,
+ft_transcendence-api-1  |       _connectionKey: '6::::3001',
+ft_transcendence-api-1  |       [Symbol(IncomingMessage)]: [Function: IncomingMessage],
+ft_transcendence-api-1  |       [Symbol(ServerResponse)]: [Function: ServerResponse],
+ft_transcendence-api-1  |       [Symbol(kCapture)]: false,
+ft_transcendence-api-1  |       [Symbol(async_id_symbol)]: 61,
+ft_transcendence-api-1  |       [Symbol(http.server.connections)]: ConnectionsList {},
+ft_transcendence-api-1  |       [Symbol(http.server.connectionsCheckingInterval)]: Timeout {
+ft_transcendence-api-1  |         _idleTimeout: 30000,
+ft_transcendence-api-1  |         _idlePrev: [TimersList],
+ft_transcendence-api-1  |         _idleNext: [TimersList],
+ft_transcendence-api-1  |         _idleStart: 60513,
+ft_transcendence-api-1  |         _onTimeout: [Function: bound checkConnections],
+ft_transcendence-api-1  |         _timerArgs: undefined,
+ft_transcendence-api-1  |         _repeat: 30000,
+ft_transcendence-api-1  |         _destroyed: false,
+ft_transcendence-api-1  |         [Symbol(refed)]: false,
+ft_transcendence-api-1  |         [Symbol(kHasPrimitive)]: false,
+ft_transcendence-api-1  |         [Symbol(asyncId)]: 60,
+ft_transcendence-api-1  |         [Symbol(triggerId)]: 0
+ft_transcendence-api-1  |       },
+ft_transcendence-api-1  |       [Symbol(kUniqueHeaders)]: null
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     _server: Server {
+ft_transcendence-api-1  |       maxHeaderSize: undefined,
+ft_transcendence-api-1  |       insecureHTTPParser: undefined,
+ft_transcendence-api-1  |       requestTimeout: 300000,
+ft_transcendence-api-1  |       headersTimeout: 60000,
+ft_transcendence-api-1  |       keepAliveTimeout: 5000,
+ft_transcendence-api-1  |       connectionsCheckingInterval: 30000,
+ft_transcendence-api-1  |       requireHostHeader: true,
+ft_transcendence-api-1  |       joinDuplicateHeaders: undefined,
+ft_transcendence-api-1  |       rejectNonStandardBodyWrites: false,
+ft_transcendence-api-1  |       _events: [Object: null prototype],
+ft_transcendence-api-1  |       _eventsCount: 3,
+ft_transcendence-api-1  |       _maxListeners: undefined,
+ft_transcendence-api-1  |       _connections: 16,
+ft_transcendence-api-1  |       _handle: [TCP],
+ft_transcendence-api-1  |       _usingWorkers: false,
+ft_transcendence-api-1  |       _workers: [],
+ft_transcendence-api-1  |       _unref: false,
+ft_transcendence-api-1  |       allowHalfOpen: true,
+ft_transcendence-api-1  |       pauseOnConnect: false,
+ft_transcendence-api-1  |       noDelay: true,
+ft_transcendence-api-1  |       keepAlive: false,
+ft_transcendence-api-1  |       keepAliveInitialDelay: 0,
+ft_transcendence-api-1  |       highWaterMark: 16384,
+ft_transcendence-api-1  |       httpAllowHalfOpen: false,
+ft_transcendence-api-1  |       timeout: 0,
+ft_transcendence-api-1  |       maxHeadersCount: null,
+ft_transcendence-api-1  |       maxRequestsPerSocket: 0,
+ft_transcendence-api-1  |       _connectionKey: '6::::3001',
+ft_transcendence-api-1  |       [Symbol(IncomingMessage)]: [Function: IncomingMessage],
+ft_transcendence-api-1  |       [Symbol(ServerResponse)]: [Function: ServerResponse],
+ft_transcendence-api-1  |       [Symbol(kCapture)]: false,
+ft_transcendence-api-1  |       [Symbol(async_id_symbol)]: 61,
+ft_transcendence-api-1  |       [Symbol(http.server.connections)]: ConnectionsList {},
+ft_transcendence-api-1  |       [Symbol(http.server.connectionsCheckingInterval)]: Timeout {
+ft_transcendence-api-1  |         _idleTimeout: 30000,
+ft_transcendence-api-1  |         _idlePrev: [TimersList],
+ft_transcendence-api-1  |         _idleNext: [TimersList],
+ft_transcendence-api-1  |         _idleStart: 60513,
+ft_transcendence-api-1  |         _onTimeout: [Function: bound checkConnections],
+ft_transcendence-api-1  |         _timerArgs: undefined,
+ft_transcendence-api-1  |         _repeat: 30000,
+ft_transcendence-api-1  |         _destroyed: false,
+ft_transcendence-api-1  |         [Symbol(refed)]: false,
+ft_transcendence-api-1  |         [Symbol(kHasPrimitive)]: false,
+ft_transcendence-api-1  |         [Symbol(asyncId)]: 60,
+ft_transcendence-api-1  |         [Symbol(triggerId)]: 0
+ft_transcendence-api-1  |       },
+ft_transcendence-api-1  |       [Symbol(kUniqueHeaders)]: null
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     parser: null,
+ft_transcendence-api-1  |     on: [Function (anonymous)],
+ft_transcendence-api-1  |     addListener: [Function (anonymous)],
+ft_transcendence-api-1  |     prependListener: [Function: prependListener],
+ft_transcendence-api-1  |     setEncoding: [Function: socketSetEncoding],
+ft_transcendence-api-1  |     _paused: false,
+ft_transcendence-api-1  |     timeout: 0,
+ft_transcendence-api-1  |     [Symbol(async_id_symbol)]: 126901,
+ft_transcendence-api-1  |     [Symbol(kHandle)]: TCP {
+ft_transcendence-api-1  |       reading: true,
+ft_transcendence-api-1  |       onconnection: null,
+ft_transcendence-api-1  |       _consumed: true,
+ft_transcendence-api-1  |       [Symbol(owner_symbol)]: [Circular *2]
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     [Symbol(lastWriteQueueSize)]: 0,
+ft_transcendence-api-1  |     [Symbol(timeout)]: null,
+ft_transcendence-api-1  |     [Symbol(kBuffer)]: null,
+ft_transcendence-api-1  |     [Symbol(kBufferCb)]: null,
+ft_transcendence-api-1  |     [Symbol(kBufferGen)]: null,
+ft_transcendence-api-1  |     [Symbol(kCapture)]: false,
+ft_transcendence-api-1  |     [Symbol(kSetNoDelay)]: true,
+ft_transcendence-api-1  |     [Symbol(kSetKeepAlive)]: false,
+ft_transcendence-api-1  |     [Symbol(kSetKeepAliveInitialDelay)]: 0,
+ft_transcendence-api-1  |     [Symbol(kBytesRead)]: 0,
+ft_transcendence-api-1  |     [Symbol(kBytesWritten)]: 0,
+ft_transcendence-api-1  |     [Symbol(websocket)]: [Circular *1]
+ft_transcendence-api-1  |   },
+ft_transcendence-api-1  |   _isServer: true,
+ft_transcendence-api-1  |   data: {},
+ft_transcendence-api-1  |   [Symbol(kCapture)]: false
+ft_transcendence-api-1  | }
+ft_transcendence-api-1  | <ref *1> WebSocket {
+ft_transcendence-api-1  |   _events: [Object: null prototype] {
+ft_transcendence-api-1  |     close: [Function (anonymous)],
+ft_transcendence-api-1  |     error: [Function (anonymous)]
+ft_transcendence-api-1  |   },
+ft_transcendence-api-1  |   _eventsCount: 2,
+ft_transcendence-api-1  |   _maxListeners: undefined,
+ft_transcendence-api-1  |   _binaryType: 'nodebuffer',
+ft_transcendence-api-1  |   _closeCode: 1006,
+ft_transcendence-api-1  |   _closeFrameReceived: false,
+ft_transcendence-api-1  |   _closeFrameSent: false,
+ft_transcendence-api-1  |   _closeMessage: <Buffer >,
+ft_transcendence-api-1  |   _closeTimer: null,
+ft_transcendence-api-1  |   _extensions: {},
+ft_transcendence-api-1  |   _paused: false,
+ft_transcendence-api-1  |   _protocol: '',
+ft_transcendence-api-1  |   _readyState: 1,
+ft_transcendence-api-1  |   _receiver: Receiver {
+ft_transcendence-api-1  |     _writableState: WritableState {
+ft_transcendence-api-1  |       objectMode: false,
+ft_transcendence-api-1  |       highWaterMark: 16384,
+ft_transcendence-api-1  |       finalCalled: false,
+ft_transcendence-api-1  |       needDrain: false,
+ft_transcendence-api-1  |       ending: false,
+ft_transcendence-api-1  |       ended: false,
+ft_transcendence-api-1  |       finished: false,
+ft_transcendence-api-1  |       destroyed: false,
+ft_transcendence-api-1  |       decodeStrings: true,
+ft_transcendence-api-1  |       defaultEncoding: 'utf8',
+ft_transcendence-api-1  |       length: 0,
+ft_transcendence-api-1  |       writing: false,
+ft_transcendence-api-1  |       corked: 0,
+ft_transcendence-api-1  |       sync: true,
+ft_transcendence-api-1  |       bufferProcessing: false,
+ft_transcendence-api-1  |       onwrite: [Function: bound onwrite],
+ft_transcendence-api-1  |       writecb: null,
+ft_transcendence-api-1  |       writelen: 0,
+ft_transcendence-api-1  |       afterWriteTickInfo: null,
+ft_transcendence-api-1  |       buffered: [],
+ft_transcendence-api-1  |       bufferedIndex: 0,
+ft_transcendence-api-1  |       allBuffers: true,
+ft_transcendence-api-1  |       allNoop: true,
+ft_transcendence-api-1  |       pendingcb: 0,
+ft_transcendence-api-1  |       constructed: true,
+ft_transcendence-api-1  |       prefinished: false,
+ft_transcendence-api-1  |       errorEmitted: false,
+ft_transcendence-api-1  |       emitClose: true,
+ft_transcendence-api-1  |       autoDestroy: true,
+ft_transcendence-api-1  |       errored: null,
+ft_transcendence-api-1  |       closed: false,
+ft_transcendence-api-1  |       closeEmitted: false,
+ft_transcendence-api-1  |       [Symbol(kOnFinished)]: []
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     _events: [Object: null prototype] {
+ft_transcendence-api-1  |       conclude: [Function: receiverOnConclude],
+ft_transcendence-api-1  |       drain: [Function: receiverOnDrain],
+ft_transcendence-api-1  |       error: [Function: receiverOnError],
+ft_transcendence-api-1  |       message: [Function: receiverOnMessage],
+ft_transcendence-api-1  |       ping: [Function: receiverOnPing],
+ft_transcendence-api-1  |       pong: [Function: receiverOnPong]
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     _eventsCount: 6,
+ft_transcendence-api-1  |     _maxListeners: undefined,
+ft_transcendence-api-1  |     _binaryType: 'nodebuffer',
+ft_transcendence-api-1  |     _extensions: {},
+ft_transcendence-api-1  |     _isServer: true,
+ft_transcendence-api-1  |     _maxPayload: 104857600,
+ft_transcendence-api-1  |     _skipUTF8Validation: false,
+ft_transcendence-api-1  |     _bufferedBytes: 0,
+ft_transcendence-api-1  |     _buffers: [],
+ft_transcendence-api-1  |     _compressed: false,
+ft_transcendence-api-1  |     _payloadLength: 0,
+ft_transcendence-api-1  |     _mask: undefined,
+ft_transcendence-api-1  |     _fragmented: 0,
+ft_transcendence-api-1  |     _masked: false,
+ft_transcendence-api-1  |     _fin: false,
+ft_transcendence-api-1  |     _opcode: 0,
+ft_transcendence-api-1  |     _totalPayloadLength: 0,
+ft_transcendence-api-1  |     _messageLength: 0,
+ft_transcendence-api-1  |     _fragments: [],
+ft_transcendence-api-1  |     _state: 0,
+ft_transcendence-api-1  |     _loop: false,
+ft_transcendence-api-1  |     [Symbol(kCapture)]: false,
+ft_transcendence-api-1  |     [Symbol(websocket)]: [Circular *1]
+ft_transcendence-api-1  |   },
+ft_transcendence-api-1  |   _sender: Sender {
+ft_transcendence-api-1  |     _extensions: {},
+ft_transcendence-api-1  |     _socket: Socket {
+ft_transcendence-api-1  |       connecting: false,
+ft_transcendence-api-1  |       _hadError: false,
+ft_transcendence-api-1  |       _parent: null,
+ft_transcendence-api-1  |       _host: null,
+ft_transcendence-api-1  |       _closeAfterHandlingError: false,
+ft_transcendence-api-1  |       _readableState: [ReadableState],
+ft_transcendence-api-1  |       _events: [Object: null prototype],
+ft_transcendence-api-1  |       _eventsCount: 4,
+ft_transcendence-api-1  |       _maxListeners: undefined,
+ft_transcendence-api-1  |       _writableState: [WritableState],
+ft_transcendence-api-1  |       allowHalfOpen: true,
+ft_transcendence-api-1  |       _sockname: null,
+ft_transcendence-api-1  |       _pendingData: null,
+ft_transcendence-api-1  |       _pendingEncoding: '',
+ft_transcendence-api-1  |       server: [Server],
+ft_transcendence-api-1  |       _server: [Server],
+ft_transcendence-api-1  |       parser: null,
+ft_transcendence-api-1  |       on: [Function (anonymous)],
+ft_transcendence-api-1  |       addListener: [Function (anonymous)],
+ft_transcendence-api-1  |       prependListener: [Function: prependListener],
+ft_transcendence-api-1  |       setEncoding: [Function: socketSetEncoding],
+ft_transcendence-api-1  |       _paused: false,
+ft_transcendence-api-1  |       timeout: 0,
+ft_transcendence-api-1  |       [Symbol(async_id_symbol)]: 126904,
+ft_transcendence-api-1  |       [Symbol(kHandle)]: [TCP],
+ft_transcendence-api-1  |       [Symbol(lastWriteQueueSize)]: 0,
+ft_transcendence-api-1  |       [Symbol(timeout)]: null,
+ft_transcendence-api-1  |       [Symbol(kBuffer)]: null,
+ft_transcendence-api-1  |       [Symbol(kBufferCb)]: null,
+ft_transcendence-api-1  |       [Symbol(kBufferGen)]: null,
+ft_transcendence-api-1  |       [Symbol(kCapture)]: false,
+ft_transcendence-api-1  |       [Symbol(kSetNoDelay)]: true,
+ft_transcendence-api-1  |       [Symbol(kSetKeepAlive)]: false,
+ft_transcendence-api-1  |       [Symbol(kSetKeepAliveInitialDelay)]: 0,
+ft_transcendence-api-1  |       [Symbol(kBytesRead)]: 0,
+ft_transcendence-api-1  |       [Symbol(kBytesWritten)]: 0,
+ft_transcendence-api-1  |       [Symbol(websocket)]: [Circular *1]
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     _firstFragment: true,
+ft_transcendence-api-1  |     _compress: false,
+ft_transcendence-api-1  |     _bufferedBytes: 0,
+ft_transcendence-api-1  |     _deflating: false,
+ft_transcendence-api-1  |     _queue: []
+ft_transcendence-api-1  |   },
+ft_transcendence-api-1  |   _socket: <ref *2> Socket {
+ft_transcendence-api-1  |     connecting: false,
+ft_transcendence-api-1  |     _hadError: false,
+ft_transcendence-api-1  |     _parent: null,
+ft_transcendence-api-1  |     _host: null,
+ft_transcendence-api-1  |     _closeAfterHandlingError: false,
+ft_transcendence-api-1  |     _readableState: ReadableState {
+ft_transcendence-api-1  |       objectMode: false,
+ft_transcendence-api-1  |       highWaterMark: 16384,
+ft_transcendence-api-1  |       buffer: BufferList { head: null, tail: null, length: 0 },
+ft_transcendence-api-1  |       length: 0,
+ft_transcendence-api-1  |       pipes: [],
+ft_transcendence-api-1  |       flowing: true,
+ft_transcendence-api-1  |       ended: false,
+ft_transcendence-api-1  |       endEmitted: false,
+ft_transcendence-api-1  |       reading: true,
+ft_transcendence-api-1  |       constructed: true,
+ft_transcendence-api-1  |       sync: false,
+ft_transcendence-api-1  |       needReadable: true,
+ft_transcendence-api-1  |       emittedReadable: false,
+ft_transcendence-api-1  |       readableListening: false,
+ft_transcendence-api-1  |       resumeScheduled: true,
+ft_transcendence-api-1  |       errorEmitted: false,
+ft_transcendence-api-1  |       emitClose: false,
+ft_transcendence-api-1  |       autoDestroy: true,
+ft_transcendence-api-1  |       destroyed: false,
+ft_transcendence-api-1  |       errored: null,
+ft_transcendence-api-1  |       closed: false,
+ft_transcendence-api-1  |       closeEmitted: false,
+ft_transcendence-api-1  |       defaultEncoding: 'utf8',
+ft_transcendence-api-1  |       awaitDrainWriters: null,
+ft_transcendence-api-1  |       multiAwaitDrain: false,
+ft_transcendence-api-1  |       readingMore: false,
+ft_transcendence-api-1  |       dataEmitted: false,
+ft_transcendence-api-1  |       decoder: null,
+ft_transcendence-api-1  |       encoding: null,
+ft_transcendence-api-1  |       [Symbol(kPaused)]: false
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     _events: [Object: null prototype] {
+ft_transcendence-api-1  |       end: [Array],
+ft_transcendence-api-1  |       close: [Function: socketOnClose],
+ft_transcendence-api-1  |       data: [Function: socketOnData],
+ft_transcendence-api-1  |       error: [Function: socketOnError]
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     _eventsCount: 4,
+ft_transcendence-api-1  |     _maxListeners: undefined,
+ft_transcendence-api-1  |     _writableState: WritableState {
+ft_transcendence-api-1  |       objectMode: false,
+ft_transcendence-api-1  |       highWaterMark: 16384,
+ft_transcendence-api-1  |       finalCalled: false,
+ft_transcendence-api-1  |       needDrain: false,
+ft_transcendence-api-1  |       ending: false,
+ft_transcendence-api-1  |       ended: false,
+ft_transcendence-api-1  |       finished: false,
+ft_transcendence-api-1  |       destroyed: false,
+ft_transcendence-api-1  |       decodeStrings: false,
+ft_transcendence-api-1  |       defaultEncoding: 'utf8',
+ft_transcendence-api-1  |       length: 0,
+ft_transcendence-api-1  |       writing: false,
+ft_transcendence-api-1  |       corked: 0,
+ft_transcendence-api-1  |       sync: false,
+ft_transcendence-api-1  |       bufferProcessing: false,
+ft_transcendence-api-1  |       onwrite: [Function: bound onwrite],
+ft_transcendence-api-1  |       writecb: null,
+ft_transcendence-api-1  |       writelen: 0,
+ft_transcendence-api-1  |       afterWriteTickInfo: [Object],
+ft_transcendence-api-1  |       buffered: [],
+ft_transcendence-api-1  |       bufferedIndex: 0,
+ft_transcendence-api-1  |       allBuffers: true,
+ft_transcendence-api-1  |       allNoop: true,
+ft_transcendence-api-1  |       pendingcb: 1,
+ft_transcendence-api-1  |       constructed: true,
+ft_transcendence-api-1  |       prefinished: false,
+ft_transcendence-api-1  |       errorEmitted: false,
+ft_transcendence-api-1  |       emitClose: false,
+ft_transcendence-api-1  |       autoDestroy: true,
+ft_transcendence-api-1  |       errored: null,
+ft_transcendence-api-1  |       closed: false,
+ft_transcendence-api-1  |       closeEmitted: false,
+ft_transcendence-api-1  |       [Symbol(kOnFinished)]: []
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     allowHalfOpen: true,
+ft_transcendence-api-1  |     _sockname: null,
+ft_transcendence-api-1  |     _pendingData: null,
+ft_transcendence-api-1  |     _pendingEncoding: '',
+ft_transcendence-api-1  |     server: Server {
+ft_transcendence-api-1  |       maxHeaderSize: undefined,
+ft_transcendence-api-1  |       insecureHTTPParser: undefined,
+ft_transcendence-api-1  |       requestTimeout: 300000,
+ft_transcendence-api-1  |       headersTimeout: 60000,
+ft_transcendence-api-1  |       keepAliveTimeout: 5000,
+ft_transcendence-api-1  |       connectionsCheckingInterval: 30000,
+ft_transcendence-api-1  |       requireHostHeader: true,
+ft_transcendence-api-1  |       joinDuplicateHeaders: undefined,
+ft_transcendence-api-1  |       rejectNonStandardBodyWrites: false,
+ft_transcendence-api-1  |       _events: [Object: null prototype],
+ft_transcendence-api-1  |       _eventsCount: 3,
+ft_transcendence-api-1  |       _maxListeners: undefined,
+ft_transcendence-api-1  |       _connections: 16,
+ft_transcendence-api-1  |       _handle: [TCP],
+ft_transcendence-api-1  |       _usingWorkers: false,
+ft_transcendence-api-1  |       _workers: [],
+ft_transcendence-api-1  |       _unref: false,
+ft_transcendence-api-1  |       allowHalfOpen: true,
+ft_transcendence-api-1  |       pauseOnConnect: false,
+ft_transcendence-api-1  |       noDelay: true,
+ft_transcendence-api-1  |       keepAlive: false,
+ft_transcendence-api-1  |       keepAliveInitialDelay: 0,
+ft_transcendence-api-1  |       highWaterMark: 16384,
+ft_transcendence-api-1  |       httpAllowHalfOpen: false,
+ft_transcendence-api-1  |       timeout: 0,
+ft_transcendence-api-1  |       maxHeadersCount: null,
+ft_transcendence-api-1  |       maxRequestsPerSocket: 0,
+ft_transcendence-api-1  |       _connectionKey: '6::::3001',
+ft_transcendence-api-1  |       [Symbol(IncomingMessage)]: [Function: IncomingMessage],
+ft_transcendence-api-1  |       [Symbol(ServerResponse)]: [Function: ServerResponse],
+ft_transcendence-api-1  |       [Symbol(kCapture)]: false,
+ft_transcendence-api-1  |       [Symbol(async_id_symbol)]: 61,
+ft_transcendence-api-1  |       [Symbol(http.server.connections)]: ConnectionsList {},
+ft_transcendence-api-1  |       [Symbol(http.server.connectionsCheckingInterval)]: Timeout {
+ft_transcendence-api-1  |         _idleTimeout: 30000,
+ft_transcendence-api-1  |         _idlePrev: [TimersList],
+ft_transcendence-api-1  |         _idleNext: [TimersList],
+ft_transcendence-api-1  |         _idleStart: 60513,
+ft_transcendence-api-1  |         _onTimeout: [Function: bound checkConnections],
+ft_transcendence-api-1  |         _timerArgs: undefined,
+ft_transcendence-api-1  |         _repeat: 30000,
+ft_transcendence-api-1  |         _destroyed: false,
+ft_transcendence-api-1  |         [Symbol(refed)]: false,
+ft_transcendence-api-1  |         [Symbol(kHasPrimitive)]: false,
+ft_transcendence-api-1  |         [Symbol(asyncId)]: 60,
+ft_transcendence-api-1  |         [Symbol(triggerId)]: 0
+ft_transcendence-api-1  |       },
+ft_transcendence-api-1  |       [Symbol(kUniqueHeaders)]: null
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     _server: Server {
+ft_transcendence-api-1  |       maxHeaderSize: undefined,
+ft_transcendence-api-1  |       insecureHTTPParser: undefined,
+ft_transcendence-api-1  |       requestTimeout: 300000,
+ft_transcendence-api-1  |       headersTimeout: 60000,
+ft_transcendence-api-1  |       keepAliveTimeout: 5000,
+ft_transcendence-api-1  |       connectionsCheckingInterval: 30000,
+ft_transcendence-api-1  |       requireHostHeader: true,
+ft_transcendence-api-1  |       joinDuplicateHeaders: undefined,
+ft_transcendence-api-1  |       rejectNonStandardBodyWrites: false,
+ft_transcendence-api-1  |       _events: [Object: null prototype],
+ft_transcendence-api-1  |       _eventsCount: 3,
+ft_transcendence-api-1  |       _maxListeners: undefined,
+ft_transcendence-api-1  |       _connections: 16,
+ft_transcendence-api-1  |       _handle: [TCP],
+ft_transcendence-api-1  |       _usingWorkers: false,
+ft_transcendence-api-1  |       _workers: [],
+ft_transcendence-api-1  |       _unref: false,
+ft_transcendence-api-1  |       allowHalfOpen: true,
+ft_transcendence-api-1  |       pauseOnConnect: false,
+ft_transcendence-api-1  |       noDelay: true,
+ft_transcendence-api-1  |       keepAlive: false,
+ft_transcendence-api-1  |       keepAliveInitialDelay: 0,
+ft_transcendence-api-1  |       highWaterMark: 16384,
+ft_transcendence-api-1  |       httpAllowHalfOpen: false,
+ft_transcendence-api-1  |       timeout: 0,
+ft_transcendence-api-1  |       maxHeadersCount: null,
+ft_transcendence-api-1  |       maxRequestsPerSocket: 0,
+ft_transcendence-api-1  |       _connectionKey: '6::::3001',
+ft_transcendence-api-1  |       [Symbol(IncomingMessage)]: [Function: IncomingMessage],
+ft_transcendence-api-1  |       [Symbol(ServerResponse)]: [Function: ServerResponse],
+ft_transcendence-api-1  |       [Symbol(kCapture)]: false,
+ft_transcendence-api-1  |       [Symbol(async_id_symbol)]: 61,
+ft_transcendence-api-1  |       [Symbol(http.server.connections)]: ConnectionsList {},
+ft_transcendence-api-1  |       [Symbol(http.server.connectionsCheckingInterval)]: Timeout {
+ft_transcendence-api-1  |         _idleTimeout: 30000,
+ft_transcendence-api-1  |         _idlePrev: [TimersList],
+ft_transcendence-api-1  |         _idleNext: [TimersList],
+ft_transcendence-api-1  |         _idleStart: 60513,
+ft_transcendence-api-1  |         _onTimeout: [Function: bound checkConnections],
+ft_transcendence-api-1  |         _timerArgs: undefined,
+ft_transcendence-api-1  |         _repeat: 30000,
+ft_transcendence-api-1  |         _destroyed: false,
+ft_transcendence-api-1  |         [Symbol(refed)]: false,
+ft_transcendence-api-1  |         [Symbol(kHasPrimitive)]: false,
+ft_transcendence-api-1  |         [Symbol(asyncId)]: 60,
+ft_transcendence-api-1  |         [Symbol(triggerId)]: 0
+ft_transcendence-api-1  |       },
+ft_transcendence-api-1  |       [Symbol(kUniqueHeaders)]: null
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     parser: null,
+ft_transcendence-api-1  |     on: [Function (anonymous)],
+ft_transcendence-api-1  |     addListener: [Function (anonymous)],
+ft_transcendence-api-1  |     prependListener: [Function: prependListener],
+ft_transcendence-api-1  |     setEncoding: [Function: socketSetEncoding],
+ft_transcendence-api-1  |     _paused: false,
+ft_transcendence-api-1  |     timeout: 0,
+ft_transcendence-api-1  |     [Symbol(async_id_symbol)]: 126904,
+ft_transcendence-api-1  |     [Symbol(kHandle)]: TCP {
+ft_transcendence-api-1  |       reading: true,
+ft_transcendence-api-1  |       onconnection: null,
+ft_transcendence-api-1  |       _consumed: true,
+ft_transcendence-api-1  |       [Symbol(owner_symbol)]: [Circular *2]
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     [Symbol(lastWriteQueueSize)]: 0,
+ft_transcendence-api-1  |     [Symbol(timeout)]: null,
+ft_transcendence-api-1  |     [Symbol(kBuffer)]: null,
+ft_transcendence-api-1  |     [Symbol(kBufferCb)]: null,
+ft_transcendence-api-1  |     [Symbol(kBufferGen)]: null,
+ft_transcendence-api-1  |     [Symbol(kCapture)]: false,
+ft_transcendence-api-1  |     [Symbol(kSetNoDelay)]: true,
+ft_transcendence-api-1  |     [Symbol(kSetKeepAlive)]: false,
+ft_transcendence-api-1  |     [Symbol(kSetKeepAliveInitialDelay)]: 0,
+ft_transcendence-api-1  |     [Symbol(kBytesRead)]: 0,
+ft_transcendence-api-1  |     [Symbol(kBytesWritten)]: 0,
+ft_transcendence-api-1  |     [Symbol(websocket)]: [Circular *1]
+ft_transcendence-api-1  |   },
+ft_transcendence-api-1  |   _isServer: true,
+ft_transcendence-api-1  |   data: {},
+ft_transcendence-api-1  |   [Symbol(kCapture)]: false
+ft_transcendence-api-1  | }
+ft_transcendence-api-1  | <ref *1> WebSocket {
+ft_transcendence-api-1  |   _events: [Object: null prototype] {
+ft_transcendence-api-1  |     close: [Function (anonymous)],
+ft_transcendence-api-1  |     error: [Function (anonymous)]
+ft_transcendence-api-1  |   },
+ft_transcendence-api-1  |   _eventsCount: 2,
+ft_transcendence-api-1  |   _maxListeners: undefined,
+ft_transcendence-api-1  |   _binaryType: 'nodebuffer',
+ft_transcendence-api-1  |   _closeCode: 1006,
+ft_transcendence-api-1  |   _closeFrameReceived: false,
+ft_transcendence-api-1  |   _closeFrameSent: false,
+ft_transcendence-api-1  |   _closeMessage: <Buffer >,
+ft_transcendence-api-1  |   _closeTimer: null,
+ft_transcendence-api-1  |   _extensions: {},
+ft_transcendence-api-1  |   _paused: false,
+ft_transcendence-api-1  |   _protocol: '',
+ft_transcendence-api-1  |   _readyState: 1,
+ft_transcendence-api-1  |   _receiver: Receiver {
+ft_transcendence-api-1  |     _writableState: WritableState {
+ft_transcendence-api-1  |       objectMode: false,
+ft_transcendence-api-1  |       highWaterMark: 16384,
+ft_transcendence-api-1  |       finalCalled: false,
+ft_transcendence-api-1  |       needDrain: false,
+ft_transcendence-api-1  |       ending: false,
+ft_transcendence-api-1  |       ended: false,
+ft_transcendence-api-1  |       finished: false,
+ft_transcendence-api-1  |       destroyed: false,
+ft_transcendence-api-1  |       decodeStrings: true,
+ft_transcendence-api-1  |       defaultEncoding: 'utf8',
+ft_transcendence-api-1  |       length: 0,
+ft_transcendence-api-1  |       writing: false,
+ft_transcendence-api-1  |       corked: 0,
+ft_transcendence-api-1  |       sync: true,
+ft_transcendence-api-1  |       bufferProcessing: false,
+ft_transcendence-api-1  |       onwrite: [Function: bound onwrite],
+ft_transcendence-api-1  |       writecb: null,
+ft_transcendence-api-1  |       writelen: 0,
+ft_transcendence-api-1  |       afterWriteTickInfo: null,
+ft_transcendence-api-1  |       buffered: [],
+ft_transcendence-api-1  |       bufferedIndex: 0,
+ft_transcendence-api-1  |       allBuffers: true,
+ft_transcendence-api-1  |       allNoop: true,
+ft_transcendence-api-1  |       pendingcb: 0,
+ft_transcendence-api-1  |       constructed: true,
+ft_transcendence-api-1  |       prefinished: false,
+ft_transcendence-api-1  |       errorEmitted: false,
+ft_transcendence-api-1  |       emitClose: true,
+ft_transcendence-api-1  |       autoDestroy: true,
+ft_transcendence-api-1  |       errored: null,
+ft_transcendence-api-1  |       closed: false,
+ft_transcendence-api-1  |       closeEmitted: false,
+ft_transcendence-api-1  |       [Symbol(kOnFinished)]: []
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     _events: [Object: null prototype] {
+ft_transcendence-api-1  |       conclude: [Function: receiverOnConclude],
+ft_transcendence-api-1  |       drain: [Function: receiverOnDrain],
+ft_transcendence-api-1  |       error: [Function: receiverOnError],
+ft_transcendence-api-1  |       message: [Function: receiverOnMessage],
+ft_transcendence-api-1  |       ping: [Function: receiverOnPing],
+ft_transcendence-api-1  |       pong: [Function: receiverOnPong]
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     _eventsCount: 6,
+ft_transcendence-api-1  |     _maxListeners: undefined,
+ft_transcendence-api-1  |     _binaryType: 'nodebuffer',
+ft_transcendence-api-1  |     _extensions: {},
+ft_transcendence-api-1  |     _isServer: true,
+ft_transcendence-api-1  |     _maxPayload: 104857600,
+ft_transcendence-api-1  |     _skipUTF8Validation: false,
+ft_transcendence-api-1  |     _bufferedBytes: 0,
+ft_transcendence-api-1  |     _buffers: [],
+ft_transcendence-api-1  |     _compressed: false,
+ft_transcendence-api-1  |     _payloadLength: 0,
+ft_transcendence-api-1  |     _mask: undefined,
+ft_transcendence-api-1  |     _fragmented: 0,
+ft_transcendence-api-1  |     _masked: false,
+ft_transcendence-api-1  |     _fin: false,
+ft_transcendence-api-1  |     _opcode: 0,
+ft_transcendence-api-1  |     _totalPayloadLength: 0,
+ft_transcendence-api-1  |     _messageLength: 0,
+ft_transcendence-api-1  |     _fragments: [],
+ft_transcendence-api-1  |     _state: 0,
+ft_transcendence-api-1  |     _loop: false,
+ft_transcendence-api-1  |     [Symbol(kCapture)]: false,
+ft_transcendence-api-1  |     [Symbol(websocket)]: [Circular *1]
+ft_transcendence-api-1  |   },
+ft_transcendence-api-1  |   _sender: Sender {
+ft_transcendence-api-1  |     _extensions: {},
+ft_transcendence-api-1  |     _socket: Socket {
+ft_transcendence-api-1  |       connecting: false,
+ft_transcendence-api-1  |       _hadError: false,
+ft_transcendence-api-1  |       _parent: null,
+ft_transcendence-api-1  |       _host: null,
+ft_transcendence-api-1  |       _closeAfterHandlingError: false,
+ft_transcendence-api-1  |       _readableState: [ReadableState],
+ft_transcendence-api-1  |       _events: [Object: null prototype],
+ft_transcendence-api-1  |       _eventsCount: 4,
+ft_transcendence-api-1  |       _maxListeners: undefined,
+ft_transcendence-api-1  |       _writableState: [WritableState],
+ft_transcendence-api-1  |       allowHalfOpen: true,
+ft_transcendence-api-1  |       _sockname: null,
+ft_transcendence-api-1  |       _pendingData: null,
+ft_transcendence-api-1  |       _pendingEncoding: '',
+ft_transcendence-api-1  |       server: [Server],
+ft_transcendence-api-1  |       _server: [Server],
+ft_transcendence-api-1  |       parser: null,
+ft_transcendence-api-1  |       on: [Function (anonymous)],
+ft_transcendence-api-1  |       addListener: [Function (anonymous)],
+ft_transcendence-api-1  |       prependListener: [Function: prependListener],
+ft_transcendence-api-1  |       setEncoding: [Function: socketSetEncoding],
+ft_transcendence-api-1  |       _paused: false,
+ft_transcendence-api-1  |       timeout: 0,
+ft_transcendence-api-1  |       [Symbol(async_id_symbol)]: 127194,
+ft_transcendence-api-1  |       [Symbol(kHandle)]: [TCP],
+ft_transcendence-api-1  |       [Symbol(lastWriteQueueSize)]: 0,
+ft_transcendence-api-1  |       [Symbol(timeout)]: null,
+ft_transcendence-api-1  |       [Symbol(kBuffer)]: null,
+ft_transcendence-api-1  |       [Symbol(kBufferCb)]: null,
+ft_transcendence-api-1  |       [Symbol(kBufferGen)]: null,
+ft_transcendence-api-1  |       [Symbol(kCapture)]: false,
+ft_transcendence-api-1  |       [Symbol(kSetNoDelay)]: true,
+ft_transcendence-api-1  |       [Symbol(kSetKeepAlive)]: false,
+ft_transcendence-api-1  |       [Symbol(kSetKeepAliveInitialDelay)]: 0,
+ft_transcendence-api-1  |       [Symbol(kBytesRead)]: 0,
+ft_transcendence-api-1  |       [Symbol(kBytesWritten)]: 0,
+ft_transcendence-api-1  |       [Symbol(websocket)]: [Circular *1]
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     _firstFragment: true,
+ft_transcendence-api-1  |     _compress: false,
+ft_transcendence-api-1  |     _bufferedBytes: 0,
+ft_transcendence-api-1  |     _deflating: false,
+ft_transcendence-api-1  |     _queue: []
+ft_transcendence-api-1  |   },
+ft_transcendence-api-1  |   _socket: <ref *2> Socket {
+ft_transcendence-api-1  |     connecting: false,
+ft_transcendence-api-1  |     _hadError: false,
+ft_transcendence-api-1  |     _parent: null,
+ft_transcendence-api-1  |     _host: null,
+ft_transcendence-api-1  |     _closeAfterHandlingError: false,
+ft_transcendence-api-1  |     _readableState: ReadableState {
+ft_transcendence-api-1  |       objectMode: false,
+ft_transcendence-api-1  |       highWaterMark: 16384,
+ft_transcendence-api-1  |       buffer: BufferList { head: null, tail: null, length: 0 },
+ft_transcendence-api-1  |       length: 0,
+ft_transcendence-api-1  |       pipes: [],
+ft_transcendence-api-1  |       flowing: true,
+ft_transcendence-api-1  |       ended: false,
+ft_transcendence-api-1  |       endEmitted: false,
+ft_transcendence-api-1  |       reading: true,
+ft_transcendence-api-1  |       constructed: true,
+ft_transcendence-api-1  |       sync: false,
+ft_transcendence-api-1  |       needReadable: true,
+ft_transcendence-api-1  |       emittedReadable: false,
+ft_transcendence-api-1  |       readableListening: false,
+ft_transcendence-api-1  |       resumeScheduled: true,
+ft_transcendence-api-1  |       errorEmitted: false,
+ft_transcendence-api-1  |       emitClose: false,
+ft_transcendence-api-1  |       autoDestroy: true,
+ft_transcendence-api-1  |       destroyed: false,
+ft_transcendence-api-1  |       errored: null,
+ft_transcendence-api-1  |       closed: false,
+ft_transcendence-api-1  |       closeEmitted: false,
+ft_transcendence-api-1  |       defaultEncoding: 'utf8',
+ft_transcendence-api-1  |       awaitDrainWriters: null,
+ft_transcendence-api-1  |       multiAwaitDrain: false,
+ft_transcendence-api-1  |       readingMore: false,
+ft_transcendence-api-1  |       dataEmitted: false,
+ft_transcendence-api-1  |       decoder: null,
+ft_transcendence-api-1  |       encoding: null,
+ft_transcendence-api-1  |       [Symbol(kPaused)]: false
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     _events: [Object: null prototype] {
+ft_transcendence-api-1  |       end: [Array],
+ft_transcendence-api-1  |       close: [Function: socketOnClose],
+ft_transcendence-api-1  |       data: [Function: socketOnData],
+ft_transcendence-api-1  |       error: [Function: socketOnError]
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     _eventsCount: 4,
+ft_transcendence-api-1  |     _maxListeners: undefined,
+ft_transcendence-api-1  |     _writableState: WritableState {
+ft_transcendence-api-1  |       objectMode: false,
+ft_transcendence-api-1  |       highWaterMark: 16384,
+ft_transcendence-api-1  |       finalCalled: false,
+ft_transcendence-api-1  |       needDrain: false,
+ft_transcendence-api-1  |       ending: false,
+ft_transcendence-api-1  |       ended: false,
+ft_transcendence-api-1  |       finished: false,
+ft_transcendence-api-1  |       destroyed: false,
+ft_transcendence-api-1  |       decodeStrings: false,
+ft_transcendence-api-1  |       defaultEncoding: 'utf8',
+ft_transcendence-api-1  |       length: 0,
+ft_transcendence-api-1  |       writing: false,
+ft_transcendence-api-1  |       corked: 0,
+ft_transcendence-api-1  |       sync: false,
+ft_transcendence-api-1  |       bufferProcessing: false,
+ft_transcendence-api-1  |       onwrite: [Function: bound onwrite],
+ft_transcendence-api-1  |       writecb: null,
+ft_transcendence-api-1  |       writelen: 0,
+ft_transcendence-api-1  |       afterWriteTickInfo: [Object],
+ft_transcendence-api-1  |       buffered: [],
+ft_transcendence-api-1  |       bufferedIndex: 0,
+ft_transcendence-api-1  |       allBuffers: true,
+ft_transcendence-api-1  |       allNoop: true,
+ft_transcendence-api-1  |       pendingcb: 1,
+ft_transcendence-api-1  |       constructed: true,
+ft_transcendence-api-1  |       prefinished: false,
+ft_transcendence-api-1  |       errorEmitted: false,
+ft_transcendence-api-1  |       emitClose: false,
+ft_transcendence-api-1  |       autoDestroy: true,
+ft_transcendence-api-1  |       errored: null,
+ft_transcendence-api-1  |       closed: false,
+ft_transcendence-api-1  |       closeEmitted: false,
+ft_transcendence-api-1  |       [Symbol(kOnFinished)]: []
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     allowHalfOpen: true,
+ft_transcendence-api-1  |     _sockname: null,
+ft_transcendence-api-1  |     _pendingData: null,
+ft_transcendence-api-1  |     _pendingEncoding: '',
+ft_transcendence-api-1  |     server: Server {
+ft_transcendence-api-1  |       maxHeaderSize: undefined,
+ft_transcendence-api-1  |       insecureHTTPParser: undefined,
+ft_transcendence-api-1  |       requestTimeout: 300000,
+ft_transcendence-api-1  |       headersTimeout: 60000,
+ft_transcendence-api-1  |       keepAliveTimeout: 5000,
+ft_transcendence-api-1  |       connectionsCheckingInterval: 30000,
+ft_transcendence-api-1  |       requireHostHeader: true,
+ft_transcendence-api-1  |       joinDuplicateHeaders: undefined,
+ft_transcendence-api-1  |       rejectNonStandardBodyWrites: false,
+ft_transcendence-api-1  |       _events: [Object: null prototype],
+ft_transcendence-api-1  |       _eventsCount: 3,
+ft_transcendence-api-1  |       _maxListeners: undefined,
+ft_transcendence-api-1  |       _connections: 15,
+ft_transcendence-api-1  |       _handle: [TCP],
+ft_transcendence-api-1  |       _usingWorkers: false,
+ft_transcendence-api-1  |       _workers: [],
+ft_transcendence-api-1  |       _unref: false,
+ft_transcendence-api-1  |       allowHalfOpen: true,
+ft_transcendence-api-1  |       pauseOnConnect: false,
+ft_transcendence-api-1  |       noDelay: true,
+ft_transcendence-api-1  |       keepAlive: false,
+ft_transcendence-api-1  |       keepAliveInitialDelay: 0,
+ft_transcendence-api-1  |       highWaterMark: 16384,
+ft_transcendence-api-1  |       httpAllowHalfOpen: false,
+ft_transcendence-api-1  |       timeout: 0,
+ft_transcendence-api-1  |       maxHeadersCount: null,
+ft_transcendence-api-1  |       maxRequestsPerSocket: 0,
+ft_transcendence-api-1  |       _connectionKey: '6::::3001',
+ft_transcendence-api-1  |       [Symbol(IncomingMessage)]: [Function: IncomingMessage],
+ft_transcendence-api-1  |       [Symbol(ServerResponse)]: [Function: ServerResponse],
+ft_transcendence-api-1  |       [Symbol(kCapture)]: false,
+ft_transcendence-api-1  |       [Symbol(async_id_symbol)]: 61,
+ft_transcendence-api-1  |       [Symbol(http.server.connections)]: ConnectionsList {},
+ft_transcendence-api-1  |       [Symbol(http.server.connectionsCheckingInterval)]: Timeout {
+ft_transcendence-api-1  |         _idleTimeout: 30000,
+ft_transcendence-api-1  |         _idlePrev: [TimersList],
+ft_transcendence-api-1  |         _idleNext: [TimersList],
+ft_transcendence-api-1  |         _idleStart: 120519,
+ft_transcendence-api-1  |         _onTimeout: [Function: bound checkConnections],
+ft_transcendence-api-1  |         _timerArgs: undefined,
+ft_transcendence-api-1  |         _repeat: 30000,
+ft_transcendence-api-1  |         _destroyed: false,
+ft_transcendence-api-1  |         [Symbol(refed)]: false,
+ft_transcendence-api-1  |         [Symbol(kHasPrimitive)]: false,
+ft_transcendence-api-1  |         [Symbol(asyncId)]: 60,
+ft_transcendence-api-1  |         [Symbol(triggerId)]: 0
+ft_transcendence-api-1  |       },
+ft_transcendence-api-1  |       [Symbol(kUniqueHeaders)]: null
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     _server: Server {
+ft_transcendence-api-1  |       maxHeaderSize: undefined,
+ft_transcendence-api-1  |       insecureHTTPParser: undefined,
+ft_transcendence-api-1  |       requestTimeout: 300000,
+ft_transcendence-api-1  |       headersTimeout: 60000,
+ft_transcendence-api-1  |       keepAliveTimeout: 5000,
+ft_transcendence-api-1  |       connectionsCheckingInterval: 30000,
+ft_transcendence-api-1  |       requireHostHeader: true,
+ft_transcendence-api-1  |       joinDuplicateHeaders: undefined,
+ft_transcendence-api-1  |       rejectNonStandardBodyWrites: false,
+ft_transcendence-api-1  |       _events: [Object: null prototype],
+ft_transcendence-api-1  |       _eventsCount: 3,
+ft_transcendence-api-1  |       _maxListeners: undefined,
+ft_transcendence-api-1  |       _connections: 15,
+ft_transcendence-api-1  |       _handle: [TCP],
+ft_transcendence-api-1  |       _usingWorkers: false,
+ft_transcendence-api-1  |       _workers: [],
+ft_transcendence-api-1  |       _unref: false,
+ft_transcendence-api-1  |       allowHalfOpen: true,
+ft_transcendence-api-1  |       pauseOnConnect: false,
+ft_transcendence-api-1  |       noDelay: true,
+ft_transcendence-api-1  |       keepAlive: false,
+ft_transcendence-api-1  |       keepAliveInitialDelay: 0,
+ft_transcendence-api-1  |       highWaterMark: 16384,
+ft_transcendence-api-1  |       httpAllowHalfOpen: false,
+ft_transcendence-api-1  |       timeout: 0,
+ft_transcendence-api-1  |       maxHeadersCount: null,
+ft_transcendence-api-1  |       maxRequestsPerSocket: 0,
+ft_transcendence-api-1  |       _connectionKey: '6::::3001',
+ft_transcendence-api-1  |       [Symbol(IncomingMessage)]: [Function: IncomingMessage],
+ft_transcendence-api-1  |       [Symbol(ServerResponse)]: [Function: ServerResponse],
+ft_transcendence-api-1  |       [Symbol(kCapture)]: false,
+ft_transcendence-api-1  |       [Symbol(async_id_symbol)]: 61,
+ft_transcendence-api-1  |       [Symbol(http.server.connections)]: ConnectionsList {},
+ft_transcendence-api-1  |       [Symbol(http.server.connectionsCheckingInterval)]: Timeout {
+ft_transcendence-api-1  |         _idleTimeout: 30000,
+ft_transcendence-api-1  |         _idlePrev: [TimersList],
+ft_transcendence-api-1  |         _idleNext: [TimersList],
+ft_transcendence-api-1  |         _idleStart: 120519,
+ft_transcendence-api-1  |         _onTimeout: [Function: bound checkConnections],
+ft_transcendence-api-1  |         _timerArgs: undefined,
+ft_transcendence-api-1  |         _repeat: 30000,
+ft_transcendence-api-1  |         _destroyed: false,
+ft_transcendence-api-1  |         [Symbol(refed)]: false,
+ft_transcendence-api-1  |         [Symbol(kHasPrimitive)]: false,
+ft_transcendence-api-1  |         [Symbol(asyncId)]: 60,
+ft_transcendence-api-1  |         [Symbol(triggerId)]: 0
+ft_transcendence-api-1  |       },
+ft_transcendence-api-1  |       [Symbol(kUniqueHeaders)]: null
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     parser: null,
+ft_transcendence-api-1  |     on: [Function (anonymous)],
+ft_transcendence-api-1  |     addListener: [Function (anonymous)],
+ft_transcendence-api-1  |     prependListener: [Function: prependListener],
+ft_transcendence-api-1  |     setEncoding: [Function: socketSetEncoding],
+ft_transcendence-api-1  |     _paused: false,
+ft_transcendence-api-1  |     timeout: 0,
+ft_transcendence-api-1  |     [Symbol(async_id_symbol)]: 127194,
+ft_transcendence-api-1  |     [Symbol(kHandle)]: TCP {
+ft_transcendence-api-1  |       reading: true,
+ft_transcendence-api-1  |       onconnection: null,
+ft_transcendence-api-1  |       _consumed: true,
+ft_transcendence-api-1  |       [Symbol(owner_symbol)]: [Circular *2]
+ft_transcendence-api-1  |     },
+ft_transcendence-api-1  |     [Symbol(lastWriteQueueSize)]: 0,
+ft_transcendence-api-1  |     [Symbol(timeout)]: null,
+ft_transcendence-api-1  |     [Symbol(kBuffer)]: null,
+ft_transcendence-api-1  |     [Symbol(kBufferCb)]: null,
+ft_transcendence-api-1  |     [Symbol(kBufferGen)]: null,
+ft_transcendence-api-1  |     [Symbol(kCapture)]: false,
+ft_transcendence-api-1  |     [Symbol(kSetNoDelay)]: true,
+ft_transcendence-api-1  |     [Symbol(kSetKeepAlive)]: false,
+ft_transcendence-api-1  |     [Symbol(kSetKeepAliveInitialDelay)]: 0,
+ft_transcendence-api-1  |     [Symbol(kBytesRead)]: 0,
+ft_transcendence-api-1  |     [Symbol(kBytesWritten)]: 0,
+ft_transcendence-api-1  |     [Symbol(websocket)]: [Circular *1]
+ft_transcendence-api-1  |   },
+ft_transcendence-api-1  |   _isServer: true,
+ft_transcendence-api-1  |   data: {},
+ft_transcendence-api-1  |   [Symbol(kCapture)]: false
+ft_transcendence-api-1  | }

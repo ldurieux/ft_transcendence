@@ -113,6 +113,33 @@ const Authentication = () => {
         }
     }
 
+    async function localRegister()
+    {
+        try {
+            if (login === "" || password === "")
+                return;
+            const input = `http://${process.env.REACT_APP_WEB_HOST}:${process.env.REACT_APP_API_PORT}/user/register`;
+            const options = {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ method: "local", username: login, password: password }),
+            }
+            const response = await fetch(input, options);
+            if (response.status === 201) {
+                let data = await response.json();
+                const token = data.access_token;
+                if (token) {
+                    localStorage.setItem("token", token);
+                    setUser({ isLoggedIn: true }); // Définir isLoggedIn sur true
+                    navigate("/profile");
+                }
+            }
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
         <div className="AuthBody">
             {show &&
@@ -141,7 +168,7 @@ const Authentication = () => {
             </div>
             }
             <div>
-                {user.isLoggedIn === false &&
+                {user?.isLoggedIn === false &&
                     <a
                     className="btn-42-login"
                     href={`https://api.intra.42.fr/oauth/authorize?client_id=${process.env.REACT_APP_INTRA_ID}&redirect_uri=http%3A%2F%2F${process.env.REACT_APP_WEB_HOST}%3A${process.env.REACT_APP_FRONT_PORT}%2Flogin&response_type=code`}
@@ -168,6 +195,7 @@ const Authentication = () => {
             <button className="btn-local-login" onClick={localConnection}>
                 Sign in
             </button>
+            <button className="btn-local-login" onClick={localRegister}>Register</button>
             <div className="TwoFA">
                 {enabled &&
                     <input
@@ -179,14 +207,14 @@ const Authentication = () => {
                         onKeyDown={sendTwoFa}
                     />
                 }
-                {user.twoFaEnabled === false &&
+                {user?.twoFaEnabled === false &&
                     <button className="EnableTwoFA"
                             onClick={createTwoFa}
                     >
                         Enable 2FA
                     </button>
                 }
-                {user.twoFaEnabled === true &&
+                {user?.twoFaEnabled === true &&
                     <div className="DisableTwoFA">
                         <button onClick={disableTwoFa}>
                             Disable 2FA

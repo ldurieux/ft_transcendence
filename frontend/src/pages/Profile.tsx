@@ -4,7 +4,6 @@ import { ProfileUser } from "../components/Utils/ProfileInfo.tsx";
 import Friendlist from "../components/Utils/friendlist.tsx";
 
 function Profile({socket}) {
-
     return (
         <div className="Profile">
             <div className="ProfileHeader">
@@ -12,7 +11,7 @@ function Profile({socket}) {
             </div>
           <div className="ProfileBody">
               <div className="Left">
-                  <ProfileUser/>
+                  <ProfileUser />
               </div>
               <div className="Right">
                   <Friendlist socket={socket} />

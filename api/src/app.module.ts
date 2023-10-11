@@ -20,7 +20,8 @@ import { Action } from './action/action.entity';
 // import { SocketServerModule } from 'src/socket/socketServer.module';
 
 import { GameModule } from './game/game.module';
-import { SocketServer } from './socket/socket.server';
+import { GameSocketModule } from './gameSocket/gameSocket.module';
+// import { SocketServer } from './socket/socket.server';
 
 @Module({
   imports: [

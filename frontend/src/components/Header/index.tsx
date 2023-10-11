@@ -39,6 +39,9 @@ const Header = () => {
 
 
   return (
+    // if we are on /Game, we don't want to display the header
+    
+    window.location.pathname === "/Game" ? null :
       <div>
           <div className={`sidebar ${isSidebarOpen ? "close" : ""}`}>
           <div className="logo-details">
@@ -55,9 +58,9 @@ const Header = () => {
             </li>
             <li>
                 <p onClick={() => startTransition(() => {
-                    window.location.href = "/Game";})}>
+                    window.location.href = "/lobby";})}>
                     <i className='bx bx-game'></i>
-                    <span className="links_name">Game</span>
+                    <span className="links_name">Lobby</span>
                 </p>
             </li>
             <li>
@@ -105,6 +108,7 @@ const Header = () => {
                 </div>
           </section>
       </div>
+    
 
   );
 };

@@ -8,6 +8,8 @@ import Popup from "../popup.tsx";
 
 function Channel({ socket, channel, currentUser, setChanParams, setChannelList, updateChannelUsers, closeChannel }) {
     const bottomChat = useRef<null | HTMLDivElement>(null);
+    const [owner, setOwner] = useState(null);
+    const [newPassword, setNewPassword] = useState("");
     const { showPopup, setShowPopup } = useContext(PopupContext);
     const isDM: boolean = channel.type === "dm";
     const [messages, setMessages] = useState([]);
@@ -15,7 +17,6 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
     const [users, setUsers] = useState({});
     const [selectedUser, setSelectedUser] = useState(null);
     const [isAdmin, setIsAdmin] = useState(false);
-    const [Owner, setOwner] = useState({});
     const [admins, setAdmins] = useState([]);
     const [username, setUsername] = useState("");
     const defaultAvatar = require("./42-logo.png");
@@ -36,6 +37,7 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                         return map;
                     }, {});
                     setUsers(userMap);
+                    setOwner(channel.owner)
                     if (message) {
                         setMessages(message);
                     }
@@ -47,10 +49,6 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                     if (admin) {
                         setIsAdmin(true);
                     }
-                }
-                //search if the current user is the owner of the channel
-                if (channel.owner) {
-                    setOwner(channel.owner);
                 }
             }
             catch (error) {
@@ -73,7 +71,7 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                     if (ret.data.user === currentUser.id)
                         closeChannel();
                 }
-                if (ret.event === "join" && ret.data.channel.id === channel.id) {
+                if (ret.event === "join" && ret.data.channel === channel.id) {
                     //add the user who joined to the channel
                     setUsers(prev => {
                         const updatedUsers = { ...prev };
@@ -196,6 +194,29 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
         }
     }
 
+    async function inviteClassicGame() {
+        try {
+            console.log()
+            if (currentUser.id !== selectedUser.id) {
+                post("game/invite", {id: selectedUser.id, typeOfGame: 1});
+                setSelectedUser(null);
+            }
+        }
+        catch (error) {
+        }
+    }
+
+    async function inviteDeluxeGame() {
+        try {
+            if (currentUser.id !== selectedUser.id) {
+                post("game/invite", {id: selectedUser.id, typeOfGame: 2});
+                setSelectedUser(null);
+            }
+        }
+        catch (error) {
+        }
+    }
+
     async function promoteUser(channel,user) {
         try {
             const ret = await post(`channel/promote`, { userId: user.id, channelId: channel.id });
@@ -234,6 +255,23 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
         }
     }
 
+    async function changePassword(channel) {
+        try {
+            const ret = await post(`channel/update`, { id: channel.id, password: newPassword });
+            if (ret.status === "updated") {
+                setNewPassword("");
+            }
+        }
+        catch (error) {
+        }
+    }
+
+    const KeyPressPassword = (e) => {
+        if (e.key === "Enter") {
+            changePassword(channel)
+        }
+    }
+
     const handlePopupClose = () => {
         setShowPopup(false);
     };
@@ -261,16 +299,28 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                         <div className="FriendsOptions">
                             <ul>
                                 <li
+                                    className="PopupClose"
+                                    onClick={() => setSelectedUser(null)}
+                                >
+                                    Close
+                                </li>
+                                <li
                                     className="PopupBlockUser"
                                     onClick={blockUser}
                                 >
                                     Block
                                 </li>
                                 <li
-                                    className="PopupClose"
-                                    onClick={() => setSelectedUser(null)}
+                                    className="classicGame"
+                                    onClick={inviteClassicGame}
                                 >
-                                    Close
+                                    Classic game
+                                </li>
+                                <li
+                                    className="deluxeGame"
+                                    onClick={inviteDeluxeGame}
+                                >
+                                    Deluxe game
                                 </li>
                             </ul>
                         </div>
@@ -346,6 +396,17 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                         <div className="popup-settings-inner">
                             <div className="popup-settings-header">
                                 <div className="popup-settings-title">{channel?.display_name}</div>
+                                {owner.id === currentUser.id &&
+                                    <div className="ChangePassword">
+                                        <input
+                                            type="text"
+                                            placeholder="New Password"
+                                            value={newPassword}
+                                            onChange={(e) => setNewPassword(e.target.value)}
+                                            onKeyDown={KeyPressPassword}
+                                        />
+                                    </div>
+                                }
                                 <div className="popup-settings-close" onClick={handlePopupClose}>
                                     <i className="bx bx-x"></i>
                                 </div>

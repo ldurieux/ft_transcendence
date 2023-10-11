@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne, OneToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToOne, OneToMany, ManyToMany, ManyToOne, JoinTable } from 'typeorm';
 import { User } from 'src/user/user.entity';
 
 @Entity()
@@ -6,8 +6,14 @@ export class Game {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @OneToOne(type => User)
-    myEnemy: User;
+    @ManyToOne(() => User, (user) => user.game)
+    user: User;
+
+    @Column({default: 0})
+    opponentId: number;
+
+    @Column({default: null})
+    opponentName: string;
 
     @Column({default: 0})
     myScore: number;

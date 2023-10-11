@@ -48,6 +48,13 @@ body {
     transition: 0.3s ease;
 }
 
+.Channels {
+    height: 70%;
+    width: 100%;
+    overflow: scroll;
+    padding: 10px;
+}
+
 .Channels ul {
     list-style-type: none;
     margin: 0;

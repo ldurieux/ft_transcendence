@@ -1,14 +1,12 @@
-import React, { Component } from "react";
-// import { MyGame } from "../components/Utils/game.tsx";
-import "../components/Styles/GameStyle.css";
+import React from "react";
+import GameComponent from "../components/Utils/gameComponents/game.tsx";
 
-class Game extends Component {
-    render() {
-        return (
-            <div className="Game">
+function Game() {
+    return (
+            <div>
+                <GameComponent />
             </div>
         );
-    }
 }
 
 export default Game;

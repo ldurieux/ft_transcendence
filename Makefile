@@ -9,3 +9,6 @@ down:
 
 log: 
 	docker compose logs api --follow
+
+logFront:
+	docker compose logs frontend --follow

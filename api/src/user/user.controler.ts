@@ -63,6 +63,16 @@ export class UserController {
     }
 
     @UseGuards(AuthGuard)
+    @Get('friends')
+    async getFriends(@Request() req) {
+        const id = req['user'];
+
+        const user: User = await this.userService.getUser(id, true, true);
+        let friends = this.userService.getFriendUser(user.id, true);
+        return friends;
+    }
+
+    @UseGuards(AuthGuard)
     @Get('block')
     async blockUser(@Request() req) {
         const self: User = await this.userService.getUser(req['user'], true);

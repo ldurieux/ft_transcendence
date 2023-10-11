@@ -1,43 +1,81 @@
-import React, {useEffect} from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { PopupProvider } from "./components/Utils/chatComponents/PopupContext.tsx";
-
+import InvitePopup from "./components/Utils/popupComponents/invitePopup/popupInvite.tsx";
+import './App.css';
 const Header = React.lazy(() => import('./components/Header/index.tsx'));
 const FrontRoute = React.lazy(() => import('./components/redirect.tsx'));
 
 function App() {
     const url = `ws://${process.env.REACT_APP_WEB_HOST}:3001`;
-    // const {setSocket} = useContext(SocketContext);
-    const socket = new WebSocket(url);
+    const [id, setId] = useState<number>(0);
+    const [userName, setUserName] = useState<string>("");
+    const [typeOfGame, setTypeOfGame] = useState<string>("");
+    const [popupVisible, setPopupVisible] = useState<boolean>(false);
+    
+    const socket = useMemo(() => new WebSocket(url), [url]);
 
     useEffect(() => {
         socket.onopen = () => {
             const baguette = { event: 'auth', data: { data: `Bearer ${localStorage.getItem('token')}` } };
             socket.send(JSON.stringify(baguette));
-            console.log('Connected to server');
-            // setSocket(socket);
         };
-
-        socket.onclose = () => {
-            console.log('Disconnected from server');
-        };
-        // Clean up function
+        socket.onclose = () => {};
+        
         return () => {
-            socket.close();
+            if (socket.readyState === WebSocket.OPEN) {
+                socket.close();
+            }
         };
-    }, [url, socket]);
+    }, [socket]);
+
+    
+    useEffect(() => {
+        if (socket) {
+            socket.onmessage = (e) => {
+                const data = JSON.parse(e.data);
+                console.log(data);
+                if (data.type === "gameStart") {
+                    window.location.href = "/game";
+                }
+                else if (data.type === "invite") {
+                    setId(data.id);
+                    setUserName(data.user);
+                    if (data.typeOfGame === 1)
+                        setTypeOfGame("classic game");
+                    if (data.typeOfGame === 2)
+                        setTypeOfGame("deluxe game");
+                    setPopupVisible(true);
+                }
+                else if (data.type === "inviteTimeout")
+                    setPopupVisible(false);
+            }
+        }
+    },[socket]);
+
+    const handleClose = () => {
+        setPopupVisible(false);
+    }
 
     return (
         <div className="App-header">
+            <div className="popup-container">
+            {
+                popupVisible ? (
+                    <InvitePopup
+                        props={{userName, typeOfGame, id}}
+                        handleClose={handleClose}
+                    />
+                ) : null
+            }
+            </div>
             <PopupProvider>
-                {/*<SocketProvider>*/}
-                    <div className="App">
-                        <BrowserRouter>
-                            <Header />
-                            <FrontRoute socket={socket}/>
-                        </BrowserRouter>
-                    </div>
-                {/*</SocketProvider>*/}
+                <div className="App">
+                    <BrowserRouter>
+                        <Header />
+                        <FrontRoute socket={socket} />
+                    </BrowserRouter>
+                </div>
             </PopupProvider>
         </div>
     );

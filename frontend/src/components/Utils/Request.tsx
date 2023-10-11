@@ -3,11 +3,11 @@ function get (path) {
     return MakeRequest('GET', path)
 }
 
-function post (path, data, multipart = false) {
+function post (path, data?, multipart = false) {
     return MakeRequest('POST', path, data, multipart)
 }
 
-function MakeRequest(method, path, data = null, multipart = false) {
+function MakeRequest(method, path, data?, multipart = false) {
     const headers = {
         "content-type": "application/json", // a changer selon si POST multipart
         "authorization" : `Bearer ${localStorage.getItem('token')}`

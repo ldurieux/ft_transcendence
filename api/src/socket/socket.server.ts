@@ -9,19 +9,18 @@ import { Injectable } from '@nestjs/common';
 })
 export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
     constructor(
-        private jwtService: JwtService
+        private jwtService: JwtService,
     ) {}
 
     @WebSocketServer() server: WebSocket;
     static serverRef;
 
-    afterInit(server: WebSocket) {
+    async afterInit(server: WebSocket) {
         // console.log('Init');
     }
 
-    handleConnection(client: WebSocket) {
+    async handleConnection(client: WebSocket) {
         client.data = {}
-        console.log('Client isConnected');
     }
     
     @SubscribeMessage('auth')
@@ -76,10 +75,9 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
         }
     }
 
-    handleDisconnect(client: WebSocket) {
+    async handleDisconnect(client: WebSocket) {
         if (client.data.user != null && client.data.user != undefined)
             this.broadcast(client.data.user, { event: "disconnect", data: { user: client.data.user } })
-        console.log('Client disconnected');
     }
 
     static instance() {
@@ -90,10 +88,11 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
         return this.server;
     }
 
-    getSocket(id: number) {
+    async getSocket(id: number) {
         for (const client of this.server.clients) {
-            if (client.data.user == id)
+            if (client.data.user == id) {
                 return client;
+            }
         }
         return null;
     }
