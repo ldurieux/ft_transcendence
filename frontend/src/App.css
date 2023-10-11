@@ -104,3 +104,14 @@
     transform: rotate(360deg);
   }
 }
+
+.popup-container {
+  position: absolute;
+  overflow: scroll;
+  width:25%;
+  height: 100%;
+  min-height: 100px;
+  min-width: 280px;
+  top: 0;
+  right: 0;
+}

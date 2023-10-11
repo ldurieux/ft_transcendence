@@ -1,48 +1,79 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { PopupProvider } from "./components/Utils/chatComponents/PopupContext.tsx";
-import SocketService from "./components/Utils/SocketService.tsx";
+import InvitePopup from "./components/Utils/popupComponents/invitePopup/popupInvite.tsx";
 import './App.css';
 const Header = React.lazy(() => import('./components/Header/index.tsx'));
 const FrontRoute = React.lazy(() => import('./components/redirect.tsx'));
 
 function App() {
-    const socketService = new SocketService();
-    let visibilityChange = null;
+    const url = `ws://${process.env.REACT_APP_WEB_HOST}:3001`;
+    const [id, setId] = useState<number>(0);
+    const [userName, setUserName] = useState<string>("");
+    const [typeOfGame, setTypeOfGame] = useState<string>("");
+    const [popupVisible, setPopupVisible] = useState<boolean>(false);
+    
+    const socket = useMemo(() => new WebSocket(url), [url]);
 
+    useEffect(() => {
+        socket.onopen = () => {
+            const baguette = { event: 'auth', data: { data: `Bearer ${localStorage.getItem('token')}` } };
+            socket.send(JSON.stringify(baguette));
+        };
+        socket.onclose = () => {};
+        
+        return () => {
+            if (socket.readyState === WebSocket.OPEN) {
+                socket.close();
+            }
+        };
+    }, [socket]);
 
-    const socket = useMemo(() => {
-        if (document.visibilityState === 'visible') {
-            socketService.connect();
+    
+    useEffect(() => {
+        if (socket) {
+            socket.onmessage = (e) => {
+                const data = JSON.parse(e.data);
+                console.log(data);
+                if (data.type === "gameStart") {
+                    window.location.href = "/game";
+                }
+                else if (data.type === "invite") {
+                    setId(data.id);
+                    setUserName(data.user);
+                    if (data.typeOfGame === 1)
+                        setTypeOfGame("classic game");
+                    if (data.typeOfGame === 2)
+                        setTypeOfGame("deluxe game");
+                    setPopupVisible(true);
+                }
+                else if (data.type === "inviteTimeout")
+                    setPopupVisible(false);
+            }
         }
+    },[socket]);
 
-        return (socketService.getSocket());
-    }, [socketService]);
+    const handleClose = () => {
+        setPopupVisible(false);
+    }
 
     return (
         <div className="App-header">
+            <div className="popup-container">
+            {
+                popupVisible ? (
+                    <InvitePopup
+                        props={{userName, typeOfGame, id}}
+                        handleClose={handleClose}
+                    />
+                ) : null
+            }
+            </div>
             <PopupProvider>
                 <div className="App">
                     <BrowserRouter>
                         <Header />
                         <FrontRoute socket={socket} />
-                        {visibilityChange &&
-                        <div className="InvitePopup">
-                            <div className="InvitePopupContent">
-                                <div className="InvitePopupHeader">
-                                    <h1>Invitation</h1>
-                                </div>
-                                <div className="InvitePopupBody">
-                                    <div className="InvitePopupText">
-                                    </div>
-                                    <div className="InvitePopupButtons">
-                                        <button className="InvitePopupButtonA" onClick={() => {}}>Accept</button>
-                                        <button className="InvitePopupButtonR" onClick={() => {}}>Decline</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        }
                     </BrowserRouter>
                 </div>
             </PopupProvider>

@@ -27,15 +27,10 @@ function matchMakingRequest(typeOfGame)
     post('game/MatchMaking', {typeOfGame});
 }
 
-export const isInGame = (isInGame) => {
-    console.log("truc = ", isInGame);
-    if (isInGame === true)
-    {
-        return(
-            <div className="resume-container">
-                <button className="button" onClick={() => {window.location.href = "/game"}}>RESUME</button>
-            </div>
-        )
-    }
-    return null;
+export const isInGame = () => {
+    return(
+        <div className="resume-container">
+            <button className="button" onClick={() => {window.location.href = "/game"}}>RESUME</button>
+        </div>
+    )
 }

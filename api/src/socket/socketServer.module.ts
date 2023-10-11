@@ -7,10 +7,8 @@ import { JwtService } from '@nestjs/jwt';
 
 import { UserService } from 'src/user/user.service';
 
-import { GeneralReply } from './general.reply';
-
 @Module({
-    providers: [ChatGateway, SocketServer, SocketGuard, JwtService, UserService, GeneralReply],
+    providers: [ChatGateway, SocketServer, SocketGuard, JwtService, UserService],
   })
 
   export class SocketServerModule {}

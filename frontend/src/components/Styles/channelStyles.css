@@ -128,7 +128,7 @@
 
 .PopupBlockUser {
     display: flex;
-    justify-content: space-between;
+    /* justify-content: space-between; */
     align-items: center;
     width: 100%;
     padding: 10px;
@@ -147,17 +147,59 @@
     transition: 0.3s ease;
 }
 
-.PopupClose {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 30px;
-    color: white;
-    cursor: pointer;
-    background: none;
+.classicGame {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding:10px;
+    margin-bottom: 20px;
+    background: #333641;
+    border-radius: 5px;
     border: none;
     outline: none;
-    list-style: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.classicGame:hover {
+    opacity: 0.5;
+    transition: 0.3s ease;
+}
+
+.deluxeGame {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding:10px;
+    margin-bottom: 20px;
+    background: #333641;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.deluxeGame:hover {
+    opacity: 0.5;
+    transition: 0.3s ease;
+}
+
+.PopupClose {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding:10px;
+    margin-bottom: 20px;
+    background: #333641;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
 }
 
 .PopupClose:hover {

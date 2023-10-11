@@ -36,24 +36,14 @@ export class GameControler
     @Post('inviteResponse')
     async gameInviteResponse(@Request() req)
     {
-        const {myId, id, response, typeOfGame } = req.Body;
+        const id:number = req.body.inviteId;
+        const response:boolean = req.body.response;
         
-        if (typeof typeOfGame !== 'number')
-            throw new HttpException("", HttpStatus.BAD_REQUEST);
-        if (typeof myId !== 'number')
-            throw new HttpException("", HttpStatus.BAD_REQUEST);
         if (typeof id !== 'number')
             throw new HttpException("", HttpStatus.BAD_REQUEST);
         if (typeof response !== 'boolean')
             throw new HttpException("", HttpStatus.BAD_REQUEST);
-        if (response === true)
-        {
-            this.gameReply.gameStart(myId, id, typeOfGame);
-        }
-        else
-        {
-            this.gameReply.inviteRefused(myId, id);
-        }
+        this.gameReply.inviteResponse(id, response);
     }
 
     @UseGuards(AuthGuard)

@@ -7,19 +7,13 @@ import * as lobbyFunction from "./lobby/lobbyFunction.tsx"
 export default function LobbyPage() {
     const [invitePopup, setInvitePopup] = useState(false);
     const [matchPopup, setMatchPopup] = useState(false);
-    const [isIngame, setIsIngame] = useState(false);
     const [friend, setFriend] = useState([]);
     const [matchHistory, setMatchHistory] = useState([]);
 
-    async function fetchData() {
-        await getFriendsList();
-        await getMatchHistory();
-        await getIsIngame();
-    }
-
     useEffect(() => {
-        fetchData();
-    }, [])
+        getFriendsList();
+        getMatchHistory();
+    }, []);
 
     const toggleinvitePopup = () => {
         setInvitePopup(!invitePopup);
@@ -31,6 +25,7 @@ export default function LobbyPage() {
 
     const toggleMatchmaking = (gameType) => {
         lobbyFunction.matchMaking(gameType);
+        toggleMatchPopup();
     }
 
     async function getFriendsList() {
@@ -40,14 +35,46 @@ export default function LobbyPage() {
 
     async function getMatchHistory() {
         const me = await get("game/matchHistory");
-        console.log(me);
         setMatchHistory(me);
     }
 
-    async function getIsIngame() {
-        const me = await get("game/isIngame");
-        console.log(me);
-        setIsIngame(me);
+    const handleInvite = (friendId, typeOfGame) => {
+        lobbyFunction.inviteFriend(friendId, typeOfGame);
+        toggleinvitePopup();
+    }
+
+    function IsInGame() {
+        const [isInGame, setIsInGame] = useState(false);
+        useEffect(() => {
+            async function isInGame() {
+                await get("game/isInGame").then((res) => {
+                    try {
+                        if (res === "true") {
+                            setIsInGame(true);
+                        }
+                        else {
+                            setIsInGame(false);
+                        }
+                    }
+                    catch (error) {
+                        setIsInGame(false);
+                    }
+                });
+            }
+            isInGame();
+        },[]);
+        if (isInGame) {
+            return (
+                <div className="resume-container">
+                    <button className="button" onClick={() => {window.location.href = "/game"}}>RESUME</button>
+                </div>
+            )
+        }
+        else {
+            return (
+                <div></div>
+            )
+        }
     }
 
     return (
@@ -66,9 +93,9 @@ export default function LobbyPage() {
                                             <div className="player-container">
                                                 <p className="playerName">{item?.display_name}</p>
                                                 <div className="button-invite-container">
-                                                    <button onClick={() => lobbyFunction.inviteFriend(item?.id, 1)}>ClassicGame</button>
+                                                    <button onClick={() => handleInvite(item?.id, 1)}>ClassicGame</button>
                                                     <div className="button-separator"></div>
-                                                    <button onClick={() => lobbyFunction.inviteFriend(item?.id, 2)}>DeluxeGame</button>
+                                                    <button onClick={() => handleInvite(item?.id, 2)}>DeluxeGame</button>
                                                 </div>
                                             </div>
                                         </li>
@@ -94,7 +121,7 @@ export default function LobbyPage() {
                         handleclose={toggleMatchPopup}
                     />}
                 </div>
-                {lobbyFunction.isInGame(isIngame)}
+                {IsInGame()}
             </div>
             <div className="matchHistory-container">
                 <div className="matchHistory-title-container">

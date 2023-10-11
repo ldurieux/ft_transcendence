@@ -16,8 +16,6 @@ import { Repository } from 'typeorm';
 
 import { UserService } from 'src/user/user.service';
 
-import { GeneralReply } from 'src/socket/general.reply';
-
 import { SocketServer } from 'src/socket/socket.server';
 
 import {
@@ -147,6 +145,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         let nSync = 0;
         let socket1: WebSocket = null;
         let socket2: WebSocket = null
+        this.playerInGame.add(player1);
+        this.playerInGame.add(player2);
         while (nSync < 5 && (socket1 === null || socket2 === null))
         {
             socket1 = await this.getSocket(player1);
@@ -156,15 +156,14 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         }
         if (nSync >= 5)
         {
+            this.playerInGame.delete(player1);
+            this.playerInGame.delete(player2);
             if (socket1 !== null)
                 socket1.send(JSON.stringify({type: 'Error', Error: 'PlayerNotConnected'}));
             if (socket2 !== null)
                 socket2.send(JSON.stringify({type: 'Error', Error: 'PlayerNotConnected'}));
             return;
         }
-        console.log('synchronized');
-        this.playerInGame.add(player1);
-        this.playerInGame.add(player2);
         this.socketServer.broadcast(player1, {event: "isInGame", data: {user: player1}})
         this.socketServer.broadcast(player2, {event: "isInGame", data: {user: player2}})
         socket1.send(JSON.stringify({type: 'synchronized', gameId: gameId, myId: player1, opponentId: player2}));
@@ -237,7 +236,6 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         while (gameId === 0 || this.gameInstance.has(gameId))
             gameId = Math.floor(Math.random() * 1000000000);
         this.gameInstance.set(gameId, game);
-        console.log('createGame');
         this.synchronizedPlayer(player1, player2, gameId);
     }
 
@@ -270,8 +268,6 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
         await this.gameRepository.save(Game2);
         await this.gameRepository.save(Game1);
-        console.log(Game1.id);
-        console.log(Game2.id);
 
         if (user1.game === undefined || user1.game === null)
             user1.game = [];
@@ -295,7 +291,6 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
         await this.userRepository.save(user1);
         await this.userRepository.save(user2);
-        console.log(user1);
         if (socketwinner !== null)
             socketwinner.send(JSON.stringify({type: 'whoWin', whoWin: "WIN"}));
         if (socketloser !== null)
@@ -338,8 +333,6 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
             if (disconnect)
                 gameContinue = false;
         }
-        console.log(disconnect);
-        console.log(player1, player2);
         if (disconnect === player1)
         {
             game.setWinner(game.player2.getPlayerId());
@@ -368,7 +361,6 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         await game.gameInit(player1, player2, socket1, socket2);
         while (gameContinue)
         {
-            console.log(gameContinue);
             await game.moveBall();
             gameContinue = await game.checkCollision(socket1, socket2);
             await game.sendBallPos(socket1, socket2);
@@ -419,16 +411,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
                 socket2.send(JSON.stringify({type: 'PAUSE'}));
             socket1 = await this.getSocket(player1);
             socket2 = await this.getSocket(player2);
-            if (socket1 === null)
-                console.log("socket1 null");
-            if (socket2 === null)
-                console.log("socket2 null");
-            console.log(pause);
             if (socket1 === null && socket2 === null)
-            {
-                console.log("disconnect");
                 return (-1);
-            }
             await this.wait(1000);
             pause += 1;
         }
@@ -448,7 +432,6 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
     async gameDisconnect(gameId: number, game: gameInterface.Game): Promise<void>
     {
-        console.log("disconnect");
         this.playerInGame.delete(game.player1.getPlayerId());
         this.playerInGame.delete(game.player2.getPlayerId());
         game.destroyGame();

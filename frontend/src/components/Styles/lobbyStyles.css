@@ -15,7 +15,7 @@ body {
     min-height: 75vh;
 }
 
-@media (max-width: 75vh) {
+@media (min-width: 300px) and (max-width: 600px) {
     .lobby-container {
         grid-template-columns: 1fr; /* Une seule colonne pour les écrans étroits */
     }
@@ -266,4 +266,14 @@ li {
 #matchHistory-element-player2 {
     font-style: italic;
     color: white;
+}
+
+.no-game {
+    text-align: center;
+    border: 1px solid rgba(98, 98, 98, 0.827);
+    width: 100%;
+    height: 100%;
+    color: white;
+    font-size: 20px;
+    font-style: unset;
 }

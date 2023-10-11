@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import "../../Styles/GameStyle.css";
 import * as gameData from "./game/object/gameData.tsx"
 
@@ -10,20 +10,20 @@ export default function GameComponent() {
     const [boardColor, setBoardColor] = useState<string>("black");
 
     const url = `ws://${process.env.REACT_APP_WEB_HOST}:3001/game`;
-    const gameSocket = new WebSocket(url);
 
     var gameId = 0;
     var MyId = 0;
     var opponentId = 0;
-
-    const ballData = new gameData.Ball();
-    const players = new Map<number, gameData.Player>;
 
     const screen: gameData.Screen = {
         width: 0,
         height: 0
     };
 
+    const gameSocket = useMemo(() => new WebSocket(url), [url]);
+    const ballData = useMemo(() => new gameData.Ball(), []);
+    const players = useMemo(() => new Map<number, gameData.Player>(), []);
+    
     useEffect(() => {
         gameSocket.onopen = () => {
             const baguette = { event: 'auth', data: { data: `Bearer ${localStorage.getItem('token')}` } };
@@ -36,7 +36,7 @@ export default function GameComponent() {
                 gameSocket.close();
             }
         };
-    }, []);
+    }, [gameSocket]);
 
     useEffect(() => {
         let alreadyPressed = {
@@ -89,7 +89,7 @@ export default function GameComponent() {
         window.addEventListener('resize', onResize, false);
         window.addEventListener('keydown', onKeydown, false);
         window.addEventListener('keyup', onKeyup, false);
-    }, []);
+    }, [MyId, gameSocket, players, screen, ballData, gameId]);
 
     useEffect(() => {
         const cssElement = document.getElementById("game-board");
@@ -118,127 +118,130 @@ export default function GameComponent() {
         );
     };
 
-    gameSocket.onmessage = (event) => {
-        const data = JSON.parse(event.data);
+    if (gameSocket)
+    {
+        gameSocket.onmessage = (event) => {
+            const data = JSON.parse(event.data);
 
-        if (data.type === 'synchronized')
-        {
-            gameId = data.gameId;
-            MyId = data.myId;
-            opponentId = data.opponentId;
-            players.set(MyId, new gameData.Player());
-            players.set(opponentId, new gameData.Player());
-        }
-
-        else if (data.type === 'initBoard')
-        {
-            const ball = document.getElementById("ball");
-            const cssElement = document.getElementById("game-board");
-            const paddle1 = document.getElementById("paddle1");
-            const paddle2 = document.getElementById("paddle2");
-            const player1 = players.get(MyId);
-            const player2 = players.get(opponentId);
-            if (player1 && paddle1)
-                player1.paddle = paddle1;
-            if (player2 && paddle2)
-                player2.paddle = paddle2;
-            screen.width = data.screen.width;
-            screen.height = data.screen.height;
-            setScore1(data.score1);
-            setScore2(data.score2);
-            ballData.setBall(
-                data.ball.x,
-                data.ball.y,
-                data.ball.radius
-            );
-            if (player1 && player2 && ball && cssElement)
+            if (data.type === 'synchronized')
             {
-                player1.setPaddlePosition(
-                    data.paddle1.x,
-                    data.paddle1.y,
-                    data.paddle1.width,
-                    data.paddle1.height
-                );
-                player2.setPaddlePosition(
-                    data.paddle2.x,
-                    data.paddle2.y,
-                    data.paddle2.width,
-                    data.paddle2.height
-                );
-                player1.drawPaddle(cssElement, screen, ballData);
-                player2.drawPaddle(cssElement, screen, ballData);
-                ballData.drawBall(ball, cssElement, screen);
+                gameId = data.gameId;
+                MyId = data.myId;
+                opponentId = data.opponentId;
+                players.set(MyId, new gameData.Player());
+                players.set(opponentId, new gameData.Player());
             }
-        }
 
-        else if (data.type === 'ballPos')
-        {
-            const ball = document.getElementById("ball");
-            const cssElement = document.getElementById("game-board");
-            ballData.setBall(
-                data.ball.x,
-                data.ball.y,
-                data.ball.radius
-            );
-            screen.width = data.screen.width;
-            screen.height = data.screen.height;
-            if (ball && cssElement)
-                ballData.drawBall(ball, cssElement, screen);
-        }
-
-        else if (data.type === 'paddlePos')
-        {
-            const cssElement = document.getElementById("game-board");
-            const player = players.get(data.paddlePlayer);
-            if (player)
+            else if (data.type === 'initBoard')
             {
-                player.setPaddlePosition(
-                    data.paddle.x,
-                    data.paddle.y,
-                    data.paddle.width,
-                    data.paddle.height
+                const ball = document.getElementById("ball");
+                const cssElement = document.getElementById("game-board");
+                const paddle1 = document.getElementById("paddle1");
+                const paddle2 = document.getElementById("paddle2");
+                const player1 = players.get(MyId);
+                const player2 = players.get(opponentId);
+                if (player1 && paddle1)
+                    player1.paddle = paddle1;
+                if (player2 && paddle2)
+                    player2.paddle = paddle2;
+                screen.width = data.screen.width;
+                screen.height = data.screen.height;
+                setScore1(data.score1);
+                setScore2(data.score2);
+                ballData.setBall(
+                    data.ball.x,
+                    data.ball.y,
+                    data.ball.radius
+                );
+                if (player1 && player2 && ball && cssElement)
+                {
+                    player1.setPaddlePosition(
+                        data.paddle1.x,
+                        data.paddle1.y,
+                        data.paddle1.width,
+                        data.paddle1.height
+                    );
+                    player2.setPaddlePosition(
+                        data.paddle2.x,
+                        data.paddle2.y,
+                        data.paddle2.width,
+                        data.paddle2.height
+                    );
+                    player1.drawPaddle(cssElement, screen, ballData);
+                    player2.drawPaddle(cssElement, screen, ballData);
+                    ballData.drawBall(ball, cssElement, screen);
+                }
+            }
+
+            else if (data.type === 'ballPos')
+            {
+                const ball = document.getElementById("ball");
+                const cssElement = document.getElementById("game-board");
+                ballData.setBall(
+                    data.ball.x,
+                    data.ball.y,
+                    data.ball.radius
                 );
                 screen.width = data.screen.width;
                 screen.height = data.screen.height;
-                if (cssElement)
-                    player.drawPaddle(cssElement, screen, ballData);
+                if (ball && cssElement)
+                    ballData.drawBall(ball, cssElement, screen);
             }
-        }
 
-        else if (data.type === "updateScore")
-        {
-            setScore1(data.score1);
-            setScore2(data.score2);
-        }
-
-        else if (data.type === "gameEffect")
-        {
-                const ball = document.getElementById("ball");
-                if (ball)
-                    ballData.undrawBall(ball);
-        }
-
-        else if (data.type === "whoWin")
-        {
-            const ball = document.getElementById("ball");
-            const paddle1 = document.getElementById("paddle1");
-            const paddle2 = document.getElementById("paddle2");
-            const player1 = players.get(1);
-            const player2 = players.get(2);
-            if (ball && paddle1 && paddle2 && player1 && player2 && score1 && score2)
+            else if (data.type === 'paddlePos')
             {
-                player1.undrawPaddle();
-                player2.undrawPaddle();
-                ballData.undrawBall(ball);
-            }   
-            setWhowin(data.whoWin);
-            setPause("");
-        }
+                const cssElement = document.getElementById("game-board");
+                const player = players.get(data.paddlePlayer);
+                if (player)
+                {
+                    player.setPaddlePosition(
+                        data.paddle.x,
+                        data.paddle.y,
+                        data.paddle.width,
+                        data.paddle.height
+                    );
+                    screen.width = data.screen.width;
+                    screen.height = data.screen.height;
+                    if (cssElement)
+                        player.drawPaddle(cssElement, screen, ballData);
+                }
+            }
 
-        if (data.type === "PAUSE")
-            setPause("PAUSE");
-        else if (data.type === "RESUME")
-            setPause("");
+            else if (data.type === "updateScore")
+            {
+                setScore1(data.score1);
+                setScore2(data.score2);
+            }
+
+            else if (data.type === "gameEffect")
+            {
+                    const ball = document.getElementById("ball");
+                    if (ball)
+                        ballData.undrawBall(ball);
+            }
+
+            else if (data.type === "whoWin")
+            {
+                const ball = document.getElementById("ball");
+                const paddle1 = document.getElementById("paddle1");
+                const paddle2 = document.getElementById("paddle2");
+                const player1 = players.get(1);
+                const player2 = players.get(2);
+                if (ball && paddle1 && paddle2 && player1 && player2 && score1 && score2)
+                {
+                    player1.undrawPaddle();
+                    player2.undrawPaddle();
+                    ballData.undrawBall(ball);
+                }   
+                setWhowin(data.whoWin);
+                setPause("");
+            }
+
+            if (data.type === "PAUSE")
+                setPause("PAUSE");
+            else if (data.type === "RESUME")
+                setPause("");
+        }
     }
 
     // const button = document.getElementById("arrow");

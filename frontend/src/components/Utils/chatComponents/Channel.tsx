@@ -176,6 +176,29 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
         }
     }
 
+    async function inviteClassicGame() {
+        try {
+            console.log()
+            if (currentUser.id !== selectedUser.id) {
+                post("game/invite", {id: selectedUser.id, typeOfGame: 1});
+                setSelectedUser(null);
+            }
+        }
+        catch (error) {
+        }
+    }
+
+    async function inviteDeluxeGame() {
+        try {
+            if (currentUser.id !== selectedUser.id) {
+                post("game/invite", {id: selectedUser.id, typeOfGame: 2});
+                setSelectedUser(null);
+            }
+        }
+        catch (error) {
+        }
+    }
+
     async function promoteUser(channel,user) {
         try {
             const ret = await post(`channel/promote`, { userId: user.id, channelId: channel.id });
@@ -258,16 +281,28 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                         <div className="FriendsOptions">
                             <ul>
                                 <li
+                                    className="PopupClose"
+                                    onClick={() => setSelectedUser(null)}
+                                >
+                                    Close
+                                </li>
+                                <li
                                     className="PopupBlockUser"
                                     onClick={blockUser}
                                 >
                                     Block
                                 </li>
                                 <li
-                                    className="PopupClose"
-                                    onClick={() => setSelectedUser(null)}
+                                    className="classicGame"
+                                    onClick={inviteClassicGame}
                                 >
-                                    Close
+                                    Classic game
+                                </li>
+                                <li
+                                    className="deluxeGame"
+                                    onClick={inviteDeluxeGame}
+                                >
+                                    Deluxe game
                                 </li>
                             </ul>
                         </div>

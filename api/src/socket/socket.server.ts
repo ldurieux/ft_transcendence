@@ -1,14 +1,7 @@
 import * as WebSocket from 'ws';
 import { OnGatewayConnection, OnGatewayDisconnect, MessageBody, OnGatewayInit ,SubscribeMessage, WebSocketGateway, ConnectedSocket, WebSocketServer } from '@nestjs/websockets';
 import { JwtService } from '@nestjs/jwt';
-import { Injectable, Inject } from '@nestjs/common';
-import { GeneralReply } from './general.reply';
-
-
-// import { GameReply } from './game.reply';
-
-import { Deque } from 'double-ended-queue';
-import { User } from 'src/user/user.entity';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 @WebSocketGateway({ 
@@ -28,7 +21,6 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
 
     async handleConnection(client: WebSocket) {
         client.data = {}
-        console.log("Connected")
     }
     
     @SubscribeMessage('auth')
@@ -86,8 +78,6 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
     async handleDisconnect(client: WebSocket) {
         if (client.data.user != null && client.data.user != undefined)
             this.broadcast(client.data.user, { event: "disconnect", data: { user: client.data.user } })
-        console.log("Disconnected");
-        console.log(client.data);
     }
 
     static instance() {

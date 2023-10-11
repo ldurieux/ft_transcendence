@@ -20,15 +20,6 @@ export default class SocketService {
 
         this.socket.onclose = () => {
         };
-
-        this.socket.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            if (data.type === 'gameStart') {
-                window.location.href = '/game';
-            }
-            if (data.type === 'invite') {
-            }
-        };
     }
 
     disconnect() {
