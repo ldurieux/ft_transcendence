@@ -22,16 +22,13 @@ export default function InvitePopup(props: any) {
     return (
         <div className="popup">
             <div className="popup-inner">
-                <div className="popup-header">
-                    <h1>Invite</h1>
-                </div>
+                <h1>Invite</h1>
                 <div className="popup-content">
                     <p>{props.props.userName} invited you to a {props.props.typeOfGame}.</p>
                 </div>
                 <button id="accept-button" onClick={() => acceptInvite(props.props.id)}>Accept</button>
                 <button id="decline-button" onClick={() => declineInvite(props.props.id)}>Decline</button>
             </div>
-            <button className="close-button" onClick={() => props.handleClose()}>X</button>
         </div>
     );
 }

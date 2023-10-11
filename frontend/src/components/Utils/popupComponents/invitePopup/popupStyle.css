@@ -4,7 +4,6 @@ h1 {
     margin: 0;
     padding: 0;
     text-align: center;
-    margin-top: 5%;
 }
 
 .popup {
@@ -35,7 +34,8 @@ h1 {
 }
 
 .popup-content {
-    position: relative;
+    display: flex;
+    position: absolute;
     top: 50%;
     transform: translateY(-50%);
     text-align: center;
