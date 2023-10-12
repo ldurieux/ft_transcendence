@@ -39,6 +39,16 @@ export class GameReply {
             socket.send(JSON.stringify({type: 'notConnected'}));
     }
 
+    async checkIds(id: number)
+    {
+        this.inviteResponse(id, false);
+        if (this.invitedClients.has(id))
+        {
+            const truc = this.invitedClients.get(id);
+            this.inviteResponse(truc, false);
+        }
+    }
+
     async invite(id: number, friendId: number, typeOfGame: number)
     {
         const socket: WebSocket = await this.socketServer.getSocket(friendId);
@@ -53,13 +63,13 @@ export class GameReply {
             this.sendInGame(id);
             return;
         }
+        if (this.invitedClients.has(friendId))
+            return;
+        this.checkIds(id);
         if (await this.gameGateway.isInGame(id))
             this.currentlyInGame(id);
         if (this.invitedClients.has(friendId))
-        {
-            this.inviteRefused(id, friendId);
             return;
-        }
         if (this.ClassicMatchMaking.includes(id))
             this.ClassicMatchMaking.pop();
         if (this.DeluxeMatchMaikng.includes(id))
@@ -101,7 +111,6 @@ export class GameReply {
         }
     }
 
-
     async inviteResponse(id: number, response: boolean)
     {
         var InviteData = this.inviteMap.get(id);
@@ -109,6 +118,14 @@ export class GameReply {
             return;
         InviteData.response = true;
         InviteData.accepted = response;
+
+        if (await this.gameGateway.isInGame(id))
+        {
+            this.sendInGame(id);
+            this.invitedClients.delete(InviteData.friendId);
+            this.inviteMap.delete(InviteData.id);
+            return;
+        }
 
         if (response === false)
             await this.inviteRefused(id, this.inviteMap.get(id).friendId);
@@ -143,12 +160,7 @@ export class GameReply {
             return;
         }
         var socket: any = null;
-        this.inviteResponse(id, false);
-        if (this.invitedClients.has(id))
-        {
-            const truc = this.invitedClients.get(id);
-            this.inviteResponse(truc, false);
-        }
+        this.checkIds(id);
         if (typeOfGame === 1)
         {
             if (this.ClassicMatchMaking.length)
