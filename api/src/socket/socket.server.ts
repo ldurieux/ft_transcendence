@@ -100,6 +100,11 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
         this.inGameList.add(id);
     }
 
+    async isInGame(id: number)
+    {
+        return this.inGameList.has(id);
+    }
+
     async removeFromInGameList(id: number)
     {
         this.inGameList.delete(id);

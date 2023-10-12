@@ -49,11 +49,13 @@ export class UserService {
         if (!self)
             delete user.twoFaSecret;
 
-        if (this.isOnline(user.id) == true)
+        const status = this.isOnline(user.id);
+        if (status == 1)
             user["status"] = "online";
-        else
+        else if (status == 2)
             user["status"] = "offline";
-
+        else
+            user["status"] = "ingame";
         return user;
     }
 
@@ -79,18 +81,20 @@ export class UserService {
         return user.friends;
     }
 
-    isOnline(userId: number): boolean
+    isOnline(userId: number): number
     {
         const websocket = SocketServer.instance();
 
         if (websocket == null || websocket == undefined)
-            return false;
+            return 2;
 
         for (const client of websocket.clients) {
             if (client.data.user == userId)
-                return true;
+                return 1;
         }
-        return false;
+        if (websocket.isInGame(userId))
+            return 3;
+        return 2;
     }
 
     async getUserByUsername(username: string, blocked: boolean = false): Promise<User> {
