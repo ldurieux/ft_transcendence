@@ -18,6 +18,9 @@ export class GameReply {
     private DeluxeMatchMaikng: Array<number>;
     private ClassicMatchMaking: Array<number>;
     private inviteMap: Map<number, InviteData>;
+    private invitedClients: Set<number>;
+    private readonly inviteTimeout: number = 30;
+
 
     constructor(
         private readonly userService: UserService,
@@ -52,6 +55,11 @@ export class GameReply {
         }
         if (await this.gameGateway.isInGame(id))
             this.currentlyInGame(id);
+        if (this.invitedClients.has(friendId))
+        {
+            this.inviteRefused(id, friendId);
+            return;
+        }
         if (this.ClassicMatchMaking.includes(id))
             this.ClassicMatchMaking.pop();
         if (this.DeluxeMatchMaikng.includes(id))
@@ -60,6 +68,7 @@ export class GameReply {
         if (socket !== null)
             socket.send(JSON.stringify({type: 'invite', user: (await this.userService.getUser(id)).display_name, typeOfGame: typeOfGame, id: id}));
         this.inviteMap.set(id, {friendId: friendId, id: id, response: false, typeOfGame: typeOfGame, accepted: false});
+        this.invitedClients.add(friendId);
         this.inviteWaiting(id);
     }
 
@@ -67,13 +76,13 @@ export class GameReply {
     {
         var InviteData: InviteData = this.inviteMap.get(id);
         let waiting:number = 0;
-        while (InviteData !== undefined && waiting < 300 && InviteData.response === false)
+        while (InviteData !== undefined && waiting < this.inviteTimeout && InviteData.response === false)
         {
             InviteData = this.inviteMap.get(id);
             await this.wait(1000);
             waiting++;
         }
-        if (waiting >= 300 && InviteData !== undefined)
+        if (waiting >= this.inviteTimeout && InviteData !== undefined)
         {
             const socket = await this.socketServer.getSocket(InviteData.friendId);
             if (socket !== null)
@@ -81,11 +90,15 @@ export class GameReply {
             const socket2 = await this.socketServer.getSocket(InviteData.id);
             if (socket2 !== null)
                 socket2.send(JSON.stringify({type: 'inviteTimeout'}));
+            this.invitedClients.delete(InviteData.friendId);
             this.inviteMap.delete(InviteData.id);
             return;
         }
         else if (InviteData !== undefined)
+        {
+            this.invitedClients.delete(InviteData.friendId);
             this.inviteMap.delete(InviteData.id);
+        }
     }
 
 
@@ -98,15 +111,11 @@ export class GameReply {
         InviteData.accepted = response;
 
         if (response === false)
-        {
-            this.inviteRefused(id, this.inviteMap.get(id).friendId);
-            return;
-        }
+            await this.inviteRefused(id, this.inviteMap.get(id).friendId);
         else 
-        {
-            this.gameStart(id, this.inviteMap.get(id).friendId, this.inviteMap.get(id).typeOfGame);
-            return;
-        }
+            await this.gameStart(id, this.inviteMap.get(id).friendId, this.inviteMap.get(id).typeOfGame);
+        this.invitedClients.delete(InviteData.friendId);
+        this.inviteMap.delete(InviteData.id);
     }
 
     async sendInGame(id: number)
@@ -133,6 +142,8 @@ export class GameReply {
             this.currentlyInGame(id);
             return;
         }
+        this.invitedClients.delete(id);
+        this.invitedClients.delete(this.inviteMap.get(id).friendId);
         this.inviteMap.delete(id);
         var socket: any = null;
         if (typeOfGame === 1)

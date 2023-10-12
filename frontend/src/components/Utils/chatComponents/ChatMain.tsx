@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { get, post } from "../Request.tsx";
 import Channel from "./Channel.tsx";
 import ChannelList from "../list.tsx";
+import InvitePopup from "../popupComponents/invitePopup/popupInvite.tsx";
 
 function ChatMain({socket}) {
     const [channelList, setChannelList] = useState([]);
@@ -15,6 +16,10 @@ function ChatMain({socket}) {
     const [ChannelPassword, setChannelPassword] = useState("");
     const [popupSelectedList, setPopupSelectedList] = useState("Join");
     const [check, setCheck] = useState(false);
+    const [id, setId] = useState<number>(0);
+    const [userName, setUserName] = useState<string>("");
+    const [typeOfGame, setTypeOfGame] = useState<string>("");
+    const [popupVisible, setPopupVisible] = useState<boolean>(false);
 
     async function leaveChannel() {
         try {
@@ -60,9 +65,24 @@ function ChatMain({socket}) {
                 else if (data.event === "leave" && data.data.user.id === user.id) {
                     setChannelList(channelList.filter((item) => item.id !== data.data.channel.id));
                 }
+                else if (data.type === "invite") {
+                    setId(data.id);
+                    setUserName(data.user);
+                    if (data.typeOfGame === 1)
+                        setTypeOfGame("classic game");
+                    if (data.typeOfGame === 2)
+                        setTypeOfGame("deluxe game");
+                    setPopupVisible(true);
+                }
+                else if (data.type === "inviteTimeout")
+                    setPopupVisible(false);
             }
         }
     }, [socket, channelList, channel, user?.id]);
+
+    const handleClose = () => {
+        setPopupVisible(false);
+    }
 
     // Function to handle button click and update the selected list
     function switchList(listType) {
@@ -178,6 +198,16 @@ function ChatMain({socket}) {
     return (
 
         <div className="baguette">
+            <div className="popup-container">
+            {
+                popupVisible ? (
+                    <InvitePopup
+                        props={{userName, typeOfGame, id}}
+                        handleClose={handleClose}
+                    />
+                ) : null
+            }
+            </div>
             <div className="ChanList">
                 <ul className="ChooseList">
                     {/* 2 buttons to choose channel or friends list */}

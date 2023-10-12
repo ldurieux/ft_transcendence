@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { get, post } from "./Request.tsx";
 import Popup from "./popup.tsx";
+import InvitePopup from "./popupComponents/invitePopup/popupInvite.tsx";
 
 function Friendlist({socket}) {
     const [list, setList] = useState([]);
@@ -10,6 +11,10 @@ function Friendlist({socket}) {
     const [error, setError] = useState(null);
     const [blocked, setBlocked] = useState([]);
     const defaultAvatar = require("./42-logo.png");
+    const [id, setId] = useState<number>(0);
+    const [userName, setUserName] = useState<string>("");
+    const [typeOfGame, setTypeOfGame] = useState<string>("");
+    const [popupVisible, setPopupVisible] = useState<boolean>(false);
 
     const popupCloseHandler = (e) => {
         setShow(e);
@@ -23,6 +28,17 @@ function Friendlist({socket}) {
                 if (data.type === "gameStart") {
                     window.location.href = "/game";
                 }
+                else if (data.type === "invite") {
+                    setId(data.id);
+                    setUserName(data.user);
+                    if (data.typeOfGame === 1)
+                        setTypeOfGame("classic game");
+                    if (data.typeOfGame === 2)
+                        setTypeOfGame("deluxe game");
+                    setPopupVisible(true);
+                }
+                else if (data.type === "inviteTimeout")
+                    setPopupVisible(false);
                 if (data.event === "connect")
                 {
                     //if user connected is one of your friends
@@ -55,6 +71,10 @@ function Friendlist({socket}) {
             }
         }
     }, [list, socket])
+
+    const handleClose = () => {
+        setPopupVisible(false);
+    }
 
     async function RemoveFriend(selectedFriend) {
         try {
@@ -183,6 +203,16 @@ function Friendlist({socket}) {
 
     return (
         <div>
+            <div className="popup-container">
+            {
+                popupVisible ? (
+                    <InvitePopup
+                        props={{userName, typeOfGame, id}}
+                        handleClose={handleClose}
+                    />
+                ) : null
+            }
+            </div>
             <Popup
 
                 title={list[selectedFriendIndex]?.display_name}
