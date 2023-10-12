@@ -54,8 +54,10 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
             return;
         }
 
+        const truc = GameGateway.instance();
+
         this.broadcast(client.data.user, { event: "connect", data: { user: client.data.user } })
-        this.sendInGameList(client.data.user, { event: "inGameList", data: { isInGame: client.data.isInGame }})
+        this.sendInGameList(client.data.user, { event: "inGameList", data: { isInGame: await truc.getPlayerInGame() }})
 
         for (const other of this.server.clients) {
             if (other.data.user == null || other.data.user == undefined)

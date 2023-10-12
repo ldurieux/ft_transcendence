@@ -5,6 +5,7 @@ import {PopupContext} from "./PopupContext.tsx";
 import "../../Styles/messageStyles.css";
 import "../../Styles/PopupStyles.css";
 import Popup from "../popup.tsx";
+import InvitePopup from "../popupComponents/invitePopup/popupInvite.tsx";
 
 function Channel({ socket, channel, currentUser, setChanParams, setChannelList, updateChannelUsers, closeChannel }) {
     const bottomChat = useRef<null | HTMLDivElement>(null);
@@ -20,6 +21,10 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
     const [admins, setAdmins] = useState([]);
     const [username, setUsername] = useState("");
     const defaultAvatar = require("./42-logo.png");
+    const [id, setId] = useState<number>(0);
+    const [userName, setUserName] = useState<string>("");
+    const [typeOfGame, setTypeOfGame] = useState<string>("");
+    const [popupVisible, setPopupVisible] = useState<boolean>(false);
 
     useEffect(() => {
         if (bottomChat.current) {
@@ -56,6 +61,10 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
             }
         })();
     }, [channel, currentUser.id]);
+
+    const handleClose = () => {
+        setPopupVisible(false);
+    }
 
     useEffect(() => {
         if (socket) {
@@ -102,6 +111,19 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                     }
                     );
                 }
+                else if (ret.type === "invite") {
+                    setId(ret.id);
+                    setUserName(ret.user);
+                    if (ret.typeOfGame === 1)
+                        setTypeOfGame("classic game");
+                    if (ret.typeOfGame === 2)
+                        setTypeOfGame("deluxe game");
+                    setPopupVisible(true);
+                }
+                else if (ret.type === "inviteTimeout")
+                    setPopupVisible(false);
+                else if (ret.type === "inviteRefused")
+                    setPopupVisible(false);
             };
         }
     }, [socket, channel, currentUser.id, closeChannel]);
@@ -282,6 +304,16 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
 
     return (
         <div className="channel">
+            <div className="popup-container">
+            {
+                popupVisible ? (
+                    <InvitePopup
+                        props={{userName, typeOfGame, id}}
+                        handleClose={handleClose}
+                    />
+                ) : null
+            }
+            </div>
             <Popup
                 title={selectedUser?.display_name}
                 show={selectedUser !== null}
