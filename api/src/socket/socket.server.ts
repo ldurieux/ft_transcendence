@@ -57,14 +57,14 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
             return;
         }
 
-        this.broadcast(client.data.user, { event: "connect", data: { user: client.data.user } })
-        this.sendInGameList(client.data.user);
+        this.setClientData()
+        this.broadcast(client.data.user, { event: "connect", data: { user: client.data } })
 
         for (const other of this.server.clients) {
             if (other.data.user == null || other.data.user == undefined)
                 continue;
 
-            const raw = JSON.stringify({ event: "connect", data: { user: other.data.user } })
+            const raw = JSON.stringify({ event: "connect", data: { user: other.data } })
             if (other.data.user != client.data.user)
                 client.send(raw)
         }
@@ -82,6 +82,18 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
         }
     }
 
+    sendClientsToAll(from: number) {
+        this.setClientData();
+        for (const client of this.server.clients) {
+            if (client.data.user == null || client.data.user == undefined)
+                continue;
+
+            const raw = JSON.stringify({ event: "connect", data: { user: client.data } })
+            if (client.data.user != from)
+                client.send(raw)
+        }
+    }
+
     async addToInGameList(id: number)
     {
         this.inGameList.add(id);
@@ -92,21 +104,13 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
         this.inGameList.delete(id);
     }
 
-    async sendInGameList(client: number)
+    async setClientData()
     {
-        const raw = JSON.stringify({ event: "inGameList", data: { list: Array.from(this.inGameList) } })
-        const socket: any = await this.getSocket(client);
-        socket.send(raw);
-    }
-
-    async sendToAllClientsInGameList()
-    {
-        const raw = JSON.stringify({ event: "inGameList", data: { list: Array.from(this.inGameList) } })
         for (const client of this.server.clients) {
             if (client.data.user == null || client.data.user == undefined)
                 continue;
 
-            client.send(raw)
+            client.data.isInGame = this.inGameList.has(client.data.user);
         }
     }
 

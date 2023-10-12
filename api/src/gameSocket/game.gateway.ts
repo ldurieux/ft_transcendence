@@ -174,7 +174,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         }
         this.socketServer.addToInGameList(player1);
         this.socketServer.addToInGameList(player2);
-        this.socketServer.sendToAllClientsInGameList();
+        this.socketServer.sendClientsToAll(player1);
+        this.socketServer.sendClientsToAll(player2);
         socket1.send(JSON.stringify({type: 'synchronized', gameId: gameId, myId: player1, opponentId: player2}));
         socket2.send(JSON.stringify({type: 'synchronized', gameId: gameId, myId: player2, opponentId: player1}));
         if (this.gameInstance.get(gameId).typeOfGame === 1)
@@ -350,7 +351,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         }
         this.socketServer.removeFromInGameList(player1);
         this.socketServer.removeFromInGameList(player2);
-        this.socketServer.sendToAllClientsInGameList();
+        this.socketServer.sendClientsToAll(player1);
+        this.socketServer.sendClientsToAll(player2);
         if (disconnect === player1)
         {
             game.setWinner(game.player2.getPlayerId());
@@ -403,7 +405,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         }
         this.socketServer.removeFromInGameList(player1);
         this.socketServer.removeFromInGameList(player2);
-        this.socketServer.sendToAllClientsInGameList();
+        this.socketServer.sendClientsToAll(player1);
+        this.socketServer.sendClientsToAll(player2);
         if (disconnect === player1)
         {
             game.setWinner(game.player2.getPlayerId());
