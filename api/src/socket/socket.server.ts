@@ -57,7 +57,7 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
             return;
         }
 
-        this.setClientData()
+        await this.setClientData()
         this.broadcast(client.data.user, { event: "connect", data: { user: client.data } })
 
         for (const other of this.server.clients) {
@@ -82,13 +82,14 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
         }
     }
 
-    sendClientsToAll(from: number) {
-        this.setClientData();
+    async sendClientsToAll(from: number) {
+        await this.setClientData();
+        const me = await this.getSocket(from);
+        const raw = JSON.stringify({ event: "connect", data: { user: me.data } })
         for (const client of this.server.clients) {
             if (client.data.user == null || client.data.user == undefined)
                 continue;
 
-            const raw = JSON.stringify({ event: "connect", data: { user: client.data } })
             if (client.data.user != from)
                 client.send(raw)
         }
