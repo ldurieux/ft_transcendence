@@ -172,8 +172,9 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
                 socket2.send(JSON.stringify({type: 'Error', Error: 'PlayerNotConnected'}));
             return;
         }
-        this.socketServer.broadcast(player1, {type: 'isInGame', isInGame: true});
-        this.socketServer.broadcast(player2, {type: 'isInGame', isInGame: true});
+        this.socketServer.addToInGameList(player1);
+        this.socketServer.addToInGameList(player2);
+        this.socketServer.sendToAllClientsInGameList();
         socket1.send(JSON.stringify({type: 'synchronized', gameId: gameId, myId: player1, opponentId: player2}));
         socket2.send(JSON.stringify({type: 'synchronized', gameId: gameId, myId: player2, opponentId: player1}));
         if (this.gameInstance.get(gameId).typeOfGame === 1)
@@ -347,8 +348,9 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
             if (disconnect)
                 gameContinue = false;
         }
-        this.socketServer.broadcast(player1, {type: 'isInGame', isInGame: false});
-        this.socketServer.broadcast(player2, {type: 'isInGame', isInGame: false});
+        this.socketServer.removeFromInGameList(player1);
+        this.socketServer.removeFromInGameList(player2);
+        this.socketServer.sendToAllClientsInGameList();
         if (disconnect === player1)
         {
             game.setWinner(game.player2.getPlayerId());
@@ -399,8 +401,9 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
             if (disconnect)
                 gameContinue = false;
         }
-        this.socketServer.broadcast(player1, {type: 'isInGame', isInGame: false});
-        this.socketServer.broadcast(player2, {type: 'isInGame', isInGame: false});
+        this.socketServer.removeFromInGameList(player1);
+        this.socketServer.removeFromInGameList(player2);
+        this.socketServer.sendToAllClientsInGameList();
         if (disconnect === player1)
         {
             game.setWinner(game.player2.getPlayerId());

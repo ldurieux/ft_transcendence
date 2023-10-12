@@ -3,16 +3,19 @@ import { OnGatewayConnection, OnGatewayDisconnect, MessageBody, OnGatewayInit ,S
 import { JwtService } from '@nestjs/jwt';
 import { Injectable } from '@nestjs/common';
 
-import { GameGateway } from "src/gameSocket/game.gateway";
-
 @Injectable()
 @WebSocketGateway({ 
     transports: ['websocket']
 })
 export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
+
+    private inGameList: Set<number>;
+
     constructor(
         private jwtService: JwtService,
-    ) {}
+    ) {
+        this.inGameList = new Set<number>();
+    }
 
     @WebSocketServer() server: WebSocket;
     static serverRef;
@@ -54,10 +57,8 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
             return;
         }
 
-        const truc = GameGateway.instance();
-
         this.broadcast(client.data.user, { event: "connect", data: { user: client.data.user } })
-        this.sendInGameList(client.data.user, { event: "inGameList", data: { isInGame: await truc.getPlayerInGame() }})
+        this.sendInGameList(client.data.user);
 
         for (const other of this.server.clients) {
             if (other.data.user == null || other.data.user == undefined)
@@ -81,10 +82,32 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
         }
     }
 
-    async sendInGameList(id: number, data: any) {
-        const socket = await this.getSocket(id);
-        if (socket)
-            socket.send(JSON.stringify(data));
+    async addToInGameList(id: number)
+    {
+        this.inGameList.add(id);
+    }
+
+    async removeFromInGameList(id: number)
+    {
+        this.inGameList.delete(id);
+    }
+
+    async sendInGameList(client: number)
+    {
+        const raw = JSON.stringify({ event: "inGameList", data: { list: Array.from(this.inGameList) } })
+        const socket: any = await this.getSocket(client);
+        socket.send(raw);
+    }
+
+    async sendToAllClientsInGameList()
+    {
+        const raw = JSON.stringify({ event: "inGameList", data: { list: Array.from(this.inGameList) } })
+        for (const client of this.server.clients) {
+            if (client.data.user == null || client.data.user == undefined)
+                continue;
+
+            client.send(raw)
+        }
     }
 
     async handleDisconnect(client: WebSocket) {
