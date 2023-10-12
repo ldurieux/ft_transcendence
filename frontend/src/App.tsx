@@ -49,6 +49,8 @@ function App() {
                 }
                 else if (data.type === "inviteTimeout")
                     setPopupVisible(false);
+                else if (data.type === "inviteRefused")
+                    setPopupVisible(false);
             }
         }
     },[socket]);

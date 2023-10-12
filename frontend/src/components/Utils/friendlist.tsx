@@ -39,6 +39,8 @@ function Friendlist({socket}) {
                 }
                 else if (data.type === "inviteTimeout")
                     setPopupVisible(false);
+                else if (data.type === "inviteRefused")
+                    setPopupVisible(false);
                 if (data.event === "connect")
                 {
                     //if user connected is one of your friends
@@ -67,6 +69,9 @@ function Friendlist({socket}) {
                             return item;
                         }));
                     }
+                }
+                else if (data.event === "isInGame") {
+                    console.log(data);
                 }
             }
         }

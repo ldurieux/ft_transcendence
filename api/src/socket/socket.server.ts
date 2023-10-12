@@ -3,6 +3,8 @@ import { OnGatewayConnection, OnGatewayDisconnect, MessageBody, OnGatewayInit ,S
 import { JwtService } from '@nestjs/jwt';
 import { Injectable } from '@nestjs/common';
 
+import { GameGateway } from "src/gameSocket/game.gateway";
+
 @Injectable()
 @WebSocketGateway({ 
     transports: ['websocket']
@@ -21,6 +23,7 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
 
     async handleConnection(client: WebSocket) {
         client.data = {}
+        client.data.isInGame = false;
     }
     
     @SubscribeMessage('auth')
@@ -52,6 +55,7 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
         }
 
         this.broadcast(client.data.user, { event: "connect", data: { user: client.data.user } })
+        this.sendInGameList(client.data.user, { event: "inGameList", data: { isInGame: client.data.isInGame }})
 
         for (const other of this.server.clients) {
             if (other.data.user == null || other.data.user == undefined)
@@ -63,7 +67,7 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
         }
     }
 
-    async broadcast(from: number, data: object) {
+    async broadcast(from: number, data: any) {
         const raw = JSON.stringify(data)
 
         for (const client of this.server.clients) {
@@ -73,6 +77,12 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
             if (client.data.user != from)
                 client.send(raw)
         }
+    }
+
+    async sendInGameList(id: number, data: any) {
+        const socket = await this.getSocket(id);
+        if (socket)
+            socket.send(JSON.stringify(data));
     }
 
     async handleDisconnect(client: WebSocket) {

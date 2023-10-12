@@ -61,7 +61,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         private userRepository: Repository<User>,
         private jwtService: JwtService,
         private readonly userService: UserService,
-        private readonly socketServer: SocketServer,
+        private readonly socketServer: SocketServer
     ) {
         this.gameInstance = new Map<number, gameInterface.Game>();
         this.playerInGame = new Set<number>();
@@ -70,6 +70,13 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     @WebSocketServer() server: WebSocket;
     static serverRef;
 
+    static instance() {
+        return this.serverRef;
+    }
+
+    async getPlayerInGame(): Promise<Set<number>> {
+        return this.playerInGame;
+    }
 
     async afterInit(server: WebSocket) {
     }
@@ -142,6 +149,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
     async synchronizedPlayer(player1: number, player2: number, gameId: number)
     {
+        console.log("synchronizedPlayer");
         let nSync = 0;
         let socket1: WebSocket = null;
         let socket2: WebSocket = null
@@ -164,8 +172,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
                 socket2.send(JSON.stringify({type: 'Error', Error: 'PlayerNotConnected'}));
             return;
         }
-        this.socketServer.broadcast(player1, {event: "isInGame", data: {user: player1}})
-        this.socketServer.broadcast(player2, {event: "isInGame", data: {user: player2}})
+        this.socketServer.broadcast(player1, {type: 'isInGame', isInGame: true});
+        this.socketServer.broadcast(player2, {type: 'isInGame', isInGame: true});
         socket1.send(JSON.stringify({type: 'synchronized', gameId: gameId, myId: player1, opponentId: player2}));
         socket2.send(JSON.stringify({type: 'synchronized', gameId: gameId, myId: player2, opponentId: player1}));
         if (this.gameInstance.get(gameId).typeOfGame === 1)
@@ -299,11 +307,16 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
         this.playerInGame.delete(game.player1.getPlayerId());
         this.playerInGame.delete(game.player2.getPlayerId());
-        this.socketServer.broadcast(user1.id, {event: "isNotInGame", data: {user: user1.id}});
-        this.socketServer.broadcast(user2.id, {event: "isNotInGame", data: {user: user2.id}});
 
         game.destroyGame();
         this.gameInstance.delete(gameId);
+    }
+
+    async changePlayerStatus(playerId: number, status: boolean) {
+        if (status === true)
+            this.playerInGame.add(playerId);
+        else
+            this.playerInGame.delete(playerId);
     }
 
     async classicGameRoutine(player1:number, player2:number, gameId: number)
@@ -334,6 +347,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
             if (disconnect)
                 gameContinue = false;
         }
+        this.socketServer.broadcast(player1, {type: 'isInGame', isInGame: false});
+        this.socketServer.broadcast(player2, {type: 'isInGame', isInGame: false});
         if (disconnect === player1)
         {
             game.setWinner(game.player2.getPlayerId());
@@ -384,6 +399,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
             if (disconnect)
                 gameContinue = false;
         }
+        this.socketServer.broadcast(player1, {type: 'isInGame', isInGame: false});
+        this.socketServer.broadcast(player2, {type: 'isInGame', isInGame: false});
         if (disconnect === player1)
         {
             game.setWinner(game.player2.getPlayerId());

@@ -76,6 +76,8 @@ function ChatMain({socket}) {
                 }
                 else if (data.type === "inviteTimeout")
                     setPopupVisible(false);
+                else if (data.type === "inviteRefused")
+                    setPopupVisible(false);
             }
         }
     }, [socket, channelList, channel, user?.id]);
