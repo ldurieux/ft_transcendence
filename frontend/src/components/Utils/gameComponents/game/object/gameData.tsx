@@ -19,12 +19,14 @@ export class Ball {
     }
 
     drawBall(ball: HTMLElement, cssElement: HTMLElement, screen: Screen) {
-            const left = (this.x - this.radius) * cssElement.offsetWidth / screen.width;
-            let top = ((screen.height - this.y) * (cssElement.offsetHeight - this.radius) / screen.height);
-            ball.style.left = `${left}px`;
-            ball.style.top = `${top}px`;
-            ball.style.width = `${this.radius}px`;
-            ball.style.height = `${this.radius}px`;
+        const left = (this.x) * cssElement.offsetWidth / screen.width;
+        const top = ((screen.height - this.y) * (cssElement.offsetHeight) / screen.height);
+        const width = this.radius * cssElement.offsetWidth / screen.width;
+        const height = this.radius * cssElement.offsetHeight / screen.height;
+        ball.style.left = `${left}px`;
+        ball.style.top = `${top}px`;
+        ball.style.width = `${width}px`;
+        ball.style.height = `${height}px`;
     }
 
     undrawBall(ball: HTMLElement) {
@@ -68,14 +70,10 @@ export class Player {
         this.score = score;
     }
 
-    drawPaddle(cssElement: HTMLElement, screen: Screen, ball: Ball) {
-            var left:number;
+    drawPaddle(cssElement: HTMLElement, screen: Screen) {
             const width:number = this.width * cssElement.offsetWidth / screen.width;
-            if (this.x <= screen.width / 2)
-                left = (this.x * cssElement.offsetWidth / screen.width) - width;
-            else
-                left = (this.x * cssElement.offsetWidth / screen.width);
-            const top:number = (cssElement.offsetHeight - this.y * cssElement.offsetHeight / screen.height) - ball.radius / 3;
+            const left = (this.x * cssElement.offsetWidth / screen.width);
+            const top:number = (cssElement.offsetHeight - this.y * cssElement.offsetHeight / screen.height);
             const height:number = this.height * cssElement.offsetHeight / screen.height;
             this.paddle.style.left = `${left}px`;
             this.paddle.style.top = `${top}px`;

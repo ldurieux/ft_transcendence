@@ -80,7 +80,7 @@ export default function GameComponent() {
             if (ball && cssElement)
             {
                 players.forEach((player, key) => {
-                    player.drawPaddle(cssElement, screen, ballData);
+                    player.drawPaddle(cssElement, screen);
                     ballData.drawBall(ball, cssElement, screen);
                 });
             }
@@ -89,7 +89,7 @@ export default function GameComponent() {
         window.addEventListener('resize', onResize, false);
         window.addEventListener('keydown', onKeydown, false);
         window.addEventListener('keyup', onKeyup, false);
-    }, [MyId, gameSocket, players, screen, ballData, gameId]);
+    }, []);
 
     useEffect(() => {
         const cssElement = document.getElementById("game-board");
@@ -167,8 +167,8 @@ export default function GameComponent() {
                         data.paddle2.width,
                         data.paddle2.height
                     );
-                    player1.drawPaddle(cssElement, screen, ballData);
-                    player2.drawPaddle(cssElement, screen, ballData);
+                    player1.drawPaddle(cssElement, screen);
+                    player2.drawPaddle(cssElement, screen);
                     ballData.drawBall(ball, cssElement, screen);
                 }
             }
@@ -203,7 +203,7 @@ export default function GameComponent() {
                     screen.width = data.screen.width;
                     screen.height = data.screen.height;
                     if (cssElement)
-                        player.drawPaddle(cssElement, screen, ballData);
+                        player.drawPaddle(cssElement, screen);
                 }
             }
 

@@ -174,6 +174,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
             this.deluxeGameRoutine(player1, player2, gameId);
     }
 
+
     @UsePipes(new ZodValidationPipe(movePaddleSchema))
     @SubscribeMessage('movePaddle')
     async movePaddle(

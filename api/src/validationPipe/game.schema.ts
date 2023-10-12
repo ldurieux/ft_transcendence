@@ -3,8 +3,6 @@ import { z } from "zod";
 export const gameIdSchema = z
 .number()
 .positive()
-.finite()
-.safe()
 
 export const playerSchema = z
 .number()
@@ -14,7 +12,6 @@ export const playerSchema = z
 
 export const directionSchema = z
 .number()
-.finite()
 .safe()
 
 export const movePaddleSchema = z

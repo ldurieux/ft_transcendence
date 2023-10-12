@@ -150,7 +150,7 @@ export class Player {
     }
 
     isInsidePaddle(x: number, y: number, ballRadius: number) {
-        if (x >= this.paddle.x && x <= this.paddle.x + this.paddle.width && y <= this.paddle.y && y + ballRadius >= this.paddle.y - this.paddle.height)
+        if (x >= this.paddle.x && x <= this.paddle.x + this.paddle.width && y - ballRadius <= this.paddle.y && y + ballRadius >= this.paddle.y - this.paddle.height)
             return ((y - (this.paddle.y - this.paddle.height / 2)) / (this.paddle.height / 2));
         return (null);
     }
@@ -259,7 +259,7 @@ export class Game {
         if (socket2 !== null)
             socket2.send(JSON.stringify({type: 'updateScore', score2: this.player2.getScore(), score1: this.player1.getScore()}));
 
-        if (player.getScore() >= 10)
+        if (player.getScore() >= 100)
         {
             player.setWinner(true);
             return (false);
