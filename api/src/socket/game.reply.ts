@@ -5,7 +5,6 @@ import { Injectable } from '@nestjs/common';
 import { UserService } from "src/user/user.service";
 
 import { GameGateway } from "src/gameSocket/game.gateway";
-import { In } from "typeorm";
 
 @WebSocketGateway()
 @Injectable()
@@ -18,7 +17,7 @@ export class GameReply {
     private DeluxeMatchMaikng: Array<number>;
     private ClassicMatchMaking: Array<number>;
     private inviteMap: Map<number, InviteData>;
-    private invitedClients: Set<number>;
+    private invitedClients: Map<number, number>;
     private readonly inviteTimeout: number = 30;
 
 
@@ -30,6 +29,7 @@ export class GameReply {
         this.DeluxeMatchMaikng = new Array<number>();
         this.ClassicMatchMaking = new Array<number>();
         this.inviteMap = new Map<number, InviteData>();
+        this.invitedClients = new Map<number, number>();
     }
 
     async sendNotConnected(id: number)
@@ -68,7 +68,7 @@ export class GameReply {
         if (socket !== null)
             socket.send(JSON.stringify({type: 'invite', user: (await this.userService.getUser(id)).display_name, typeOfGame: typeOfGame, id: id}));
         this.inviteMap.set(id, {friendId: friendId, id: id, response: false, typeOfGame: typeOfGame, accepted: false});
-        this.invitedClients.add(friendId);
+        this.invitedClients.set(friendId, id);
         this.inviteWaiting(id);
     }
 
@@ -143,6 +143,12 @@ export class GameReply {
             return;
         }
         var socket: any = null;
+        this.inviteResponse(id, false);
+        if (this.invitedClients.has(id))
+        {
+            const truc = this.invitedClients.get(id);
+            this.inviteResponse(truc, false);
+        }
         if (typeOfGame === 1)
         {
             if (this.ClassicMatchMaking.length)
