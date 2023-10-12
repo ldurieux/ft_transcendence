@@ -142,9 +142,6 @@ export class GameReply {
             this.currentlyInGame(id);
             return;
         }
-        this.invitedClients.delete(id);
-        this.invitedClients.delete(this.inviteMap.get(id).friendId);
-        this.inviteMap.delete(id);
         var socket: any = null;
         if (typeOfGame === 1)
         {
