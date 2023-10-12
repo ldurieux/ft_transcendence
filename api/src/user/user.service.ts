@@ -90,7 +90,7 @@ export class UserService {
 
         for (const client of websocket.clients) {
             if (client.data.user == userId && client.data.isInGame)
-                return 1;
+                return 3;
         }
         for (const client of websocket.clients) {
             if (client.data.user == userId)
