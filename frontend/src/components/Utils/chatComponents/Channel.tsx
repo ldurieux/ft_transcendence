@@ -74,7 +74,7 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                     //remove the user who left from the channel
                     setUsers(prev => {
                         const updatedUsers = { ...prev };
-                        delete updatedUsers[ret?.data.user];
+                        delete updatedUsers[ret.data.user];
                         return updatedUsers;
                     });
                     if (ret?.data.user === currentUser.id)
@@ -84,7 +84,7 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                     //add the user who joined to the channel
                     setUsers(prev => {
                         const updatedUsers = { ...prev };
-                        updatedUsers[ret?.data.user.id] = ret?.data.user;
+                        updatedUsers[ret.data.user.id] = ret?.data.user;
                         return updatedUsers;
                     });
                 }
@@ -97,7 +97,7 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                     //update user status to online in userlist
                     setUsers(prev => {
                         const updatedUsers = { ...prev };
-                        updatedUsers[ret?.data.user].status = "online";
+                        updatedUsers[ret.data.user].status = "online";
                         return updatedUsers;
                     }
                     );
@@ -106,7 +106,7 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                     //update user status to offline in userlist
                     setUsers(prev => {
                         const updatedUsers = { ...prev };
-                        updatedUsers[ret?.data.user].status = "offline";
+                        updatedUsers[ret.data.user].status = "offline";
                         return updatedUsers;
                     }
                     );
