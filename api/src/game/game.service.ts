@@ -23,7 +23,7 @@ export class Ball {
         this.y = screen.height / 2;
         this.radius = 13;
         this.speed = 8;
-        this.maxSpeed = 11;
+        this.maxSpeed = 15;
         const rand = Math.floor(Math.random() * 3);
         if (rand === 0)
             this.vectorRadians = Math.PI / 4;
@@ -33,6 +33,10 @@ export class Ball {
             this.vectorRadians = Math.PI * 5 / 4;
         else 
             this.vectorRadians = Math.PI * 7 / 4;
+    }
+
+    setBallX(x: number) {
+        this.x = x;
     }
 
     updateSpeed() {
@@ -87,7 +91,7 @@ export class Paddle {
     constructor() {
         this.y = 0;
         this.height = 200
-        this.width = 10;
+        this.width = 20;
         this.paddleSpeed = 20;
         this.movingPaddle = true;
     }
@@ -289,7 +293,12 @@ export class Game {
         {
             var angle = colision.relativePos * (Math.PI * 5 / 12);
             if (colision.player === 1)
+            {
+                this.ball.setBallX(this.player1.paddle.getPaddleData().x - this.ball.getBallData().radius);
                 angle = Math.PI - angle;
+            }
+            if (colision.player === 2)
+                this.ball.setBallX(this.player2.paddle.getPaddleData().x + this.ball.getBallData().radius);
             this.ball.setVectorRadians(angle);
             this.ball.updateSpeed();
             this.collision = true;
