@@ -60,7 +60,7 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                 return error;
             }
         })();
-    }, [channel, currentUser.id]);
+    }, []);
 
     const handleClose = () => {
         setPopupVisible(false);
@@ -70,21 +70,21 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
         if (socket) {
             socket.onmessage = (event) => {
                 const ret = JSON.parse(event.data)
-                if (ret.event === "leave" && ret.data.channel === channel.id) {
+                if (ret?.event === "leave" && ret?.data.channel === channel.id) {
                     //remove the user who left from the channel
                     setUsers(prev => {
                         const updatedUsers = { ...prev };
-                        delete updatedUsers[ret.data.user];
+                        delete updatedUsers[ret?.data.user];
                         return updatedUsers;
                     });
-                    if (ret.data.user === currentUser.id)
+                    if (ret?.data.user === currentUser.id)
                         closeChannel();
                 }
-                if (ret.event === "join" && ret.data.channel === channel.id) {
+                if (ret?.event === "join" && ret?.data.channel === channel.id) {
                     //add the user who joined to the channel
                     setUsers(prev => {
                         const updatedUsers = { ...prev };
-                        updatedUsers[ret.data.user.id] = ret.data.user;
+                        updatedUsers[ret?.data.user.id] = ret?.data.user;
                         return updatedUsers;
                     });
                 }
@@ -97,7 +97,7 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                     //update user status to online in userlist
                     setUsers(prev => {
                         const updatedUsers = { ...prev };
-                        updatedUsers[ret.data.user].status = "online";
+                        updatedUsers[ret?.data.user].status = "online";
                         return updatedUsers;
                     }
                     );
@@ -106,7 +106,7 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                     //update user status to offline in userlist
                     setUsers(prev => {
                         const updatedUsers = { ...prev };
-                        updatedUsers[ret.data.user].status = "offline";
+                        updatedUsers[ret?.data.user].status = "offline";
                         return updatedUsers;
                     }
                     );
@@ -380,16 +380,16 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                                 item.owner?.id === currentUser?.id ?
                                 <div className="message-content-user">
                                 <div className="message-header">
-                                    <div className="message-username">{users[item.owner.id].display_name}</div>
+                                    <div className="message-username">{users[item?.owner.id].display_name}</div>
                                     {/*<div className="message-time">{item.created_at}</div>*/}
                                 </div>
-                                <div className="message-body">{item.text}</div>
+                                <div className="message-body">{item?.text}</div>
                                 </div>
                                 :
                                 <div className="message-content-other">
                                     <div className="message-header">
                                         <div className="message-username"
-                                            onClick={() => setSelectedUser(item.owner)}
+                                            onClick={() => setSelectedUser(item?.owner)}
                                         >{item.owner.display_name}</div>
                                         {/*<div className="message-time">{item.created_at}</div>*/}
                                     </div>
