@@ -60,7 +60,7 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                 return error;
             }
         })();
-    }, []);
+    }, [channel, currentUser.id]);
 
     const handleClose = () => {
         setPopupVisible(false);
@@ -268,7 +268,7 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
     async function inviteUser(channel) {
         try {
             const ret = await post(`channel/add`, { username: username, channelId: channel.id });
-            if (ret?.status === "added") {
+            if (ret.status === "added") {
                 setUsername("");
             }
         }

@@ -51,7 +51,7 @@ function ChatMain({socket}) {
             } catch (error) {
             }
         })();
-    }, []);
+    }, [channel]);
 
     // useEffect to get the list of channels and friends
     useEffect(() => {
