@@ -304,16 +304,16 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
 
     return (
         <div className="channel">
-            <div className="popup-container">
             {
-                popupVisible ? (
-                    <InvitePopup
-                        props={{userName, typeOfGame, id}}
-                        handleClose={handleClose}
-                    />
-                ) : null
+                    popupVisible ? (
+                        <div className="popup-container">
+                            <InvitePopup
+                                props={{userName, typeOfGame, id}}
+                                handleClose={handleClose}
+                            />
+                        </div>
+                    ) : null
             }
-            </div>
             <Popup
                 title={selectedUser?.display_name}
                 show={selectedUser !== null}

@@ -202,16 +202,16 @@ function ChatMain({socket}) {
     return (
 
         <div className="baguette">
-            <div className="popup-container">
             {
-                popupVisible ? (
-                    <InvitePopup
-                        props={{userName, typeOfGame, id}}
-                        handleClose={handleClose}
-                    />
-                ) : null
+                    popupVisible ? (
+                        <div className="popup-container">
+                            <InvitePopup
+                                props={{userName, typeOfGame, id}}
+                                handleClose={handleClose}
+                            />
+                        </div>
+                    ) : null
             }
-            </div>
             <div className="ChanList">
                 <ul className="ChooseList">
                     {/* 2 buttons to choose channel or friends list */}

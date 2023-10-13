@@ -60,16 +60,16 @@ function App() {
 
     return (
         <div className="App-header">
-            <div className="popup-container">
             {
                 popupVisible ? (
-                    <InvitePopup
-                        props={{userName, typeOfGame, id}}
-                        handleClose={handleClose}
-                    />
+                    <div className="popup-container">
+                        <InvitePopup
+                            props={{userName, typeOfGame, id}}
+                            handleClose={handleClose}
+                        />
+                    </div>
                 ) : null
             }
-            </div>
             <PopupProvider>
                 <div className="App">
                     <BrowserRouter>

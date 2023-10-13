@@ -3,17 +3,34 @@ import { OnGatewayConnection, OnGatewayDisconnect, MessageBody, OnGatewayInit ,S
 import { JwtService } from '@nestjs/jwt';
 import { Injectable } from '@nestjs/common';
 
+export interface InviteData {
+    friendId: number;
+    id: number;
+    response: boolean;
+    typeOfGame: number;
+    accepted: boolean;
+}
+
 @Injectable()
 @WebSocketGateway({ 
     transports: ['websocket']
 })
 export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 
+    public DeluxeMatchMaikng: Array<number>;
+    public ClassicMatchMaking: Array<number>;
+    public inviteMap: Map<number, InviteData>;
+    public invitedClients: Map<number, number>;
+
     private inGameList: Set<number>;
 
     constructor(
         private jwtService: JwtService,
     ) {
+        this.DeluxeMatchMaikng = new Array<number>();
+        this.ClassicMatchMaking = new Array<number>();
+        this.inviteMap = new Map<number, InviteData>();
+        this.invitedClients = new Map<number, number>();
         this.inGameList = new Set<number>();
     }
 
@@ -57,6 +74,12 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
             return;
         }
 
+        if (this.invitedClients.has(client.data.user))
+        {
+            const truc = this.invitedClients.get(client.data.user);
+            const socket = await this.getSocket(client.data.user);
+            socket.send(JSON.stringify({type: 'invite', user: (this.inviteMap.get(truc))}));
+        }
         await this.setClientData()
         this.broadcast(client.data.user, { event: "connect", data: { user: client.data } })
 
