@@ -23,7 +23,7 @@ export class Ball {
         this.y = screen.height / 2;
         this.radius = 13;
         this.speed = 8;
-        this.maxSpeed = 14;
+        this.maxSpeed = 11;
         const rand = Math.floor(Math.random() * 3);
         if (rand === 0)
             this.vectorRadians = Math.PI / 4;
@@ -37,7 +37,7 @@ export class Ball {
 
     updateSpeed() {
         if (this.speed < this.maxSpeed)
-            this.speed = this.speed + 2;
+            this.speed = this.speed + 1;
     }
 
     getBallData() {
@@ -154,6 +154,7 @@ export class Player {
             return ((y - (this.paddle.y - this.paddle.height / 2)) / (this.paddle.height / 2));
         return (null);
     }
+
 
     async movePaddle(direction: number, socket1: any, socket2: any, screen: Screen) {
         const move = this.paddle.paddleSpeed * direction;
