@@ -39,7 +39,6 @@ function ChatMain({socket}) {
         }
     }
 
-    // useEffect to get the list of channels and friends
     useEffect(() => {
         (async () => {
             try {
@@ -49,10 +48,13 @@ function ChatMain({socket}) {
                 if (channels) {
                     setChannelList(channels);
                 }
-            }
-            catch (error) {
+            } catch (error) {
             }
         })();
+    }, []);
+
+    // useEffect to get the list of channels and friends
+    useEffect(() => {
         if (socket && !channel) {
             socket.onmessage = (e) => {
                 const data = JSON.parse(e.data);
