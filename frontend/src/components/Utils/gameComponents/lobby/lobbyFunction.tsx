@@ -22,9 +22,10 @@ export const matchMaking = (typeOfGame) => {
     matchMakingRequest(typeOfGame);
 }
 
-function matchMakingRequest(typeOfGame)
+async function matchMakingRequest(typeOfGame): Promise<boolean>
 {
-    post('game/MatchMaking', {typeOfGame});
+    const response = await post('game/MatchMaking', {typeOfGame});
+    return (response);
 }
 
 export const isInGame = () => {

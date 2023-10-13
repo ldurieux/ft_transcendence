@@ -19,7 +19,7 @@ export class GameControler
 
     @UseGuards(AuthGuard)
     @Post('invite')
-    async gameInvite(@Request() req)
+    async gameInvite(@Request() req): Promise<boolean>
     {
         const id = req['user'];
         const typeOfGame:number = req.body.typeOfGame;
@@ -30,11 +30,12 @@ export class GameControler
         if (typeof typeOfGame !== 'number')
             throw new HttpException("", HttpStatus.BAD_REQUEST);
         this.gameReply.invite(id, friendId, typeOfGame);
+        return (true);
     }
 
     @UseGuards(AuthGuard)
     @Post('inviteResponse')
-    async gameInviteResponse(@Request() req)
+    async gameInviteResponse(@Request() req): Promise<boolean>
     {
         const id:number = req.body.inviteId;
         const response:boolean = req.body.response;
@@ -44,17 +45,19 @@ export class GameControler
         if (typeof response !== 'boolean')
             throw new HttpException("", HttpStatus.BAD_REQUEST);
         this.gameReply.inviteResponse(id, response);
+        return (true);
     }
 
     @UseGuards(AuthGuard)
     @Post('MatchMaking')
-    async gameMatchMaking(@Request() req) {
+    async gameMatchMaking(@Request() req): Promise<boolean> {
         const id = req['user'];
         const typeOfGame:number = req.body.typeOfGame;
 
         if (typeof typeOfGame !== 'number')
             throw new HttpException("", HttpStatus.BAD_REQUEST);
         this.gameReply.MatchMaking(id, typeOfGame);
+        return (true);
     }
 
     @UseGuards(AuthGuard)
