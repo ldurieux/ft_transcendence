@@ -6,6 +6,7 @@ import { Injectable } from '@nestjs/common';
 export interface InviteData {
     friendId: number;
     id: number;
+    name: string;
     response: boolean;
     typeOfGame: number;
     accepted: boolean;
@@ -78,7 +79,8 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
         {
             const truc = this.invitedClients.get(client.data.user);
             const socket = await this.getSocket(client.data.user);
-            socket.send(JSON.stringify({type: 'invite', user: (this.inviteMap.get(truc))}));
+            const truc1 = this.inviteMap.get(truc);
+            socket.send(JSON.stringify({type: 'invite', user: (truc1.name, truc1.typeOfGame, truc1.id)}));
         }
         await this.setClientData()
         this.broadcast(client.data.user, { event: "connect", data: { user: client.data } })

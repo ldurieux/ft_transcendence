@@ -69,7 +69,7 @@ export class GameReply {
         this.socketServer.inviteMap.delete(id);
         if (socket !== null)
             socket.send(JSON.stringify({type: 'invite', user: (await this.userService.getUser(id)).display_name, typeOfGame: typeOfGame, id: id}));
-        this.socketServer.inviteMap.set(id, {friendId: friendId, id: id, response: false, typeOfGame: typeOfGame, accepted: false});
+        this.socketServer.inviteMap.set(id, {friendId: friendId, id: id, name: (await this.userService.getUser(id)).display_name,response: false, typeOfGame: typeOfGame, accepted: false});
         this.socketServer.invitedClients.set(friendId, id);
         this.inviteWaiting(id);
     }
