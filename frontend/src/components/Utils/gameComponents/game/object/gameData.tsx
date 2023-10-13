@@ -19,8 +19,8 @@ export class Ball {
     }
 
     drawBall(ball: HTMLElement, cssElement: HTMLElement, screen: Screen) {
-        const left = (this.x) * cssElement.offsetWidth / screen.width;
-        const top = ((screen.height - this.y) * (cssElement.offsetHeight) / screen.height);
+        const left = (this.x - this.radius / 2) * (cssElement.offsetWidth / screen.width);
+        const top = ((screen.height - this.y - this.radius / 2) * (cssElement.offsetHeight) / screen.height);
         const width = this.radius * cssElement.offsetWidth / screen.width;
         const height = this.radius * cssElement.offsetHeight / screen.height;
         ball.style.left = `${left}px`;

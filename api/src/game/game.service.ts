@@ -21,9 +21,9 @@ export class Ball {
     ballInit(screen: Screen) {
         this.x = screen.width / 2;
         this.y = screen.height / 2;
-        this.radius = 10;
-        this.speed = 7;
-        this.maxSpeed = 11;
+        this.radius = 13;
+        this.speed = 8;
+        this.maxSpeed = 14;
         const rand = Math.floor(Math.random() * 3);
         if (rand === 0)
             this.vectorRadians = Math.PI / 4;
@@ -37,7 +37,7 @@ export class Ball {
 
     updateSpeed() {
         if (this.speed < this.maxSpeed)
-            this.speed = this.speed + 1;
+            this.speed = this.speed + 2;
     }
 
     getBallData() {
