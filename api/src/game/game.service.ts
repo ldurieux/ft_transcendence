@@ -114,6 +114,7 @@ export class Player {
     private playerId: number;
     public paddle: Paddle;
     private winner: boolean;
+    private isMoving: boolean;
 
     constructor() {
         this.score = 0;
@@ -161,6 +162,8 @@ export class Player {
 
 
     async movePaddle(direction: number, socket1: any, socket2: any, screen: Screen) {
+        if (this.paddle.movingPaddle === true)
+            return;
         const move = this.paddle.paddleSpeed * direction;
         this.paddle.movingPaddle = true;
         while (this.paddle.movingPaddle)

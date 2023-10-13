@@ -39,37 +39,29 @@ export default function GameComponent() {
     }, [gameSocket]);
 
     useEffect(() => {
-        let alreadyPressed = {
-            up: false,
-            down: false
-        };
         const onKeydown = (e) => {
-            if (e.key === 'ArrowDown' && !alreadyPressed.down && !alreadyPressed.up)
+            if (e.key === 'ArrowDown')
             {
                 const data = { gameId: gameId, player: MyId, direction: -1};
                 gameSocket.send(JSON.stringify({ event: 'movePaddle', data: data}));
-                alreadyPressed.down = true;
             }
-            else if (e.key === 'ArrowUp' && !alreadyPressed.up && !alreadyPressed.down)
+            else if (e.key === 'ArrowUp')
             {
                 const data = { gameId: gameId, player: MyId, direction: 1};
                 gameSocket.send(JSON.stringify({ event: 'movePaddle', data: data}));
-                alreadyPressed.up = true;
             }
         }
     
         const onKeyup = (e) => {
-            if (e.key === 'ArrowDown' && alreadyPressed.down && !alreadyPressed.up)
+            if (e.key === 'ArrowDown')
             {
                 const data = { gameId: gameId, player: MyId};
                 gameSocket.send(JSON.stringify({ event: 'stopPaddle', data: data}));
-                alreadyPressed.down = false;
             }
-            else if (e.key === 'ArrowUp' && alreadyPressed.up && !alreadyPressed.down)
+            else if (e.key === 'ArrowUp')
             {
                 const data = { gameId: gameId, player: MyId};
                 gameSocket.send(JSON.stringify({ event: 'stopPaddle', data: data}));
-                alreadyPressed.up = false;
             }
         }
 
