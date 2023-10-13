@@ -3,7 +3,6 @@ body {
 }
 
 .ProfileHeader {
-    height: 100px;
     color: white;
     display: flex;
     justify-content: center;
@@ -13,6 +12,8 @@ body {
 
 .ProfileBody {
     display: flex;
+    overflow: scroll;
+    max-height: 100vh;
 }
 
 .ProfileBody h2 {
@@ -359,11 +360,28 @@ body {
 }
 
 @media screen and (max-width: 600px) {
+    .Profile {
+        margin-left: 0 !important;
+    }
     .ProfileHeader {
         display: none;
+        margin-left: 0 !important;
     }
     .ProfileBody {
-        flex-direction: column;
+        /*flex-direction: column;*/
+        margin-left: 0 !important;
+    }
+
+    .Left .User {
+        font-size: 20px;
+    }
+
+    .Left .Nickname {
+        font-size: 15px;
+    }
+
+    .Left .Username input {
+        width: 100px;
     }
 
     .Left,
@@ -376,8 +394,24 @@ body {
     }
 
     .Left .Avatar img {
-        width: 200px;
-        height: 200px;
+        width: 100px;
+        height: 100px;
+    }
+
+    .Right h2 {
+        font-size: 20px;
+    }
+
+    .Right input {
+        width: 100px;
+    }
+
+    .Right ul {
+        list-style-type: none;
+    }
+    .Right li {
+        /*padding: 5px;*/
+        font-size: 15px;
     }
 }
 

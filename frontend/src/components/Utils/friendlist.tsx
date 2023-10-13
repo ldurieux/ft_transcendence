@@ -233,7 +233,7 @@ function Friendlist({socket}) {
                                 alt={list[selectedFriendIndex]?.display_name}
                                 src={list[selectedFriendIndex]?.profile_picture ?? defaultAvatar}/>
                             <p>{list[selectedFriendIndex]?.display_name}</p>
-                            <p>{list[selectedFriendIndex].status}</p>
+                            <p>{list[selectedFriendIndex]?.status}</p>
                             <ul>
                                 <li>
                                 {/*    match history */}
