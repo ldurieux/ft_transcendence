@@ -291,7 +291,7 @@ export class Game {
         }
         if (colision.relativePos !== null)
         {
-            var angle = colision.relativePos * (Math.PI * 5 / 12);
+            var angle = colision.relativePos * (Math.PI * 5 / 6);
             if (colision.player === 1)
                 angle = Math.PI - angle;
             this.ball.setVectorRadians(angle);
