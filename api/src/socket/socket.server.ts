@@ -80,7 +80,7 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
             const truc = this.invitedClients.get(client.data.user);
             const socket = await this.getSocket(client.data.user);
             const truc1 = this.inviteMap.get(truc);
-            socket.send(JSON.stringify({type: 'invite', user: (truc1.name), typesOfGame: truc1.typeOfGame, id: truc1.id}));
+            socket.send(JSON.stringify({type: 'invite', user: truc1.name, typeOfGame: truc1.typeOfGame, id: truc1.id}));
         }
         await this.setClientData()
         this.broadcast(client.data.user, { event: "connect", data: { user: client.data } })
