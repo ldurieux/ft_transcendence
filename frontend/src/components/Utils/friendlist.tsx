@@ -45,13 +45,18 @@ function Friendlist({socket}) {
                 {
                     //if user connected is one of your friends
                     //set his status to online in list
-                    if (list.some((item) => item.id === data.data.user))
+                    if (list.some((item) => item.id === data.data.user.user))
                     {
                         setList(list.map((item) => {
-                            if (item.id === data.data.user)
+                            if (item.id === data.data.user.user && data.data.user.isInGame === false)
                             {
-                                item.status = "online";
+                                item.status = "Online";
                             }
+                            if (item.id === data.data.user.user && data.data.user.isInGame === true)
+                            {
+                                item.status = "In Game";
+                            }
+
                             return item;
                         }));
                     }
@@ -69,9 +74,6 @@ function Friendlist({socket}) {
                             return item;
                         }));
                     }
-                }
-                else if (data.event === "isInGame") {
-                    console.log(data);
                 }
             }
         }
@@ -193,7 +195,7 @@ function Friendlist({socket}) {
             setRequest(result.receivedRequests);
             setBlocked(result.blocked);
         })();
-    }, [list]);
+    }, []);
 
     // useEffect(() => {
     //     const interval = setInterval(() => {
