@@ -87,7 +87,7 @@ const Header = () => {
             <li>
           <div className="profile-details">
                 <div className="profile-content">
-                    <img src={user?.profile_picture} alt="profileImg"/>
+                    <img src={user?.profile_picture} alt=""/>
                 </div>
 
                 <div className="login-nickname">
