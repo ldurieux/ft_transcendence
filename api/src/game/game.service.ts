@@ -267,7 +267,7 @@ export class Game {
         if (socket2 !== null)
             socket2.send(JSON.stringify({type: 'updateScore', score2: this.player2.getScore(), score1: this.player1.getScore()}));
 
-        if (player.getScore() >= 6)
+        if (player.getScore() >= 100)
         {
             player.setWinner(true);
             return (false);
