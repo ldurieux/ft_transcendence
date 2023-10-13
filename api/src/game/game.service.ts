@@ -293,12 +293,7 @@ export class Game {
         {
             var angle = colision.relativePos * (Math.PI * 5 / 12);
             if (colision.player === 1)
-            {
-                this.ball.setBallX(this.player1.paddle.getPaddleData().x - this.ball.getBallData().radius);
                 angle = Math.PI - angle;
-            }
-            if (colision.player === 2)
-                this.ball.setBallX(this.player2.paddle.getPaddleData().x + this.ball.getBallData().radius);
             this.ball.setVectorRadians(angle);
             this.ball.updateSpeed();
             this.collision = true;
