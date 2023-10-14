@@ -41,6 +41,15 @@ export class GameReply {
         }
     }
 
+    async isInMatchMaking(id: number)
+    {
+        if (this.socketServer.ClassicMatchMaking.includes(id))
+            return (true);
+        if (this.socketServer.DeluxeMatchMaikng.includes(id))
+            return (true);
+        return (false);
+    }
+
     async invite(id: number, friendId: number, typeOfGame: number)
     {
         const socket: WebSocket = await this.socketServer.getSocket(friendId);
@@ -101,7 +110,6 @@ export class GameReply {
     async inviteResponse(id: number, response: boolean)
     {
         var InviteData = this.socketServer.inviteMap.get(id);
-        console.log("truc", InviteData);
         if (InviteData === undefined)
             return;
         InviteData.response = true;
@@ -141,6 +149,14 @@ export class GameReply {
     {
         console.log('MatchMaking');
 
+        if (typeOfGame === 0)
+        {
+            if (this.socketServer.ClassicMatchMaking.includes(id))
+                this.socketServer.ClassicMatchMaking.pop();
+            if (this.socketServer.DeluxeMatchMaikng.includes(id))
+                this.socketServer.DeluxeMatchMaikng.pop();
+            return;
+        }
         if (await this.gameGateway.isInGame(id))
         {
             console.log('currentlyInGame');
