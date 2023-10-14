@@ -7,6 +7,7 @@ import * as lobbyFunction from "./lobby/lobbyFunction.tsx"
 export default function LobbyPage() {
     const [invitePopup, setInvitePopup] = useState(false);
     const [matchPopup, setMatchPopup] = useState(false);
+    const [matchMakingSearch, setMatchMakingSearch] = useState(false);
     const [friend, setFriend] = useState([]);
     const [matchHistory, setMatchHistory] = useState([]);
 
@@ -23,9 +24,15 @@ export default function LobbyPage() {
         setMatchPopup(!matchPopup);
     }
 
+    const cancelMatchMaking = () => {
+        lobbyFunction.matchMaking(0);
+        setMatchMakingSearch(false);
+    }
+
     const toggleMatchmaking = (gameType) => {
         lobbyFunction.matchMaking(gameType);
         toggleMatchPopup();
+        setMatchMakingSearch(true);
     }
 
     async function getFriendsList() {
@@ -42,6 +49,23 @@ export default function LobbyPage() {
         lobbyFunction.inviteFriend(friendId, typeOfGame);
         toggleinvitePopup();
     }
+
+    useEffect(() => {
+        lobbyFunction.getIsInMatchMaking().then((res) => {
+            console.log(res);
+            try {
+                if (res === "true") {
+                    setMatchMakingSearch(true);
+                }
+                else {
+                    setMatchMakingSearch(false);
+                }
+            }
+            catch (error) {
+                setMatchMakingSearch(false);
+            }
+        });
+    }, []);
 
     function IsInGame() {
         const [isInGame, setIsInGame] = useState(false);
@@ -108,7 +132,11 @@ export default function LobbyPage() {
                     />}
                 </div>
                 <div className="matchmaking-container">
-                    <button className="button" onClick={toggleMatchPopup}>MATCHMAKING</button>
+                    { matchMakingSearch ?
+                        <button className="lds-dual-ring" onClick={cancelMatchMaking}></button>
+                        :
+                        <button className="button" onClick={toggleMatchPopup}>MATCHMAKING</button>
+                    }
                     {matchPopup && <lobbyFunction.Popup
                         Content={<>
                             <p className="PopupTitle">Matchmaking</p>

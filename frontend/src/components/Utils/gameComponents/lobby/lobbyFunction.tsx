@@ -1,4 +1,4 @@
-import { post } from "../../Request.tsx";
+import { post, get } from "../../Request.tsx";
 import React from 'react';
 import "../../../Styles/lobbyStyles.css"
 
@@ -26,6 +26,11 @@ async function matchMakingRequest(typeOfGame): Promise<boolean>
 {
     const response = await post('game/MatchMaking', {typeOfGame});
     return (response);
+}
+
+export const getIsInMatchMaking = () => {
+    const isInMatchMaking = get("game/isInMatchMaking");
+    return isInMatchMaking;
 }
 
 export const isInGame = () => {

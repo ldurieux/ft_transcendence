@@ -50,6 +50,7 @@ body {
 }
 
 .button {
+    position: relative;
     cursor: pointer;
     background: none;
     border: 1px solid rgba(98, 98, 98, 0.827);
@@ -274,4 +275,39 @@ li {
     color: white;
     font-size: 20px;
     font-style: unset;
+}
+
+.lds-dual-ring {
+    position: relative; /* Positionne l'élément au centre de son parent */
+    background-color: black;
+    cursor: pointer;
+    border: 1px solid rgba(98, 98, 98, 0.827);
+    width: 100%;
+    height: 100%;
+}
+
+.lds-dual-ring:hover {
+    background-color: rgba(23, 23, 23, 0.513);
+}
+
+.lds-dual-ring:after {
+  content: " ";
+  display: flex;
+
+  width: 64px;
+  height: 64px;
+  margin: auto;
+  border-radius: 50%;
+  border: 6px solid #fff;
+  border-color: #fff transparent #fff transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

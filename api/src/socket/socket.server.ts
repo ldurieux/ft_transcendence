@@ -107,9 +107,13 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
         }
     }
 
-    async sendClientsToAll(from: number) {
+    async sendClientsToAll(from: number): Promise<boolean>{
         await this.setClientData();
         const me = await this.getSocket(from);
+        if (me == null)
+            return(false);
+        if (me.data == null || me.data == undefined)
+            return (false);
         const raw = JSON.stringify({ event: "connect", data: { user: me.data } })
         for (const client of this.server.clients) {
             if (client.data.user == null || client.data.user == undefined)
@@ -118,6 +122,7 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
             if (client.data.user != from)
                 client.send(raw)
         }
+        return (true);
     }
 
     async addToInGameList(id: number)

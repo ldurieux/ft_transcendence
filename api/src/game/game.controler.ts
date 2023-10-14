@@ -69,6 +69,14 @@ export class GameControler
     }
 
     @UseGuards(AuthGuard)
+    @Get('isInMatchMaking')
+    async isInMatchMaking(@Request() req) {
+        const id = req['user'];
+        const isInMatchMaking = await this.gameReply.isInMatchMaking(id);
+        return isInMatchMaking;
+    }
+
+    @UseGuards(AuthGuard)
     @Get('isInGame')
     async isInGame(@Request() req) {
         const id = req['user'];

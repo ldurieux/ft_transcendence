@@ -46,30 +46,30 @@ export default function GameComponent() {
         const onKeydown = (e) => {
             if (e.key === 'ArrowDown' && !alreadyPressed.down && !alreadyPressed.up)
             {
+                alreadyPressed.down = true;
                 const data = { gameId: gameId, player: MyId, direction: -1};
                 gameSocket.send(JSON.stringify({ event: 'movePaddle', data: data}));
-                alreadyPressed.down = true;
             }
             else if (e.key === 'ArrowUp' && !alreadyPressed.up && !alreadyPressed.down)
             {
+                alreadyPressed.up = true;
                 const data = { gameId: gameId, player: MyId, direction: 1};
                 gameSocket.send(JSON.stringify({ event: 'movePaddle', data: data}));
-                alreadyPressed.up = true;
             }
         }
     
         const onKeyup = (e) => {
             if (e.key === 'ArrowDown' && alreadyPressed.down && !alreadyPressed.up)
             {
+                alreadyPressed.down = false;
                 const data = { gameId: gameId, player: MyId};
                 gameSocket.send(JSON.stringify({ event: 'stopPaddle', data: data}));
-                alreadyPressed.down = false;
             }
             else if (e.key === 'ArrowUp' && alreadyPressed.up && !alreadyPressed.down)
             {
+                alreadyPressed.up = false;
                 const data = { gameId: gameId, player: MyId};
                 gameSocket.send(JSON.stringify({ event: 'stopPaddle', data: data}));
-                alreadyPressed.up = false;
             }
         }
 

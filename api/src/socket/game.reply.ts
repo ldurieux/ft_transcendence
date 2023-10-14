@@ -41,6 +41,15 @@ export class GameReply {
         }
     }
 
+    async isInMatchMaking(id: number)
+    {
+        if (this.socketServer.ClassicMatchMaking.includes(id))
+            return (true);
+        if (this.socketServer.DeluxeMatchMaikng.includes(id))
+            return (true);
+        return (false);
+    }
+
     async invite(id: number, friendId: number, typeOfGame: number)
     {
         const socket: WebSocket = await this.socketServer.getSocket(friendId);
@@ -57,7 +66,7 @@ export class GameReply {
         }
         if (this.socketServer.invitedClients.has(friendId))
             return;
-        this.checkIds(id);
+        await this.checkIds(id);
         if (await this.gameGateway.isInGame(id))
             this.currentlyInGame(id);
         if (this.socketServer.invitedClients.has(friendId))
@@ -80,7 +89,7 @@ export class GameReply {
         let waiting:number = 0;
         while (InviteData !== undefined && waiting < this.inviteTimeout && InviteData.response === false)
         {
-            InviteData = this.socketServer.inviteMap.get(id);
+            console.log(InviteData);
             await this.wait(1000);
             waiting++;
         }
@@ -95,11 +104,6 @@ export class GameReply {
             this.socketServer.invitedClients.delete(InviteData.friendId);
             this.socketServer.inviteMap.delete(InviteData.id);
             return;
-        }
-        else if (InviteData !== undefined)
-        {
-            this.socketServer.invitedClients.delete(InviteData.friendId);
-            this.socketServer.inviteMap.delete(InviteData.id);
         }
     }
 
@@ -145,6 +149,14 @@ export class GameReply {
     {
         console.log('MatchMaking');
 
+        if (typeOfGame === 0)
+        {
+            if (this.socketServer.ClassicMatchMaking.includes(id))
+                this.socketServer.ClassicMatchMaking.pop();
+            if (this.socketServer.DeluxeMatchMaikng.includes(id))
+                this.socketServer.DeluxeMatchMaikng.pop();
+            return;
+        }
         if (await this.gameGateway.isInGame(id))
         {
             console.log('currentlyInGame');

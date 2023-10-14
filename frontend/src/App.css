@@ -107,7 +107,6 @@
 
 .popup-container {
   position: absolute;
-  overflow: scroll;
   width:25%;
   height: 30%;
   min-height: 100px;
