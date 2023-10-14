@@ -172,7 +172,7 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
 
     async function banUser(channel, userId) {
         try {
-            const ret = await post(`channel/ban`, { userId: userId, channelId: channel.id, duration: 60 });
+            const ret = await post(`channel/ban`, { userId: userId, channelId: channel.id, duration: 86400 });
             if (ret) {
                 //update the users list
                 setUsers(prev => {
