@@ -111,7 +111,7 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                 //     }
                 //     );
                 // }
-                else if (ret.event === "gameStart") {
+                else if (ret.type === "gameStart") {
                     window.location.href = "/game";
                 }
                 else if (ret.type === "invite") {

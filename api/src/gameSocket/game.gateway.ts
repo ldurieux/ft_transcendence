@@ -172,7 +172,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
                 socket2.send(JSON.stringify({type: 'Error', Error: 'PlayerNotConnected'}));
             return;
         }
-        await this.socketServer.addToInGameList(player1);
+        await this.socketServer.addToInGameList(player1)
         await this.socketServer.addToInGameList(player2);
         await this.socketServer.sendClientsToAll(player1);
         await this.socketServer.sendClientsToAll(player2);

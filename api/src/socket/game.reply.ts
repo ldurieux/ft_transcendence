@@ -57,7 +57,7 @@ export class GameReply {
         }
         if (this.socketServer.invitedClients.has(friendId))
             return;
-        this.checkIds(id);
+        await this.checkIds(id);
         if (await this.gameGateway.isInGame(id))
             this.currentlyInGame(id);
         if (this.socketServer.invitedClients.has(friendId))
@@ -80,7 +80,7 @@ export class GameReply {
         let waiting:number = 0;
         while (InviteData !== undefined && waiting < this.inviteTimeout && InviteData.response === false)
         {
-            InviteData = this.socketServer.inviteMap.get(id);
+            console.log(InviteData);
             await this.wait(1000);
             waiting++;
         }
@@ -96,16 +96,12 @@ export class GameReply {
             this.socketServer.inviteMap.delete(InviteData.id);
             return;
         }
-        else if (InviteData !== undefined)
-        {
-            this.socketServer.invitedClients.delete(InviteData.friendId);
-            this.socketServer.inviteMap.delete(InviteData.id);
-        }
     }
 
     async inviteResponse(id: number, response: boolean)
     {
         var InviteData = this.socketServer.inviteMap.get(id);
+        console.log("truc", InviteData);
         if (InviteData === undefined)
             return;
         InviteData.response = true;

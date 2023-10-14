@@ -59,6 +59,7 @@ function ChatMain({socket}) {
             socket.onmessage = (e) => {
                 const data = JSON.parse(e.data);
                 if (data.type === "gameStart") {
+                    console.log("gameStart");
                     window.location.href = "/game";
                 }
                 if (data.event === "join" && data.data.user.id === user.id) {
