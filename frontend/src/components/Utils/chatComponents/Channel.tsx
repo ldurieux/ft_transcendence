@@ -153,7 +153,7 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
 
     async function kickUser(channel, userId) {
         try {
-            if (currentUser.id === channel.owner.id) {
+            if (currentUser.id === channel.owner?.id) {
                 const result = await post(`channel/kick`, { userId: userId, channelId: channel.id });
                 if (result) {
                     // Update the users list
@@ -384,7 +384,7 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                                 item.owner?.id === currentUser?.id ?
                                 <div className="message-content-user">
                                 <div className="message-header">
-                                    <div className="message-username">{users[item.owner.id]?.display_name}</div>
+                                    <div className="message-username">{users[item.owner?.id]?.display_name}</div>
                                     {/*<div className="message-time">{item.created_at}</div>*/}
                                 </div>
                                 <div className="message-body">{item.text}</div>
@@ -463,7 +463,7 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                                                     <li key={key}>
                                                         {item?.display_name}
                                                         {
-                                                            (currentUser.id === channel.owner.id) &&
+                                                            (currentUser.id === channel.owner?.id) &&
                                                             currentUser.id !== item.id &&
                                                             <button onClick={() => demoteUser(channel, item)}>Demote</button>
                                                         }
@@ -501,7 +501,7 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                                             </div>
                                         ))}
                                     </ul>
-                                    {(currentUser.id === channel.owner.id || isAdmin) &&
+                                    {(currentUser.id === channel.owner?.id || isAdmin) &&
                                         channel.type === "private" &&
                                     <ul>
                                         <input
