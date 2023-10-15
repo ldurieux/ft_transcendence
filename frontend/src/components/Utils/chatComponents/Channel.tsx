@@ -432,6 +432,7 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                             <div className="popup-settings-header">
                                 <div className="popup-settings-title">{channel?.display_name}</div>
                                 {owner.id === currentUser.id &&
+                                    channel.type !== "dm" && channel.type !== "private" &&
                                     <div className="ChangePassword">
                                         <input
                                             type="text"

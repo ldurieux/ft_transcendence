@@ -226,7 +226,7 @@ function ChatMain({socket}) {
                         className={`ChanButton ${selectedList === "Friends" ? "ChanButtonSelected" : "ButtonUnselected"}`}
                         onClick={() => switchList("Friends")}
                     >
-                        Friends
+                        D.M.
                     </button>
                 </ul>
                 {selectedList === "ChatMain" ? (
