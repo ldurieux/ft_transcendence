@@ -6,6 +6,7 @@ import "../../Styles/messageStyles.css";
 import "../../Styles/PopupStyles.css";
 import Popup from "../popup.tsx";
 import InvitePopup from "../popupComponents/invitePopup/popupInvite.tsx";
+import Linkify from 'react-linkify';
 
 function Channel({ socket, channel, currentUser, setChanParams, setChannelList, updateChannelUsers, closeChannel }) {
     const bottomChat = useRef<null | HTMLDivElement>(null);
@@ -391,7 +392,11 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                                     <div className="message-username">{users[item.owner?.id]?.display_name}</div>
                                     {/*<div className="message-time">{item.created_at}</div>*/}
                                 </div>
-                                <div className="message-body">{item.text}</div>
+                                    <div className="message-body">
+                                        <Linkify>
+                                            {item.text}
+                                        </Linkify>
+                                    </div>
                                 </div>
                                 :
                                 <div className="message-content-other">
@@ -401,7 +406,11 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                                         >{item.owner?.display_name}</div>
                                         {/*<div className="message-time">{item.created_at}</div>*/}
                                     </div>
-                                    <div className="message-body">{item.text}</div>
+                                    <div className="message-body">
+                                        <Linkify>
+                                            {item.text}
+                                        </Linkify>
+                                    </div>
                                 </div>
                             }
                         </div>

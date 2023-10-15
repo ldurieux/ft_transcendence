@@ -11,11 +11,12 @@
     "react": "^18.2.0",
     "react-avatar": "^5.0.3",
     "react-dom": "^18.2.0",
+    "react-linkify": "^1.0.0-alpha",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.10.0",
     "react-scripts": "^5.0.1",
-    "web-vitals": "^2.1.4",
-    "react-use-websocket": "4.3.1"
+    "react-use-websocket": "4.3.1",
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
