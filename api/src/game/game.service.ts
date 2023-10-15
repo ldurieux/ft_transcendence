@@ -304,6 +304,8 @@ export class Game {
         const collision = this.ball.boardCollision(this.screen, this.player1.paddle, this.player2.paddle);
         if (collision)
             this.collision = true;
+        if (collision)
+            this.ballEffect = false;
         if (collision === 1)
             return (await this.checkIfWinner(this.player1, socket1, socket2));
         else if (collision === 2)
