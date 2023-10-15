@@ -432,7 +432,7 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                         <div className="popup-settings-inner">
                             <div className="popup-settings-header">
                                 <div className="popup-settings-title">{channel?.display_name}</div>
-                                {owner.id === currentUser.id &&
+                                {owner?.id === currentUser?.id &&
                                     channel.type !== "dm" && channel.type !== "private" &&
                                     <div className="ChangePassword">
                                         <input
@@ -476,9 +476,9 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                                     <li style={{ fontWeight: "700" }}>Users:</li>
                                     <ul>
                                         {Object.values(users).map((user) => (
-                                            <div key={user.id}>
+                                            <div key={user?.id}>
                                                 <p>{user?.display_name}</p>
-                                                {currentUser.id === channel.owner.id &&
+                                                {currentUser.id === channel.owner?.id &&
                                                     currentUser.id !== user.id &&
                                                     <div>
                                                         <button onClick={() => promoteUser(channel, user)}>Promote</button>
