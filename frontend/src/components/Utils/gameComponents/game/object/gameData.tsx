@@ -40,11 +40,6 @@ export class Ball {
     }
 }
 
-export interface Screen {
-    width: number;
-    height: number;
-}
-
 export class Player {
     public id:number;
     public x: number;
@@ -91,4 +86,9 @@ export class Player {
         this.paddle.style.width = `0px`;
         this.paddle.style.height = `0px`;
     }
+}
+
+export class screen {
+    public width: number;
+    public height: number;
 }

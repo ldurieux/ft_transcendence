@@ -15,14 +15,10 @@ export default function GameComponent() {
     var MyId = 0;
     var opponentId = 0;
 
-    const screen: gameData.Screen = {
-        width: 0,
-        height: 0
-    };
-
     const gameSocket = useMemo(() => new WebSocket(url), [url]);
     const ballData = useMemo(() => new gameData.Ball(), []);
     const players = useMemo(() => new Map<number, gameData.Player>(), []);
+    const screen = useMemo(() => new gameData.screen(), []);
 
     const redirect = () => {
         setTimeout(() => {
@@ -95,7 +91,7 @@ export default function GameComponent() {
         window.addEventListener('resize', onResize, false);
         window.addEventListener('keydown', onKeydown, false);
         window.addEventListener('keyup', onKeyup, false);
-    }, []);
+    }, [players, ballData, screen, gameSocket, gameId, MyId]);
 
     useEffect(() => {
         const cssElement = document.getElementById("game-board");
