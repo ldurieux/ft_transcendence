@@ -87,6 +87,7 @@ body {
     padding: 20px;
     border: 1px solid black;
     overflow: auto;
+    scrollbar-width: thin;
 }
    
 .close-icon {
@@ -212,7 +213,7 @@ li {
 
 .overflow-container {
     overflow: scroll;
-    scrollbar-width: none;
+    scrollbar-width: thin;
     border: 1px solid black;
     width: 100%;
     max-height: 600px;
@@ -222,6 +223,7 @@ li {
   /* Match history list styles */
 .matchHistory-list {
     overflow: auto;
+    scrollbar-width: thin;
 }
   
   /* Match history element styles */

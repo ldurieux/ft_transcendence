@@ -54,6 +54,7 @@
     margin: 0;
     text-align: center;
     overflow: scroll;
+    scrollbar-width: thin;
     max-height: 300px;
 }
 

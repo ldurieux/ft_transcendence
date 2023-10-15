@@ -13,6 +13,7 @@ body {
 .ProfileBody {
     display: flex;
     overflow: scroll;
+    scrollbar-width: thin;
     max-height: 100vh;
 }
 
@@ -156,6 +157,7 @@ body {
     list-style-type: none;
     padding: 0;
     overflow-x: scroll;
+    scrollbar-width: thin;
     white-space: nowrap;
 }
 

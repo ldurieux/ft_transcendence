@@ -52,6 +52,7 @@ body {
     height: 70%;
     width: 100%;
     overflow: scroll;
+    scrollbar-width: thin;
     padding: 10px;
 }
 
@@ -60,6 +61,7 @@ body {
     margin: 0;
     padding: 0;
     overflow: scroll;
+    scrollbar-width: thin;
     border: 2px solid #e7e7e7;
 }
 
@@ -83,6 +85,7 @@ body {
     height: 80vh;
     width: calc(100% - 530px);
     overflow: scroll;
+    scrollbar-width: thin;
     border: 2px solid #e7e7e7;
     display: flex;
     flex-direction: column;
@@ -93,6 +96,7 @@ body {
     height: 80vh;
     width: 100%;
     overflow: scroll;
+    scrollbar-width: thin;
     padding: 10px;
 }
 
@@ -145,6 +149,7 @@ body {
 
     .ChanList .Channels {
         overflow: scroll;
+        scrollbar-width: thin;
         max-height: 100px;
         font-size: 10px;
     }
@@ -173,6 +178,7 @@ body {
         height: 100%;
         width: 100%;
         overflow: scroll;
+        scrollbar-width: thin;
         padding: 10px;
     }
 }

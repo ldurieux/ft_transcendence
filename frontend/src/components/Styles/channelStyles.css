@@ -33,6 +33,7 @@
     flex: 1;
     padding: 20px;
     overflow-y: scroll;
+    scrollbar-width: thin;
 }
 
 .channel .channel-input {

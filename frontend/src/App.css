@@ -2,6 +2,11 @@
   background: #1e2122;
 }
 
+/* Because chromium is shit, we have to use this rule to hide ugly scrollbars */
+*::-webkit-scrollbar {
+  display: none;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;

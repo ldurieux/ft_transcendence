@@ -24,6 +24,7 @@
     align-items: center;
     color: #fff;
     overflow: scroll;
+    scrollbar-width: thin;
     height: 80vh;
     width: 100vw;
 }

@@ -3,6 +3,7 @@
     margin: 0;
     padding: 0;
     overflow: scroll;
+    scrollbar-width: thin;
     border: 2px solid #e7e7e7;
 }
 
@@ -12,6 +13,7 @@
     margin: 0;
     padding: 0;
     overflow: scroll;
+    scrollbar-width: thin;
     border: 2px solid #e7e7e7;
 }
 
