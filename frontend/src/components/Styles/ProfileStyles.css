@@ -359,6 +359,37 @@ body {
     cursor: pointer;
 }
 
+.BlockedUser {
+    text-align: center;
+    border-radius: 5px;
+    color: white;
+    margin-top: 10px;
+}
+
+.BlockedUser ul {
+    margin-top: 10px;
+    list-style-type: none;
+    padding: 0;
+}
+
+.BlockedUser button {
+    padding: 5px;
+    border-radius: 5px;
+    background-color: green;
+    text-align: center;
+    width: auto;
+    border-bottom: 1px solid white;
+    border: none;
+    outline: none;
+    color: white;
+}
+
+.BlockedUser button:hover {
+    opacity: 0.5;
+    transition: 0.3s ease;
+    cursor: pointer;
+}
+
 @media screen and (max-width: 600px) {
     .Profile {
         margin-left: 0 !important;
