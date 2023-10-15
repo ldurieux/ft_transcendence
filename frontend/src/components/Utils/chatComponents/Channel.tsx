@@ -407,7 +407,7 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                                         {/*<div className="message-time">{item.created_at}</div>*/}
                                     </div>
                                     <div className="message-body">
-                                        <Linkify>
+                                        <Linkify componentDecorator={(decoratedHref, decoratedText, key) => ( <a target="blank" href={decoratedHref} key={key}> {decoratedText} </a> )} >
                                             {item.text}
                                         </Linkify>
                                     </div>
