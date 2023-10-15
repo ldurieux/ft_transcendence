@@ -36,6 +36,7 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
         (async () => {
             try {
                 if (channel.id !== undefined) {
+                    setNewPassword("");
                     const message = await get("channel/message?id=" + channel.id);
                     const userMap = channel.users.reduce((map, user) => {
                         map[user.id] = user;
