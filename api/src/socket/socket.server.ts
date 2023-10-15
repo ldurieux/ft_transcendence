@@ -38,9 +38,7 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
     @WebSocketServer() server: WebSocket;
     static serverRef;
 
-    async afterInit(server: WebSocket) {
-        // console.log('Init');
-    }
+    async afterInit(server: WebSocket) {}
 
     async handleConnection(client: WebSocket) {
         client.data = {}

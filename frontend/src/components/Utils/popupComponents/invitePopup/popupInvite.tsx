@@ -5,16 +5,13 @@ import "./popupStyle.css";
 
 export default function InvitePopup(props: any) {
     
-    console.log("props = ", props);
     
     async function acceptInvite(id) {
-        console.log(id);
         await post("game/inviteResponse", {inviteId: id, response: true});
         props.handleClose();
     }
 
     async function declineInvite(id) {
-        console.log(id);
         await post("game/inviteResponse", {inviteId: id, response: false});
         props.handleClose();
     }

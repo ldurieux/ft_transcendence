@@ -93,7 +93,6 @@ export default function LobbyPage({socket}) {
 
     useEffect(() => {
         lobbyFunction.getIsInMatchMaking().then((res) => {
-            console.log(res);
             try {
                 if (res === "true") {
                     setMatchMakingSearch(true);

@@ -89,7 +89,6 @@ export class GameReply {
         let waiting:number = 0;
         while (InviteData !== undefined && waiting < this.inviteTimeout && InviteData.response === false)
         {
-            console.log(InviteData);
             await this.wait(1000);
             waiting++;
         }
@@ -147,8 +146,6 @@ export class GameReply {
 
     async MatchMaking(id: number, typeOfGame: number)
     {
-        console.log('MatchMaking');
-
         if (typeOfGame === 0)
         {
             if (this.socketServer.ClassicMatchMaking.includes(id))
@@ -159,7 +156,6 @@ export class GameReply {
         }
         if (await this.gameGateway.isInGame(id))
         {
-            console.log('currentlyInGame');
             this.currentlyInGame(id);
             return;
         }
@@ -217,7 +213,6 @@ export class GameReply {
         const socket: any = await this.socketServer.getSocket(Id2);
         if (friendSocket == null  || socket == null)
             return;
-        console.log('gameStart');
         friendSocket.send(JSON.stringify({type: 'gameStart', user : this.userService.getUser(Id1)}));
         socket.send(JSON.stringify({type: 'gameStart', user : this.userService.getUser(Id2)}));
         this.gameGateway.createGame(Id1, Id2, typeOfGame);
