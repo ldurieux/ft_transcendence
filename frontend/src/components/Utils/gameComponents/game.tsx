@@ -23,6 +23,12 @@ export default function GameComponent() {
     const gameSocket = useMemo(() => new WebSocket(url), [url]);
     const ballData = useMemo(() => new gameData.Ball(), []);
     const players = useMemo(() => new Map<number, gameData.Player>(), []);
+
+    const redirect = () => {
+        setTimeout(() => {
+            window.location.href = "/lobby";
+        }, 3000);
+    }
     
     useEffect(() => {
         gameSocket.onopen = () => {
@@ -233,8 +239,9 @@ export default function GameComponent() {
                     player2.undrawPaddle();
                     ballData.undrawBall(ball);
                 }   
-                setWhowin(data.whoWin);
                 setPause("");
+                setWhowin(data.whoWin);
+                redirect();
             }
 
             if (data.type === "PAUSE")
