@@ -206,3 +206,13 @@
     opacity: 0.5;
     transition: 0.3s ease;
 }
+
+.ChangePassword input {
+    width: 100%;
+    max-width: 150px;
+    background: #1e2122;
+    color: white;
+    border: none;
+    padding: 5px;
+    margin: 10px;
+}
