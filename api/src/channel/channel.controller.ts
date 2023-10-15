@@ -48,6 +48,18 @@ export class ChannelController {
     }
 
     @UseGuards(AuthGuard)
+    @Post("delete")
+    async deleteDm(@Request() req) {
+        const selfId: number = req['user'];
+        const { id } = req.body;
+
+        if (typeof id !== 'number' ) {
+            throw new HttpException("", HttpStatus.BAD_REQUEST)
+        }
+        return this.channelService.deleteDm([ selfId, id ]);
+    }
+
+    @UseGuards(AuthGuard)
     @Post('update')
     async updatePassword(@Request() req) {
         const user: User = await this.userService.getUser(req['user']);

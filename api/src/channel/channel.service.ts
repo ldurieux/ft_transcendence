@@ -279,6 +279,26 @@ export class ChannelService {
         return this.channelRepository.remove(channel)
     }
 
+    async deleteDm(userIds: number[]) {
+        if (userIds.length != 2) {
+            throw new HttpException("channel.dmExist: Invalid users count", HttpStatus.BAD_REQUEST);
+        }
+
+        const user1Id = userIds[0];
+        const user2Id = userIds[1];
+
+        let channel: Channel = await this.channelRepository.createQueryBuilder('channel')
+            .innerJoin('channel.users', 'user1', 'user1.id = :user1Id', { user1Id })
+            .innerJoin('channel.users', 'user2', 'user2.id = :user2Id', { user2Id })
+            .where('channel.type = :type', { type: "dm" })
+            .getOne();
+
+        if (!channel)
+            throw new HttpException("channel does not exist", HttpStatus.NOT_FOUND);
+
+        return this.deleteChannel(channel.id);
+    }
+
     async createChannel(owner: User, type: string, data): Promise<Channel> {
         switch (type) {
             case 'dm': {

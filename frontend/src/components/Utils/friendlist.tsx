@@ -88,6 +88,7 @@ function Friendlist({socket}) {
             await post("user/friend/delete", { id: selectedFriend.id });
             setList(list.filter((item) => item.id !== selectedFriend.id));
             setSelectedFriendIndex(null);
+            await post("channel/delete", { id: selectedFriend.id });
         } catch (error) {
             setError("Error removing friend");
             await timeout(3000);
