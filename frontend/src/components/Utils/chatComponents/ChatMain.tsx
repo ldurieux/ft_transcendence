@@ -59,7 +59,6 @@ function ChatMain({socket}) {
             socket.onmessage = (e) => {
                 const data = JSON.parse(e.data);
                 if (data.type === "gameStart") {
-                    console.log("gameStart");
                     window.location.href = "/game";
                 }
                 if (data.event === "join" && data.data.user.id === user.id) {
@@ -67,10 +66,6 @@ function ChatMain({socket}) {
                 }
                 else if (data.event === "leave" && data.data.user.id === user.id) {
                     setChannelList(channelList.filter((item) => item.id !== data.data.channel.id));
-                }
-                else if (data.event === "delete")
-                {
-                    console.log(data);
                 }
                 else if (data.type === "invite") {
                     setId(data.id);

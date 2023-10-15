@@ -40,7 +40,6 @@ function MakeRequest(method, path, data?, multipart = false) {
         }
     }
     ).catch(error => {
-        console.log(error);
     });
 }
 

@@ -28,7 +28,6 @@ class Leaderboard extends Component {
             }
         }
         catch (error) {
-            console.log(error);
         }
     }
 

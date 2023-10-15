@@ -25,7 +25,6 @@ const Authentication = () => {
                     body: JSON.stringify({ method: "42", code: code }),
                 };
                 const response = await fetch(input, options);
-                console.log(response)
                 if (response.status === 201) {
                     let data = await response.json();
                     const token = data.access_token;
@@ -40,7 +39,6 @@ const Authentication = () => {
                     }
                 }
             } catch (error) {
-                console.log(error);
             }
         };
 
@@ -109,7 +107,6 @@ const Authentication = () => {
             }
         }
         catch (error) {
-            console.log(error);
         }
     }
 
@@ -136,7 +133,6 @@ const Authentication = () => {
             }
         }
         catch (error) {
-            console.log(error);
         }
     }
 

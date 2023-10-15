@@ -43,14 +43,11 @@ function ChannelList({ onClick }) {
         }
         else
             error = await onClick(selectedChannel, password);
-        console.log(error)
         if (error === true) {
-            console.log("error")
             setSelectedChannel(null);
             setPassword("");
         }
         else {
-            console.log("no error")
             //remove channel we join from list
             setList(list.filter((item) => item.id !== selectedChannel.id));
             setSelectedChannel(null);

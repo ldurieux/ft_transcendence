@@ -227,7 +227,6 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
 
     async function inviteClassicGame() {
         try {
-            console.log()
             if (currentUser.id !== selectedUser.id) {
                 post("game/invite", {id: selectedUser.id, typeOfGame: 1});
                 setSelectedUser(null);
