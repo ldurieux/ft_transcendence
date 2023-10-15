@@ -68,6 +68,10 @@ function ChatMain({socket}) {
                 else if (data.event === "leave" && data.data.user.id === user.id) {
                     setChannelList(channelList.filter((item) => item.id !== data.data.channel.id));
                 }
+                else if (data.event === "delete")
+                {
+                    console.log(data);
+                }
                 else if (data.type === "invite") {
                     setId(data.id);
                     setUserName(data.user);

@@ -81,6 +81,9 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                     if (ret.data.user === currentUser.id)
                         closeChannel();
                 }
+                else if (ret.event === "delete" && ret.data.channel === channel.id) {
+                    closeChannel();
+                }
                 if (ret.event === "join" && ret.data.channel === channel.id) {
                     //add the user who joined to the channel
                     setUsers(prev => {
@@ -206,6 +209,7 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
             if (currentUser.id !== selectedUser.id) {
                 ret = await get(`user/block?id=` + selectedUser.id);
                 if (ret) {
+                    await post("channel/delete", { id: selectedUser.id });
                     //get message
                     const message = await get("channel/message?id=" + channel.id);
                     if (message) {
@@ -214,6 +218,7 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                     }
                 }
             }
+
         }
         catch (error) {
 
