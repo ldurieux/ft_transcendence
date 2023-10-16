@@ -111,6 +111,21 @@ function ProfileUser() {
                 />
                 <button onClick={changeUsername}>Edit</button>
             </div>
+            <div className="GamePlayed">
+                <h2>
+                    Game played: {user?.games_played}
+                </h2>
+            </div>
+            <div className="WinLose">
+                <ul>
+                    <li>
+                        Win: {user?.games_won}
+                    </li>
+                    <li>
+                        Lose: {user?.games_lost}
+                    </li>
+                </ul>
+            </div>
         </div>
     );
 }

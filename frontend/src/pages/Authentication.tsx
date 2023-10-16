@@ -174,7 +174,7 @@ const Authentication = () => {
                     <span>Sign in as student</span>
                 </a>}
             </div>
-            <input
+            {/* <input
                 className="input"
                 type="text"
                 placeholder="Login"
@@ -187,11 +187,11 @@ const Authentication = () => {
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-            />
-            <button className="btn-local-login" onClick={localConnection}>
+            /> */}
+            {/* <button className="btn-local-login" onClick={localConnection}>
                 Sign in
             </button>
-            <button className="btn-local-login" onClick={localRegister}>Register</button>
+            <button className="btn-local-login" onClick={localRegister}>Register</button> */}
             <div className="TwoFA">
                 {enabled &&
                     <input

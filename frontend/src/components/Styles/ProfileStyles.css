@@ -137,6 +137,23 @@ body {
     opacity: 0.5;
     transition: 0.3s ease;
 }
+.Left .GamePlayed h2 {
+    justify-content: space-between;
+}
+
+.Left .WinLose ul {
+    list-style-type: circle;
+    padding: 0;
+    white-space: nowrap;
+    text-align: center;
+    color: white;
+}
+
+.Left .WinLose li {
+    display: inline-block;
+    padding: 10px;
+
+}
 
 .Right {
     display: flex;
@@ -156,6 +173,7 @@ body {
  .FriendsList ul {
     list-style-type: none;
     padding: 0;
+    max-width: 100%;
     overflow-x: scroll;
     scrollbar-width: thin;
     white-space: nowrap;
