@@ -377,7 +377,6 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         let disconnect: number = 0;
         let gameEffect: number = 16;
 
-
         await game.gameInit(player1, player2, socket1, socket2);
         while (gameContinue)
         {
@@ -386,7 +385,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
             await game.sendBallPos(socket1, socket2);
             if (gameEffect % 2000 === 0)
                 await game.gameEffect(socket1, socket2);
-            else if (gameEffect % 500 === 0)
+            else if (gameEffect % 250 === 0)
                 game.releaseGameEffect();
             await this.wait(16);
             gameEffect += 16;

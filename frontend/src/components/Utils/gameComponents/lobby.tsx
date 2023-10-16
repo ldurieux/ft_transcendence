@@ -78,7 +78,7 @@ export default function LobbyPage({socket}) {
 
     async function getFriendsList() {
         const me = await get("user/self");
-        setFriend(me.friends);
+        setFriend(me?.friends);
     }
 
     async function getMatchHistory() {

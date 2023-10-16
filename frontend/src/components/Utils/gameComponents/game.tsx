@@ -61,13 +61,13 @@ export default function GameComponent() {
         }
     
         const onKeyup = (e) => {
-            if (e.key === 'ArrowDown' && alreadyPressed.down && !alreadyPressed.up)
+            if (e.key === 'ArrowDown' && alreadyPressed.down)
             {
                 alreadyPressed.down = false;
                 const data = { gameId: gameId, player: MyId};
                 gameSocket.send(JSON.stringify({ event: 'stopPaddle', data: data}));
             }
-            else if (e.key === 'ArrowUp' && alreadyPressed.up && !alreadyPressed.down)
+            else if (e.key === 'ArrowUp' && alreadyPressed.up)
             {
                 alreadyPressed.up = false;
                 const data = { gameId: gameId, player: MyId};
@@ -91,6 +91,11 @@ export default function GameComponent() {
         window.addEventListener('resize', onResize, false);
         window.addEventListener('keydown', onKeydown, false);
         window.addEventListener('keyup', onKeyup, false);
+        return () => {
+            window.removeEventListener('resize', onResize, false);
+            window.removeEventListener('keydown', onKeydown, false);
+            window.removeEventListener('keyup', onKeyup, false);
+        }
     }, [players, ballData, screen, gameSocket, gameId, MyId]);
 
     useEffect(() => {
@@ -104,6 +109,45 @@ export default function GameComponent() {
             <p id={id}>{score}</p>
         );
     };
+
+    useEffect(() => {
+        const upButton = () => {
+            const data = { gameId: gameId, player: MyId, direction: 1 };
+            gameSocket.send(JSON.stringify({ event: 'movePaddle', data: data }));
+        }
+    
+        const downButton = () => {
+            const data = { gameId: gameId, player: MyId, direction: -1 };
+            gameSocket.send(JSON.stringify({ event: 'movePaddle', data: data }));
+        }
+    
+        const releaseButton = () => {
+            const data = { gameId: gameId, player: MyId };
+            gameSocket.send(JSON.stringify({ event: 'stopPaddle', data: data }));
+        }
+    
+        const downButtonElement = document.getElementById("down-button");
+        const upButtonElement = document.getElementById("up-button");
+    
+        if (downButtonElement && upButtonElement) {
+            downButtonElement.addEventListener("touchstart", downButton);
+            upButtonElement.addEventListener("touchstart", upButton);
+            downButtonElement.addEventListener("touchend", releaseButton);
+            upButtonElement.addEventListener("touchend", releaseButton);
+        }
+    
+        return () => {
+            if (downButtonElement && upButtonElement) {
+                downButtonElement.removeEventListener("touchstart", downButton);
+                upButtonElement.removeEventListener("touchstart", upButton);
+                downButtonElement.removeEventListener("touchend", releaseButton);
+                upButtonElement.removeEventListener("touchend", releaseButton);
+            }
+        };
+    }, [gameId, MyId, gameSocket]); // Assurez-vous d'ajouter gameId et MyId comme dépendances si nécessaire
+    
+    
+
 
     const WhoWin = ({id, whoWin}) => {
         const ball = document.getElementById("ball");
@@ -250,23 +294,29 @@ export default function GameComponent() {
     // const button = document.getElementById("arrow");
     
     return (
-        <div id="game-board">
-            <div className="color-button-container">
-                <button className="change-board-color" onClick={() => setBoardColor("darkred")}>Red</button>
-                <button className="change-board-color" onClick={() => setBoardColor("black")}>black</button>
-            </div>
-            <div className="score-container">
-                <Score id={"score2"} score={score2}/>
-                <Score id={"score1"} score={score1}/>
-            </div>
-            <div id="ball"></div>
-            <div id="paddle1"></div>
-            <div id="paddle2"></div>
-            <div className="whoWin-container">
-                <WhoWin id={"whoWin"} whoWin={whowin}/>
-            </div>
-            <div className="Pause-container">
-                <Pause id={"Pause"} pause={pause}/>
+        <div>
+            <div id="game-board">
+                <div className="color-button-container">
+                    <button className="change-board-color" onClick={() => setBoardColor("darkred")}>Red</button>
+                    <button className="change-board-color" onClick={() => setBoardColor("black")}>black</button>
+                </div>
+                <div className="score-container">
+                    <Score id={"score2"} score={score2}/>
+                    <Score id={"score1"} score={score1}/>
+                </div>
+                <div id="ball"></div>
+                <div id="paddle1"></div>
+                <div id="paddle2"></div>
+                <div className="whoWin-container">
+                    <WhoWin id={"whoWin"} whoWin={whowin}/>
+                </div>
+                <div className="Pause-container">
+                    <Pause id={"Pause"} pause={pause}/>
+                </div>
+                <div className="arrow-container">
+                    <button id="down-button" className="arrow-button">▼</button>
+                    <button id="up-button" className="arrow-button">▲</button>
+                </div>
             </div>
         </div>
     );
