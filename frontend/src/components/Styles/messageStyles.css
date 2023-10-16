@@ -1,3 +1,7 @@
+.message a {
+    color: white;
+}
+
 .message {
     display: flex;
     flex-direction: column;

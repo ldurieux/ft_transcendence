@@ -2,6 +2,22 @@
   background: #1e2122;
 }
 
+a {
+    color: white;
+}
+
+*:visited {
+    color: white;
+}
+
+.decoratedText a {
+    color: white;
+}
+
+.decoratedHref a {
+    color: white;
+}
+
 /* Because chromium is shit, we have to use this rule to hide ugly scrollbars */
 *::-webkit-scrollbar {
   display: none;
