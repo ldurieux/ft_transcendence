@@ -126,6 +126,12 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         {
             this.rejoinGame(client.data.user);
         }
+        else 
+        {
+            const socket = await this.getSocket(client.data.user);
+            if (socket !== null)
+                socket.send(JSON.stringify({type: 'notConnected'}));
+        }
     }
 
     async getClientId(client: WebSocket): Promise<number> {
@@ -147,8 +153,6 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         let nSync = 0;
         let socket1: WebSocket = null;
         let socket2: WebSocket = null
-        this.playerInGame.add(player1);
-        this.playerInGame.add(player2);
         while (nSync < 5 && (socket1 === null || socket2 === null))
         {
             socket1 = await this.getSocket(player1);
@@ -241,6 +245,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         while (gameId === 0 || this.gameInstance.has(gameId))
             gameId = Math.floor(Math.random() * 1000000000);
         this.gameInstance.set(gameId, game);
+        this.playerInGame.add(player1);
+        this.playerInGame.add(player2);
         this.synchronizedPlayer(player1, player2, gameId);
     }
 

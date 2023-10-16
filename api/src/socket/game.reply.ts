@@ -242,8 +242,8 @@ export class GameReply {
         }
         if (friendSocket == null  || socket == null)
             return;
+        await this.gameGateway.createGame(Id1, Id2, typeOfGame);
         friendSocket.send(JSON.stringify({type: 'gameStart', user : user1}));
         socket.send(JSON.stringify({type: 'gameStart', user : user2}));
-        this.gameGateway.createGame(Id1, Id2, typeOfGame);
     }
 }

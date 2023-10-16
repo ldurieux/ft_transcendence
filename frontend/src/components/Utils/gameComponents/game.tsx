@@ -285,6 +285,8 @@ export default function GameComponent() {
                 setPause("PAUSE");
             else if (data.type === "RESUME")
                 setPause("");
+            if (data.type === "notConnected")
+                window.location.href = "/lobby";
         }
     }
 
