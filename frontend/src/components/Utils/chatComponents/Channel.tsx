@@ -141,7 +141,8 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
     }
 
     async function sendMessage(channelId) {
-        await post("channel/message", { id: channelId, text: message });
+        if (message.length != 0)
+            await post("channel/message", { id: channelId, text: message });
     }
 
     const handleKeyPress = (e) => {

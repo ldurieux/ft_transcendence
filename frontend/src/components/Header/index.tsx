@@ -70,13 +70,13 @@ const Header = () => {
                     <span className="links_name">Profile</span>
                 </p>
             </li>
-            {/*<li>*/}
-            {/*    <p onClick={() => startTransition(() => {*/}
-            {/*        window.location.href = "/leaderboard";})}>*/}
-            {/*        <i className='bx bx-list-ol'></i>*/}
-            {/*        <span className="links_name">Leaderboard</span>*/}
-            {/*    </p>*/}
-            {/*</li>*/}
+            <li>
+               <p onClick={() => startTransition(() => {
+                  window.location.href = "/leaderboard";})}>
+                  <i className='bx bx-list-ol'></i>
+                   <span className="links_name">Leaderboard</span>
+                </p>
+            </li>
             <li>
                 <p onClick={() => startTransition(() => {
                     window.location.href = "/chat";})}>

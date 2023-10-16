@@ -49,7 +49,7 @@ class Leaderboard extends Component {
                             {data.map((item: any) => (
                                 <li key={item.id}>
                                     <div className="nickname"> {item.display_name} </div>
-                                    <div className="score"> {item.points} </div>
+                                    <div className="score"> {item.games_won} </div>
                                 </li>
                             ))}
                         </ul>
