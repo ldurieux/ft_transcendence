@@ -1,12 +1,16 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { JwtService } from '@nestjs/jwt';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(
+    private readonly jwtService: JwtService,
+    private readonly  userService: UserService)
+  {}
 
-  canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest();
 
     const authHeader = req.headers['authorization'];
@@ -32,6 +36,12 @@ export class AuthGuard implements CanActivate {
       console.log("[auth.guard.ts] " + err)
       throw new UnauthorizedException();
     }
+
+    // Dumb code in case someone drop the database
+    // ¯\_(ツ)_/¯
+    if (!await this.userService.userExist(req['user']))
+      throw new UnauthorizedException();
+
     return true;
   }
 }

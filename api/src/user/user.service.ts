@@ -22,6 +22,15 @@ export class UserService {
         private readonly friendService: FriendRequestService,
     ) {}
 
+    async userExist(id: number): Promise<boolean> {
+        const count: number = await this.userRepository.count({
+            where: {
+                id: id
+            }
+        });
+        return count != 0;
+    }
+
     async getUser(id: number, self: boolean = false, withGames = false): Promise<User> {
         const user = await this.userRepository.findOne({
             where: {
