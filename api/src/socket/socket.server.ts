@@ -51,14 +51,12 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
 
         if (!authHeader || !authHeader.startsWith('Bearer ')) {
             client.terminate();
-            console.log("Bearer")
             return;
         }
 
         const token = authHeader.split(' ')[1];
         if (typeof token !== 'string' || token == "null") {
             client.terminate();
-            console.log("null")
             return;
         }
 
@@ -69,7 +67,6 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
           client.data.user = id;
         } catch (err) {
             client.terminate();
-            console.log(client.data, err,"No headers")
             return;
         }
 

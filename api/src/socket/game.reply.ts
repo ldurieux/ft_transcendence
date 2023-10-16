@@ -53,6 +53,8 @@ export class GameReply {
     async invite(id: number, friendId: number, typeOfGame: number)
     {
         const socket: WebSocket = await this.socketServer.getSocket(friendId);
+        let user1;
+        let user2;
 
         if (socket === null)
         {
@@ -76,9 +78,17 @@ export class GameReply {
         if (this.socketServer.DeluxeMatchMaikng.includes(id))
             this.socketServer.DeluxeMatchMaikng.pop();
         this.socketServer.inviteMap.delete(id);
+
+        try {
+            user1 = await this.userService.getUser(id);
+            user2 = await this.userService.getUser(friendId);
+        }
+        catch(e) {
+            return;
+        }
         if (socket !== null)
-            socket.send(JSON.stringify({type: 'invite', user: (await this.userService.getUser(id)).display_name, typeOfGame: typeOfGame, id: id}));
-        this.socketServer.inviteMap.set(id, {friendId: friendId, id: id, name: (await this.userService.getUser(id)).display_name,response: false, typeOfGame: typeOfGame, accepted: false});
+            socket.send(JSON.stringify({type: 'invite', user: user1.display_name, typeOfGame: typeOfGame, id: id}));
+        this.socketServer.inviteMap.set(id, {friendId: friendId, id: id, name: user2.display_name, response: false, typeOfGame: typeOfGame, accepted: false});
         this.socketServer.invitedClients.set(friendId, id);
         this.inviteWaiting(id);
     }
@@ -200,21 +210,40 @@ export class GameReply {
     async inviteRefused(id: number, friendId: number) {
         const friendSocket: any = await this.socketServer.getSocket(friendId);
         const socket: any = await this.socketServer.getSocket(id);
+        let user1;
+        let user2;
         this.socketServer.inviteMap.delete(id);
+        try {
+            user1 = await this.userService.getUser(id);
+            user2 = await this.userService.getUser(friendId);
+        }
+        catch(e) {
+            return;
+        }
         if (friendSocket !== null)
-            friendSocket.send(JSON.stringify({type: 'inviteRefused', user : this.userService.getUser(id)}));
+            friendSocket.send(JSON.stringify({type: 'inviteRefused', user : user1}));
         if (socket !== null)
-            socket.send(JSON.stringify({type: 'inviteRefused', user : this.userService.getUser(friendId)}));
+            socket.send(JSON.stringify({type: 'inviteRefused', user : user2}));
     }
 
     async gameStart(Id1: number, Id2: number, typeOfGame: number)
     {
         const friendSocket: any = await this.socketServer.getSocket(Id1);
         const socket: any = await this.socketServer.getSocket(Id2);
+        let user1;
+        let user2;
+        try {
+            user1 = await this.userService.getUser(Id1);
+            user2 = await this.userService.getUser(Id2);
+        }
+        catch (e)
+        {
+            return;
+        }
         if (friendSocket == null  || socket == null)
             return;
-        friendSocket.send(JSON.stringify({type: 'gameStart', user : this.userService.getUser(Id1)}));
-        socket.send(JSON.stringify({type: 'gameStart', user : this.userService.getUser(Id2)}));
+        friendSocket.send(JSON.stringify({type: 'gameStart', user : user1}));
+        socket.send(JSON.stringify({type: 'gameStart', user : user2}));
         this.gameGateway.createGame(Id1, Id2, typeOfGame);
     }
 }

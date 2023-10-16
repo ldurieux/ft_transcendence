@@ -146,9 +146,6 @@ export default function GameComponent() {
         };
     }, [gameId, MyId, gameSocket]); // Assurez-vous d'ajouter gameId et MyId comme dépendances si nécessaire
     
-    
-
-
     const WhoWin = ({id, whoWin}) => {
         const ball = document.getElementById("ball");
         if (ball)
@@ -313,7 +310,7 @@ export default function GameComponent() {
                 <div className="Pause-container">
                     <Pause id={"Pause"} pause={pause}/>
                 </div>
-                <div className="arrow-container">
+                <div id="arrow-container">
                     <button id="down-button" className="arrow-button">▼</button>
                     <button id="up-button" className="arrow-button">▲</button>
                 </div>

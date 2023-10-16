@@ -16,9 +16,13 @@ body {
     border: none;
 }
 
+#score-container {
+    display: none;
+}
+
 /* Styles spécifiques aux écrans de petite taille (téléphones) */
 @media screen and (max-width: 800px) {
-    .arrow-container {
+    #arrow-container {
         display: flex;
         width: 100%;
         height: 100%;

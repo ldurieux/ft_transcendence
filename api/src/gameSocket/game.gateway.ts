@@ -83,11 +83,9 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
     async handleConnection(client: WebSocket) {
         client.data = {}
-        console.log('connected');
     }
     
     async handleDisconnect(client: WebSocket) {
-        console.log('disconnected');
         this.server.clients.delete(client);
     }
 
@@ -106,14 +104,12 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
         if (!authHeader || !authHeader.startsWith('Bearer ')) {
             client.terminate();
-            console.log("Bearer")
             return;
         }
 
         const token = authHeader.split(' ')[1];
         if (typeof token !== 'string' || token == "null") {
             client.terminate();
-            console.log("null")
             return;
         }
 
@@ -124,7 +120,6 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
           client.data.user = id;
         } catch (err) {
             client.terminate();
-            console.log(client.data, err,"No headers")
             return;
         }
         if (await this.isInGame(client.data.user) === true)
@@ -149,7 +144,6 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
     async synchronizedPlayer(player1: number, player2: number, gameId: number)
     {
-        console.log("synchronizedPlayer");
         let nSync = 0;
         let socket1: WebSocket = null;
         let socket2: WebSocket = null
@@ -258,21 +252,35 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         game.stopPaddle(game.player1.getPlayerId());
         game.stopPaddle(game.player2.getPlayerId());
 
-        const user1: User = await this.userService.getUser((await game.whoWin()).getPlayerId(), true, true)
-        const user2: User = await this.userService.getUser((await game.whoLose()).getPlayerId(), true, true)
+        let user1: User;
+        let user2: User;
+
+        try {
+            user1 = await this.userService.getUser((await game.whoWin()).getPlayerId(), true, true);
+            user2 = await this.userService.getUser((await game.whoLose()).getPlayerId(), true, true);
+        }
+        catch (e)
+        {
+            this.playerInGame.delete(game.player1.getPlayerId());
+            this.playerInGame.delete(game.player2.getPlayerId());
+
+            game.destroyGame();
+            this.gameInstance.delete(gameId);
+            return;
+        }
 
 
         Game1.myScore = (await game.whoWin()).getScore();
         Game1.enemyScore = (await game.whoLose()).getScore();
         Game1.opponentId = (await game.whoLose()).getPlayerId();
-        Game1.opponentName = (await this.userService.getUser(Game1.opponentId, true)).display_name;
+        Game1.opponentName = user1.display_name;
         Game1.user = user1;
         Game1.Win = true;
 
         Game2.myScore = (await game.whoLose()).getScore();
         Game2.enemyScore = (await game.whoWin()).getScore();
         Game2.opponentId = (await game.whoWin()).getPlayerId();
-        Game2.opponentName = (await this.userService.getUser(Game2.opponentId, true)).display_name;
+        Game2.opponentName = user2.display_name;
         Game2.user = user2;
         Game2.Win = false;
 
