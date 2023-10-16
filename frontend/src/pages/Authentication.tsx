@@ -7,8 +7,8 @@ import {post} from "../components/Utils/Request.tsx";
 const Authentication = () => {
     const { user, setUser } = useContext(UserContext);
     let navigate = useNavigate();
-    const [login, setLogin] = useState("");
-    const [password, setPassword] = useState("");
+    // const [login, setLogin] = useState("");
+    // const [password, setPassword] = useState("");
     const [twoFaCode, setTwoFaCode] = useState("");
     const [enabled, setEnabled] = useState(false);
     const [show, setShow] = useState(false);
@@ -84,57 +84,57 @@ const Authentication = () => {
         navigate("/profile");
     }
 
-    async function localConnection()
-    {
-        try {
-            if (login === "" || password === "")
-                return;
-            const input = `http://${process.env.REACT_APP_WEB_HOST}:${process.env.REACT_APP_API_PORT}/user/login`;
-            const options = {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ method: "local", username: login, password: password }),
-            }
-            const response = await fetch(input, options);
-            if (response.status === 201) {
-                let data = await response.json();
-                const token = data.access_token;
-                if (token) {
-                    localStorage.setItem("token", token);
-                    setUser({ isLoggedIn: true }); // Définir isLoggedIn sur true
-                    navigate("/profile");
-                }
-            }
-        }
-        catch (error) {
-        }
-    }
+    // async function localConnection()
+    // {
+    //     try {
+    //         if (login === "" || password === "")
+    //             return;
+    //         const input = `http://${process.env.REACT_APP_WEB_HOST}:${process.env.REACT_APP_API_PORT}/user/login`;
+    //         const options = {
+    //             method: "POST",
+    //             headers: { "Content-Type": "application/json" },
+    //             body: JSON.stringify({ method: "local", username: login, password: password }),
+    //         }
+    //         const response = await fetch(input, options);
+    //         if (response.status === 201) {
+    //             let data = await response.json();
+    //             const token = data.access_token;
+    //             if (token) {
+    //                 localStorage.setItem("token", token);
+    //                 setUser({ isLoggedIn: true }); // Définir isLoggedIn sur true
+    //                 navigate("/profile");
+    //             }
+    //         }
+    //     }
+    //     catch (error) {
+    //     }
+    // }
 
-    async function localRegister()
-    {
-        try {
-            if (login === "" || password === "")
-                return;
-            const input = `http://${process.env.REACT_APP_WEB_HOST}:${process.env.REACT_APP_API_PORT}/user/register`;
-            const options = {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ method: "local", username: login, password: password }),
-            }
-            const response = await fetch(input, options);
-            if (response.status === 201) {
-                let data = await response.json();
-                const token = data.access_token;
-                if (token) {
-                    localStorage.setItem("token", token);
-                    setUser({ isLoggedIn: true }); // Définir isLoggedIn sur true
-                    navigate("/profile");
-                }
-            }
-        }
-        catch (error) {
-        }
-    }
+    // async function localRegister()
+    // {
+    //     try {
+    //         if (login === "" || password === "")
+    //             return;
+    //         const input = `http://${process.env.REACT_APP_WEB_HOST}:${process.env.REACT_APP_API_PORT}/user/register`;
+    //         const options = {
+    //             method: "POST",
+    //             headers: { "Content-Type": "application/json" },
+    //             body: JSON.stringify({ method: "local", username: login, password: password }),
+    //         }
+    //         const response = await fetch(input, options);
+    //         if (response.status === 201) {
+    //             let data = await response.json();
+    //             const token = data.access_token;
+    //             if (token) {
+    //                 localStorage.setItem("token", token);
+    //                 setUser({ isLoggedIn: true }); // Définir isLoggedIn sur true
+    //                 navigate("/profile");
+    //             }
+    //         }
+    //     }
+    //     catch (error) {
+    //     }
+    // }
 
     return (
         <div className="AuthBody">
