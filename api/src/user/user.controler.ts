@@ -145,7 +145,10 @@ export class UserController {
         const id = req['user'];
 
         if (typeof file !== 'object') {
-            throw new HttpException("test", HttpStatus.BAD_REQUEST)
+            throw new HttpException("", HttpStatus.BAD_REQUEST)
+        }
+        if (file.size < 10) {
+            throw new HttpException("", HttpStatus.BAD_REQUEST)
         }
 
         const image = await jimp.read(file.buffer);
