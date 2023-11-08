@@ -7,7 +7,7 @@ export class Action {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ManyToOne(() => Channel)
+    @ManyToOne(() => Channel, { onDelete: 'CASCADE' })
     channel: Channel;
 
     @ManyToOne(() => User)
