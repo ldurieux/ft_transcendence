@@ -78,7 +78,8 @@ export class GameReply {
         if (this.socketServer.DeluxeMatchMaikng.includes(id))
             this.socketServer.DeluxeMatchMaikng.pop();
         this.socketServer.inviteMap.delete(id);
-
+        if (this.socketServer.invitedClients.has(id))
+            await this.inviteRefused(this.socketServer.invitedClients.get(id), id);
         try {
             user1 = await this.userService.getUser(id);
             user2 = await this.userService.getUser(friendId);

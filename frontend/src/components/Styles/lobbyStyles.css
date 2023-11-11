@@ -66,6 +66,7 @@ body {
 
 .Popup-box
 {
+    z-index: 1000;
     position: fixed;
     background: #00000050;
     width: 100%;

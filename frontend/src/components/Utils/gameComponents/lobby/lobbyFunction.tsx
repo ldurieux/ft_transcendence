@@ -1,5 +1,5 @@
 import { post, get } from "../../Request.tsx";
-import React from 'react';
+import React, { useEffect } from 'react';
 import "../../../Styles/lobbyStyles.css"
 
 export function inviteFriend(friendId:number, typeOfGame:number) {
@@ -8,6 +8,19 @@ export function inviteFriend(friendId:number, typeOfGame:number) {
 }
 
 export const Popup = props => {
+    const hanfleClickOutside = (e) => {
+        if (e.target.className === "Popup-box") {
+            props.handleclose();
+        }
+    }
+
+    useEffect(() => {
+        document.addEventListener("mousedown", hanfleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", hanfleClickOutside);
+        }
+    }, []);
+
     return (
         <div className='Popup-box'>
             <div className='box'>
