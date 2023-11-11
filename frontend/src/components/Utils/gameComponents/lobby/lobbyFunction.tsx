@@ -8,18 +8,18 @@ export function inviteFriend(friendId:number, typeOfGame:number) {
 }
 
 export const Popup = props => {
-    const hanfleClickOutside = (e) => {
-        if (e.target.className === "Popup-box") {
-            props.handleclose();
-        }
-    }
 
     useEffect(() => {
-        document.addEventListener("mousedown", hanfleClickOutside);
+        const handleClickOutside = (e) => {
+            if (e.target.className === "Popup-box") {
+                props.handleclose();
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
         return () => {
-            document.removeEventListener("mousedown", hanfleClickOutside);
+            document.removeEventListener("mousedown", handleClickOutside);
         }
-    }, []);
+    },);
 
     return (
         <div className='Popup-box'>

@@ -41,7 +41,7 @@ function App() {
         return () => {
             document.removeEventListener('visibilitychange', handleVisibilityChange);
         };
-    }, []);
+    }, [socket]);
     
     useEffect(() => {
         if (socket) {
