@@ -158,12 +158,11 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
 
     async function kickUser(channel, userId) {
         try {
-            if (currentUser.id === channel.owner?.id) {
                 const result = await post(`channel/kick`, { userId: userId, channelId: channel.id });
                 if (result) {
                     // Update the users list
                     setUsers(prev => {
-                        const updatedUsers = { ...prev };
+                        const updatedUsers = {...prev};
                         delete updatedUsers[userId];
                         return updatedUsers;
                     });
@@ -172,7 +171,7 @@ function Channel({ socket, channel, currentUser, setChanParams, setChannelList, 
                     updateChannelUsers(channel, users);
                 }
                 return result;
-            }
+
         } catch (error) {
             // Gérer l'erreur ici
             console.error("Erreur lors de la suppression de l'utilisateur :", error);
