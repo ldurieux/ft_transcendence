@@ -22,6 +22,7 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
     public ClassicMatchMaking: Array<number>;
     public inviteMap: Map<number, InviteData>;
     public invitedClients: Map<number, number>;
+    public focusOn: Map<number, WebSocket>;
 
     private inGameList: Set<number>;
 
@@ -33,6 +34,7 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
         this.inviteMap = new Map<number, InviteData>();
         this.invitedClients = new Map<number, number>();
         this.inGameList = new Set<number>();
+        this.focusOn = new Map<number, WebSocket>();
     }
 
     @WebSocketServer() server: WebSocket;
@@ -77,6 +79,8 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
             const truc1 = this.inviteMap.get(truc);
             socket.send(JSON.stringify({type: 'invite', user: truc1.name, typeOfGame: truc1.typeOfGame, id: truc1.id}));
         }
+
+        this.focusOn.set(client.data.user, client);
         await this.setClientData()
         this.broadcast(client.data.user, { event: "connect", data: { user: client.data } })
 
@@ -88,6 +92,14 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
             if (other.data.user != client.data.user)
                 client.send(raw)
         }
+    }
+
+    @SubscribeMessage("focusOn")
+    async handleFocusOn(@ConnectedSocket() client: WebSocket) {
+        const id = this.getId(client);
+        if (id == null || id == undefined)
+            return;
+        this.focusOn.set(id, client);
     }
 
     async broadcast(from: number, data: any) {
@@ -148,6 +160,8 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
     async handleDisconnect(client: WebSocket) {
         if (client.data.user != null && client.data.user != undefined)
             this.broadcast(client.data.user, { event: "disconnect", data: { user: client.data.user } })
+        if (this.focusOn.get(client.data.user) == client)
+            this.focusOn.delete(client.data.user);
     }
 
     static instance() {

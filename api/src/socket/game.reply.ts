@@ -228,8 +228,10 @@ export class GameReply {
 
     async gameStart(Id1: number, Id2: number, typeOfGame: number)
     {
-        const friendSocket: any = await this.socketServer.getSocket(Id1);
-        const socket: any = await this.socketServer.getSocket(Id2);
+        let socket: any = this.socketServer.focusOn.get(Id1);
+        let friendSocket: any = this.socketServer.focusOn.get(Id2);
+        const socketg: any = await this.socketServer.getSocket(Id1);
+        const socketg1: any = await this.socketServer.getSocket(Id2);
         let user1;
         let user2;
         try {
@@ -240,8 +242,18 @@ export class GameReply {
         {
             return;
         }
-        if (friendSocket == null  || socket == null)
-            return;
+        if (socket === null || socket === undefined)
+        {
+            if (socketg === null || socketg === undefined)
+                return;
+            socket = socketg;
+        }
+        if (friendSocket === null || friendSocket === undefined)
+        {
+            if (socketg1 === null || socketg1 === undefined)
+                return;
+            friendSocket = socketg1;
+        }
         await this.gameGateway.createGame(Id1, Id2, typeOfGame);
         friendSocket.send(JSON.stringify({type: 'gameStart', user : user1}));
         socket.send(JSON.stringify({type: 'gameStart', user : user2}));

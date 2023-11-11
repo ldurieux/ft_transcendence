@@ -19,6 +19,7 @@ function App() {
         socket.onopen = () => {
             const baguette = { event: 'auth', data: { data: `Bearer ${localStorage.getItem('token')}` } };
             socket.send(JSON.stringify(baguette));
+            socket.send(JSON.stringify({ event: 'focusOn' }));
         };
         socket.onclose = () => {};
         
@@ -29,6 +30,18 @@ function App() {
         };
     }, [socket]);
 
+    useEffect(() => {
+      const handleVisibilityChange = () => {
+        if (document.visibilityState === 'visible')
+            socket.send(JSON.stringify({ event: 'focusOn' }));
+    };
+      
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+      
+        return () => {
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+        };
+    }, []);
     
     useEffect(() => {
         if (socket) {

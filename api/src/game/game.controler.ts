@@ -4,7 +4,6 @@ import { HttpException, HttpStatus, Controller, Get, Post, Body, Request, UseGua
 
 import { GameReply } from "src/socket/game.reply";
 import { GameGateway } from "src/gameSocket/game.gateway";
-import { type } from "os";
 
 // import { GameService } from "./game.service";
 
