@@ -233,6 +233,10 @@ export class GameReply {
         let friendSocket: any = this.socketServer.focusOn.get(Id2);
         const socketg: any = await this.socketServer.getSocket(Id1);
         const socketg1: any = await this.socketServer.getSocket(Id2);
+        if (this.socketServer.invitedClients.has(Id1))
+            this.inviteResponse(this.socketServer.invitedClients.get(Id1), false);
+        if (this.socketServer.invitedClients.has(Id2))
+            this.inviteResponse(this.socketServer.invitedClients.get(Id2), false);
         let user1;
         let user2;
         try {
