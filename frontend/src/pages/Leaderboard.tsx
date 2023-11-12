@@ -46,11 +46,13 @@ class Leaderboard extends Component {
                 <div className="LeaderboardBody">
                     <div className="LeaderboardList">
                         <ul>
-                            {data.map((item: any) => (
-                                <li key={item.id}>
-                                    <div className="nickname"> {item.display_name} </div>
-                                    <div className="score"> {item.games_won} </div>
-                                </li>
+                        {data
+                            .sort((a, b) => b.games_won - a.games_won)
+                            .map((item: any) => (
+                              <li key={item.id}>
+                                <div className="nickname"> {item.display_name} </div>
+                                <div className="score"> {item.games_won} </div>
+                              </li>
                             ))}
                         </ul>
                     </div>
