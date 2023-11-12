@@ -51,9 +51,16 @@ const Header = () => {
               <ul className={`nav-links ${isSidebarOpen ? "" : "close"}`}>
             <li>
                 <p onClick={() => startTransition(() => {
-                    window.location.href = "/login";})}>
-                    <i className='bx bx-log-in'></i>
-                    <span className="links_name">Login</span>
+                    window.location.href = "/profile";})}>
+                    <i className='bx bx-user-circle'></i>
+                    <span className="links_name">Profile</span>
+                </p>
+            </li>
+            <li>
+                <p onClick={() => startTransition(() => {
+                    window.location.href = "/chat";})}>
+                    <i className='bx bx-chat'></i>
+                    <span className="links_name">Chat</span>
                 </p>
             </li>
             <li>
@@ -61,13 +68,6 @@ const Header = () => {
                     window.location.href = "/lobby";})}>
                     <i className='bx bx-game'></i>
                     <span className="links_name">Lobby</span>
-                </p>
-            </li>
-            <li>
-                <p onClick={() => startTransition(() => {
-                    window.location.href = "/profile";})}>
-                    <i className='bx bx-user-circle'></i>
-                    <span className="links_name">Profile</span>
                 </p>
             </li>
             <li>
@@ -79,9 +79,9 @@ const Header = () => {
             </li>
             <li>
                 <p onClick={() => startTransition(() => {
-                    window.location.href = "/chat";})}>
-                    <i className='bx bx-chat'></i>
-                    <span className="links_name">Chat</span>
+                    window.location.href = "/login";})}>
+                    <i className='bx bx-log-in'></i>
+                    <span className="links_name">Login</span>
                 </p>
             </li>
             <li>
@@ -108,8 +108,6 @@ const Header = () => {
                 </div>
           </section>
       </div>
-    
-
   );
 };
 
