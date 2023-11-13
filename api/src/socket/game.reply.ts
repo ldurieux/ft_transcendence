@@ -33,12 +33,10 @@ export class GameReply {
 
     async checkIds(id: number)
     {
-        this.inviteResponse(id, false);
+        if (this.socketServer.inviteMap.has(id))
+            await this.inviteResponse(id, false);
         if (this.socketServer.invitedClients.has(id))
-        {
-            const truc = this.socketServer.invitedClients.get(id);
-            this.inviteResponse(truc, false);
-        }
+            await this.inviteResponse(this.socketServer.invitedClients.get(id), false);
     }
 
     async isInMatchMaking(id: number)
@@ -68,18 +66,16 @@ export class GameReply {
         }
         if (this.socketServer.invitedClients.has(friendId))
             return;
-        await this.checkIds(id);
         if (await this.gameGateway.isInGame(id))
-            this.currentlyInGame(id);
-        if (this.socketServer.invitedClients.has(friendId))
+        {
+            await this.currentlyInGame(id);
             return;
+        }
+        await this.checkIds(id);
         if (this.socketServer.ClassicMatchMaking.includes(id))
             this.socketServer.ClassicMatchMaking.pop();
         if (this.socketServer.DeluxeMatchMaikng.includes(id))
             this.socketServer.DeluxeMatchMaikng.pop();
-        this.socketServer.inviteMap.delete(id);
-        if (this.socketServer.invitedClients.has(id))
-            await this.inviteRefused(this.socketServer.invitedClients.get(id), id);
         try {
             user1 = await this.userService.getUser(id);
             user2 = await this.userService.getUser(friendId);
@@ -121,7 +117,14 @@ export class GameReply {
     {
         var InviteData = this.socketServer.inviteMap.get(id);
         if (InviteData === undefined)
+        {
+            if (this.socketServer.invitedClients.has(id))
+            {
+                await this.inviteResponse(this.socketServer.invitedClients.get(id), false);
+                this.socketServer.invitedClients.delete(id);
+            }
             return;
+        }
         InviteData.response = true;
         InviteData.accepted = response;
 
@@ -133,9 +136,9 @@ export class GameReply {
             return;
         }
 
-        if (response === false)
+        if (response === false && this.socketServer.inviteMap.has(id))
             await this.inviteRefused(id, this.socketServer.inviteMap.get(id).friendId);
-        else 
+        else if (response === true)
             await this.gameStart(id, this.socketServer.inviteMap.get(id).friendId, this.socketServer.inviteMap.get(id).typeOfGame);
         this.socketServer.invitedClients.delete(InviteData.friendId);
         this.socketServer.inviteMap.delete(InviteData.id);
@@ -171,7 +174,7 @@ export class GameReply {
             return;
         }
         var socket: any = null;
-        this.checkIds(id);
+        await this.checkIds(id);
         if (typeOfGame === 1)
         {
             if (this.socketServer.ClassicMatchMaking.length)

@@ -97,7 +97,6 @@ export class SocketServer implements OnGatewayInit, OnGatewayConnection, OnGatew
     @SubscribeMessage("focusOn")
     async handleFocusOn(@ConnectedSocket() client: WebSocket) {
         const id = this.getId(client);
-        console.log("focusOn: ");
         if (id == null || id == undefined)
             return;
         this.focusOn.set(id, client);
