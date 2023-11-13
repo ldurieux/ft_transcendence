@@ -151,15 +151,20 @@ export class UserController {
             throw new HttpException("", HttpStatus.BAD_REQUEST)
         }
 
-        const image = await jimp.read(file.buffer);
         let res;
-        if (image) {
-            res = await image.getBase64Async(jimp.AUTO);
-            this.userService.setPicture(id, res)
-        }
-        else {
-            throw new HttpException("Invalid image", HttpStatus.BAD_REQUEST)
-        }
+		try {
+			const image = await jimp.read(file.buffer);
+			if (image) {
+        	    res = await image.getBase64Async(jimp.AUTO);
+        	    this.userService.setPicture(id, res)
+        	}
+        	else {
+        	    throw new HttpException("Invalid image", HttpStatus.BAD_REQUEST)
+        	}
+		}
+		catch {
+            throw new HttpException("", HttpStatus.BAD_REQUEST)
+		}
 
         return { status: "modified", profile_picture: res }
     }
